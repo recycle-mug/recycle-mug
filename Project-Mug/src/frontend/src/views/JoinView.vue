@@ -1,19 +1,17 @@
 <template>
   <div :class="getTheme">
     <header-nav></header-nav>
-    <router-link to="/login/member" tag="button">login as member</router-link>
-    <router-link to="/login/store" tag="button">login as store</router-link>
-
-    <router-link to="/join/member" tag="button">join as member</router-link>
-    <router-link to="/join/store" tag="button">join as store</router-link>
+    <join-form-box :role="role"></join-form-box>
   </div>
 </template>
 
 <script>
 import HeaderNav from "../components/HeaderNav";
+import JoinFormBox from "../components/JoinFormBox";
 
 export default {
-  components: { HeaderNav },
+  props: ["role"],
+  components: { JoinFormBox, HeaderNav },
   computed: {
     getTheme() {
       return this.$store.state.theme;

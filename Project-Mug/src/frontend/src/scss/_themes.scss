@@ -1,0 +1,19 @@
+$theme-light: (
+  name: "theme-light",
+  "background": #f7f7f7,
+  "content-background": #fff,
+  "text": #151515,
+  "text-light": #6e6b7b,
+  "text-reverse-color": #d0d2d6,
+);
+
+$theme-dark: (
+  name: "theme-dark",
+  "background": #161d30,
+  "content-background": #283045,
+  "text": #f7f7f7,
+  "text-light": #d0d2d6,
+  "text-reverse-color": #151515,
+);
+
+$themes: $theme-light, $theme-dark;
