@@ -5,7 +5,7 @@ start at May 23 2021
 # Backend
 - Spring
 # Database
-- MariaDB
+- H2 1.499
 
 # Meeting
 - Discord
