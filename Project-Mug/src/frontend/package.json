@@ -1,0 +1,38 @@
+{
+  "name": "project-mug",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production ",
+    "dev": "webpack-dev-server --mode development --hot"
+  },
+  "author": "",
+  "license": "ISC"
+},
+"eslintConfig": {
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "plugin:vue/essential",
+    "@vue/airbnb"
+  ],
+  "rules": {},
+  "parserOptions": {
+    "parser": "babel-eslint"
+  },
+  "plugins": [
+    "vue"
+  ]
+},
+"postcss": {
+  "plugins": {
+    "autoprefixer": {}
+  }
+},
+"browserslist": [
+  "> 1%",
+  "last 2 versions"
+]
