@@ -75,6 +75,6 @@ li {
   margin: 0 10px;
 }
 a {
-  color: blue;
+  color: #42b983;
 }
 </style>
