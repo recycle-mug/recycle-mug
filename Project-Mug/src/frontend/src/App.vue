@@ -1,15 +1,26 @@
 <template>
-  <router-view :key="this.$route.fullPath"></router-view>
+  <img alt="Vue logo" src="./assets/logo.png">
+  <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
-import router from "./routes/routes.js";
-import store from "./stores/store";
+import HelloWorld from './components/HelloWorld.vue'
 
 export default {
-  router,
-  store,
-};
+  name: 'App',
+  components: {
+    HelloWorld
+  }
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
