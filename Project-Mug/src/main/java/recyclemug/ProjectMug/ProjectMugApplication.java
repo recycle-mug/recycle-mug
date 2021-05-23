@@ -9,5 +9,4 @@ public class ProjectMugApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectMugApplication.class, args);
 	}
-
 }
