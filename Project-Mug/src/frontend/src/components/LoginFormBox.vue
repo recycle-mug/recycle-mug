@@ -10,9 +10,27 @@
         </div>
 
         <span>or use your email for registration</span>
-        <input type="text" placeholder="Store ID" />
-        <input type="password" placeholder="Store Password" />
-        <button>Login</button>
+        <div class="row">
+          <input
+            type="text"
+            placeholder="Store ID"
+            v-model="formData.loginId"
+            @keydown.enter.prevent="nextInput"
+            @keyup="checkId"
+          />
+          <span class="error-msg">{{ errors.loginId }}</span>
+        </div>
+        <div class="row">
+          <input
+            type="password"
+            placeholder="Store Password"
+            v-model="formData.loginPw"
+            @keydown.enter.prevent="onSubmit"
+            @keyup.prevent="checkPassword"
+          />
+          <span class="error-msg">{{ errors.loginPw }}</span>
+        </div>
+        <button type="submit" @click.prevent="onSubmit">Login</button>
         <router-link to="../join/store" tag="span" class="caption"
           >Create Store Account</router-link
         >
@@ -29,9 +47,28 @@
         </div>
 
         <span>or use your email for registration</span>
-        <input type="text" placeholder="ID" />
-        <input type="password" placeholder="Password" />
-        <button>Login</button>
+        <div class="row">
+          <input
+            type="text"
+            placeholder="ID"
+            v-model="formData.loginId"
+            @keydown.enter.prevent="nextInput"
+            @keyup="checkId"
+          />
+          <span class="error-msg">{{ errors.loginId }}</span>
+        </div>
+
+        <div class="row">
+          <input
+            type="password"
+            placeholder="Password"
+            v-model="formData.loginPw"
+            @keydown.enter.prevent="onSubmit"
+            @keyup="checkPassword"
+          />
+          <span class="error-msg">{{ errors.loginPw }}</span>
+        </div>
+        <button type="submit" @click.prevent="onSubmit">Login</button>
         <router-link to="../join/member" tag="span" class="caption"
           >Create Member Account</router-link
         >
@@ -43,7 +80,6 @@
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <!-- <button class="ghost">Login As Member</button> -->
           <router-link to="../login/member" tag="button" class="ghost">
             Login As Member</router-link
           >
@@ -56,8 +92,6 @@
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <!-- <button class="ghost">Login As Store</button> -->
-
           <router-link to="../login/store" tag="button" class="ghost">Login As Store</router-link>
         </div>
       </div>
@@ -76,11 +110,71 @@ faLibrary.add(faFacebookF, faGooglePlusG, faComment);
 export default {
   data() {
     return {
-      transitionName: "slide-left",
+      formData: {
+        role: this.role,
+        loginId: "",
+        loginPw: "",
+      },
+      errors: {
+        loginId: "",
+        loginPw: "",
+      },
     };
   },
   props: ["role"],
   components: { FontAwesomeIcon },
+  methods: {
+    nextInput() {
+      event.target.parentElement.nextElementSibling.children[0].focus();
+    },
+    checkRequired() {
+      for (const item in this.formData) {
+        try {
+          if (!this.formData[item]) {
+            throw "빈 칸을 모두 채워주세요";
+          }
+        } catch (error) {
+          this.errors[item] = error;
+        }
+      }
+    },
+    checkId() {
+      const pattern_loginId = /^[a-zA-Z가-힣0-9]{4,20}$/;
+      try {
+        if (!pattern_loginId.test(this.formData.loginId)) {
+          throw "한글, 영어, 숫자로만 이루어진 4~20글자로 입력해주세요";
+        } else {
+          console.log("test :>> ");
+          this.errors.loginId = "";
+        }
+      } catch (error) {
+        this.errors.loginId = error;
+      }
+    },
+    checkPassword() {
+      const pattern_loginPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d$@$!%*?&]{8,}$/;
+
+      try {
+        if (!pattern_loginPw.test(this.formData.loginPw)) throw "비밀번호를 확인해주세요";
+        else this.errors.loginPw = "";
+      } catch (error) {
+        this.errors.loginPw = error;
+      }
+    },
+    validate() {
+      this.checkRequired();
+      this.checkId();
+      this.checkPassword();
+    },
+    onSubmit(e) {
+      e.preventDefault();
+      this.validate();
+
+      console.log("this.formData.role :>> ", this.formData.role);
+      console.log("this.formData.loginId :>> ", this.formData.loginId);
+      console.log("this.formData.loginPw :>> ", this.formData.loginPw);
+    },
+  },
 };
 </script>
 
@@ -147,16 +241,30 @@ export default {
             margin-bottom: 0.5rem;
           }
 
-          input {
-            background-color: map-get($map: $theme, $key: "background");
-            border: none;
-            padding: 1rem 1.4rem;
-            margin: 0.7rem 0;
+          .row {
             width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
 
-            &:focus {
-              outline-color: $sub-color;
+            input {
+              background-color: map-get($map: $theme, $key: "background");
+              color: map-get($map: $theme, $key: "text");
               border: none;
+              padding: 1rem 1.4rem;
+              margin: 0.7rem 0;
+              width: 100%;
+              box-sizing: border-box;
+
+              &:focus {
+                outline-color: $sub-color;
+                border: none;
+              }
+            }
+            .error-msg {
+              color: $error-msg;
+              width: 100%;
+              text-align: left;
             }
           }
 

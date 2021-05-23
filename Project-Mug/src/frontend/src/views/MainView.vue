@@ -6,14 +6,17 @@
 
     <router-link to="/join/member" tag="button">join as member</router-link>
     <router-link to="/join/store" tag="button">join as store</router-link>
+
+    <travel-map style="width:500px; height:500px; margin:20px"></travel-map>
   </div>
 </template>
 
 <script>
 import HeaderNav from "../components/HeaderNav";
+import TravelMap from "../components/TravelMap";
 
 export default {
-  components: { HeaderNav },
+  components: { HeaderNav, TravelMap },
   computed: {
     getTheme() {
       return this.$store.state.theme;
