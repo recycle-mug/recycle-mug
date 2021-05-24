@@ -16,19 +16,19 @@ import static org.junit.Assert.*;
 @SpringBootTest
 public class MemberRepositoryTest {
 
-    @Autowired MemberRepository memberRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     @Transactional
     @Rollback(false)
-    public void testMember(){
+    public void testMember() {
         Member member = new Member();
-        member.setName("memberA");
+        member.setName("memberB");
 
         Long saveId = memberRepository.save(member);
         Member findMember = memberRepository.find(saveId);
 
         Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
     }
-
 }
