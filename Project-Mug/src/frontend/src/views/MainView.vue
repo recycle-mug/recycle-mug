@@ -1,22 +1,20 @@
 <template>
   <div :class="getTheme">
     <header-nav></header-nav>
-    <router-link to="/login/member" tag="button">login as member</router-link>
-    <router-link to="/login/store" tag="button">login as store</router-link>
-
-    <router-link to="/join/member" tag="button">join as member</router-link>
-    <router-link to="/join/store" tag="button">join as store</router-link>
-
-    <travel-map style="width:500px; height:500px; margin:20px"></travel-map>
+    <div class="content-body">
+      <travel-map style="width:500px; height:500px; margin:20px"></travel-map>
+    </div>
+    <footer-nav></footer-nav>
   </div>
 </template>
 
 <script>
 import HeaderNav from "../components/HeaderNav";
 import TravelMap from "../components/TravelMap";
+import FooterNav from "../components/FooterNav";
 
 export default {
-  components: { HeaderNav, TravelMap },
+  components: { HeaderNav, TravelMap, FooterNav },
   computed: {
     getTheme() {
       return this.$store.state.theme;
@@ -32,6 +30,13 @@ export default {
     color: map-get($map: $theme, $key: "text");
     width: 100%;
     height: 100%;
+
+    .content-body {
+      width: 100%;
+      max-width: 1140px;
+      margin: auto;
+      box-sizing: border-box;
+    }
   }
 }
 </style>

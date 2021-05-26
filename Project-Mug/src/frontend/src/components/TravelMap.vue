@@ -1,7 +1,11 @@
 <template>
-  <GoogleMapLoader :mapConfig="mapConfig" apiKey="AIzaSyAnUJ1BD9yCOYF0i_Qt4ctxXRAg32xrShI">
-    // insert your google maps api key to render styled map
-    <template slot-scope="{ google, map }">
+  <GoogleMapLoader
+    class="map-container"
+    :mapConfig="mapConfig"
+    apiKey="AIzaSyAnUJ1BD9yCOYF0i_Qt4ctxXRAg32xrShI"
+  >
+    <!-- // insert your google maps api key to render styled map -->
+    <!-- <template slot-scope="{ google, map }">
       <GoogleMapMarker
         v-for="marker in markers"
         :key="marker.id"
@@ -9,29 +13,18 @@
         :google="google"
         :map="map"
       />
-      <GoogleMapLine
-        v-for="line in lines"
-        :key="line.id"
-        :path.sync="line.path"
-        :google="google"
-        :map="map"
-      />
-    </template>
+    </template> -->
   </GoogleMapLoader>
 </template>
 
 <script>
 import GoogleMapLoader from "./GoogleMapLoader";
-import GoogleMapMarker from "./GoogleMapMarker";
-import GoogleMapLine from "./GoogleMapLine";
 
 import { mapSettings } from "../constants/mapSettings";
 
 export default {
   components: {
     GoogleMapLoader,
-    GoogleMapMarker,
-    GoogleMapLine,
   },
 
   data() {
@@ -39,31 +32,11 @@ export default {
       markers: [
         {
           id: "a",
-          position: { lat: 3, lng: 101 },
+          position: { lat: 36.619, lng: 127.443 },
         },
         {
           id: "b",
-          position: { lat: 5, lng: 99 },
-        },
-        {
-          id: "c",
-          position: { lat: 6, lng: 97 },
-        },
-      ],
-      lines: [
-        {
-          id: "1",
-          path: [
-            { lat: 3, lng: 101 },
-            { lat: 5, lng: 99 },
-          ],
-        },
-        {
-          id: "2",
-          path: [
-            { lat: 5, lng: 99 },
-            { lat: 6, lng: 97 },
-          ],
+          position: { lat: 36.626, lng: 127.457 },
         },
       ],
     };
@@ -73,13 +46,32 @@ export default {
     mapConfig() {
       return {
         ...mapSettings,
-        center: this.mapCenter,
+        center: this.markers[1].position,
       };
-    },
-
-    mapCenter() {
-      return this.markers[1].position;
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@each $theme in $themes {
+  &.#{map-get($theme, "name")} {
+    background-color: map-get($map: $theme, $key: "background");
+    color: map-get($map: $theme, $key: "text");
+
+    .map-container {
+      margin: 0.5rem;
+      box-sizing: border-box;
+      box-shadow: $shadow-lighter;
+      border-radius: 30px;
+      overflow: hidden;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        box-shadow: $shadow;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  }
+}
+</style>

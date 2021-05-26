@@ -36,7 +36,7 @@ const LINE_SYMBOL_CONFIG = {
 };
 
 const LINE_PATH_CONFIG = {
-  clickable: false,
+  clickable: true,
   geodesic: false,
   strokeOpacity: 0,
   strokeColor: COLORS.LINE,
@@ -49,7 +49,7 @@ const LINE_PATH_CONFIG = {
 };
 
 const mapSettings = {
-  clickableIcons: false,
+  clickableIcons: true,
   streetViewControl: false,
   panControlOptions: false,
   gestureHandling: "cooperative",
@@ -58,9 +58,9 @@ const mapSettings = {
   zoomControlOptions: {
     style: "SMALL",
   },
-  zoom: 5,
-  minZoom: 2,
-  maxZoom: 8,
+  zoom: 12,
+  minZoom: 8,
+  maxZoom: 18,
   styles: [
     {
       featureType: "landscape",

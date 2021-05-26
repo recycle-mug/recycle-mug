@@ -1,7 +1,9 @@
 <template>
   <div :class="getTheme">
     <header-nav></header-nav>
-    <login-form-box :role="role"></login-form-box>
+    <div class="content-body">
+      <login-form-box :role="role"></login-form-box>
+    </div>
   </div>
 </template>
 
@@ -26,6 +28,13 @@ export default {
     color: map-get($map: $theme, $key: "text");
     width: 100%;
     height: 100%;
+
+    .content-body {
+      width: 100%;
+      max-width: 1140px;
+      margin: auto;
+      box-sizing: border-box;
+    }
   }
 }
 </style>

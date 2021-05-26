@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="form-container store-form-container" v-if="role === 'store'">
+    <div class="form-container market-form-container" v-if="role === 'market'">
       <form action="#">
-        <h1>join as Store</h1>
+        <h1>join as market</h1>
         <div class="social-container">
           <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
           <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -10,20 +10,54 @@
         </div>
 
         <span>or use your email for registration</span>
-        <input type="text" placeholder="Store ID" />
-        <input type="password" placeholder="Store Password" />
-        <input type="password" placeholder="Password Check" />
-        <input type="number" placeholder="010XXXXXXXX" />
+        <input type="text" placeholder="market ID" />
+        <input type="password" placeholder="market Password" />
+        <input type="password" placeholder="Password Check" @keydown.enter.prevent="telInput" />
+        <div class="num-input-wrapper">
+          <input
+            type="number"
+            name="tel_first"
+            class="num-input"
+            v-model="formData.joinTel.first"
+            placeholder="010"
+            @keydown.enter.prevent="nextTelInput"
+            @keyup="limitNumber"
+          />
+          <div class="num-input-connector">
+            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
+          </div>
+          <input
+            type="number"
+            name="tel_second"
+            class="num-input"
+            v-model="formData.joinTel.second"
+            placeholder="0000"
+            @keydown.enter.prevent="nextTelInput"
+            @keyup="limitNumber"
+          />
+          <div class="num-input-connector">
+            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
+          </div>
+          <input
+            type="number"
+            name="tel_third"
+            class="num-input"
+            v-model="formData.joinTel.third"
+            placeholder="0000"
+            @keydown.enter.prevent="onSubmitForm"
+            @keyup="limitNumber"
+          />
+        </div>
         <button>join</button>
-        <router-link to="../login/store" tag="span" class="caption"
+        <router-link to="../login/market" tag="span" class="caption"
           >Already has Account</router-link
         >
       </form>
     </div>
 
-    <div class="form-container member-form-container" v-else-if="role === 'member'">
+    <div class="form-container user-form-container" v-else-if="role === 'user'">
       <form action="#">
-        <h1>join as Member</h1>
+        <h1>join as user</h1>
         <div class="social-container">
           <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
           <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -33,31 +67,63 @@
         <span>or use your email for registration</span>
         <input type="text" placeholder="ID" />
         <input type="password" placeholder="Password" />
-        <input type="password" placeholder="Password Check" />
-        <input type="number" placeholder="010XXXXXXXX" />
+        <input type="password" placeholder="Password Check" @keydown.enter.prevent="telInput" />
+        <div class="num-input-wrapper">
+          <input
+            type="number"
+            name="tel_first"
+            class="num-input"
+            v-model="formData.joinTel.first"
+            placeholder="010"
+            @keydown.enter.prevent="nextTelInput"
+            @keyup="limitNumber"
+          />
+          <div class="num-input-connector">
+            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
+          </div>
+          <input
+            type="number"
+            name="tel_second"
+            class="num-input"
+            v-model="formData.joinTel.second"
+            placeholder="0000"
+            @keydown.enter.prevent="nextTelInput"
+            @keyup="limitNumber"
+          />
+          <div class="num-input-connector">
+            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
+          </div>
+          <input
+            type="number"
+            name="tel_third"
+            class="num-input"
+            v-model="formData.joinTel.third"
+            placeholder="0000"
+            @keydown.enter.prevent="onSubmitForm"
+            @keyup="limitNumber"
+          />
+        </div>
         <button>join</button>
-        <router-link to="../login/member" tag="span" class="caption"
-          >Already has Account</router-link
-        >
+        <router-link to="../login/user" tag="span" class="caption">Already has Account</router-link>
       </form>
     </div>
 
-    <div class="overlay-container overlay-left" v-if="role === 'store'">
+    <div class="overlay-container overlay-left" v-if="role === 'market'">
       <div class="overlay">
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link to="../join/member" tag="button" class="ghost"> join As Member</router-link>
+          <router-link to="../join/user" tag="button" class="ghost"> join As user</router-link>
         </div>
       </div>
     </div>
 
-    <div class="overlay-container overlay-right" v-else-if="role === 'member'">
+    <div class="overlay-container overlay-right" v-else-if="role === 'user'">
       <div class="overlay">
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link to="../join/store" tag="button" class="ghost">join As Store</router-link>
+          <router-link to="../join/market" tag="button" class="ghost">join As market</router-link>
         </div>
       </div>
     </div>
@@ -67,14 +133,56 @@
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFacebookF, faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
-faLibrary.add(faFacebookF, faGooglePlusG, faComment);
+faLibrary.add(faFacebookF, faGooglePlusG, faComment, faMinus);
 
 export default {
+  data() {
+    return {
+      formData: {
+        role: this.role,
+        joinId: "",
+        joinPw: "",
+        joinTel: {
+          first: "",
+          second: "",
+          third: "",
+        },
+      },
+    };
+  },
   props: ["role"],
   components: { FontAwesomeIcon },
+  methods: {
+    telInput() {
+      event.target.nextElementSibling.children[0].focus();
+    },
+    nextTelInput() {
+      event.target.nextElementSibling.nextElementSibling.focus();
+    },
+    limitNumber() {
+      if ((event.target.name == "tel_first") & (event.target.value.length == 3)) {
+        this.nextTelInput();
+      }
+      if ((event.target.name == "tel_first") & (event.target.value.length > 3)) {
+        event.target.value = event.target.value.slice(0, 3);
+        this.formData.joinTel.first = event.target.value;
+      }
+      if ((event.target.name == "tel_second") & (event.target.value.length == 4)) {
+        this.nextTelInput();
+      }
+      if ((event.target.name == "tel_second") & (event.target.value.length > 4)) {
+        event.target.value = event.target.value.slice(0, 4);
+        this.formData.joinTel.second = event.target.value;
+      }
+      if ((event.target.name == "tel_third") & (event.target.value.length > 4)) {
+        event.target.value = event.target.value.slice(0, 4);
+        this.formData.joinTel.third = event.target.value;
+      }
+    },
+  },
 };
 </script>
 
@@ -94,9 +202,9 @@ export default {
       box-shadow: $shadow;
       position: relative;
       overflow: hidden;
-      width: 768px;
+      width: 900px;
       max-width: 100%;
-      min-height: 480px;
+      min-height: 640px;
       margin: auto;
 
       .form-container {
@@ -111,7 +219,7 @@ export default {
           align-items: center;
           justify-content: center;
           flex-direction: column;
-          padding: 0 3rem;
+          padding: 1rem 3rem;
           height: 100%;
           text-align: center;
 
@@ -133,6 +241,14 @@ export default {
               margin: 0 0.1rem;
               height: 40px;
               width: 40px;
+              transition: all 0.2s linear;
+
+              &:hover {
+                box-shadow: $shadow;
+                background: $main-color;
+                border: 1px solid white;
+                color: white;
+              }
             }
           }
 
@@ -152,6 +268,41 @@ export default {
             &:focus {
               outline-color: $sub-color;
               border: none;
+            }
+          }
+
+          .num-input-wrapper {
+            display: flex;
+            justify-content: space-between;
+            border: none;
+            padding: 1rem 1.4rem;
+            margin: 0.7rem 0;
+            width: 100%;
+
+            .num-input-connector {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 0.6rem;
+              margin: 3px;
+              color: $main-color;
+            }
+
+            .num-input {
+              margin: 0;
+              height: 43px;
+              box-sizing: border-box;
+              width: 75px;
+              font-weight: 700;
+              text-align: center;
+              transition: border-color 0.2s ease-in-out;
+              background-color: map-get($map: $theme, $key: "background");
+
+              &:focus {
+                outline-color: $sub-color;
+                border: none;
+                box-sizing: border-box;
+              }
             }
           }
 
@@ -185,14 +336,14 @@ export default {
         }
       }
 
-      .store-form-container {
+      .market-form-container {
         right: 0;
         width: 50%;
         opacity: 1;
         z-index: 1;
       }
 
-      .member-form-container {
+      .user-form-container {
         left: 0;
         width: 50%;
         z-index: 2;

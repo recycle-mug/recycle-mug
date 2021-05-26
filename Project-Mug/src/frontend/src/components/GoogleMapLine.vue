@@ -25,7 +25,5 @@ export default {
       ...LINE_PATH_CONFIG,
     });
   },
-
-  render() {},
 };
 </script>

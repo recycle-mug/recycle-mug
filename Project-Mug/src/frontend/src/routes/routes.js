@@ -7,6 +7,7 @@ Vue.use(Router);
 import MainView from "../views/MainView";
 import JoinView from "../views/JoinView";
 import LoginView from "../views/LoginView";
+import ProfileView from "../views/ProfileView";
 
 export default new Router({
   mode: "history",
@@ -28,6 +29,11 @@ export default new Router({
       name: "join",
       component: JoinView,
       props: true,
+    },
+    {
+      path: "/profile",
+      name: "profile",
+      component: ProfileView,
     },
   ],
 });

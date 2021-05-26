@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="form-container store-form-container" v-if="role === 'store'">
+    <div class="form-container store-form-container" v-if="role === 'market'">
       <form action="#">
         <h1>Login as Store</h1>
         <div class="social-container">
@@ -31,13 +31,13 @@
           <span class="error-msg">{{ errors.loginPw }}</span>
         </div>
         <button type="submit" @click.prevent="onSubmit">Login</button>
-        <router-link to="../join/store" tag="span" class="caption"
+        <router-link to="../join/market" tag="span" class="caption"
           >Create Store Account</router-link
         >
       </form>
     </div>
 
-    <div class="form-container member-form-container" v-else-if="role === 'member'">
+    <div class="form-container member-form-container" v-else-if="role === 'user'">
       <form action="#">
         <h1>Login as Member</h1>
         <div class="social-container">
@@ -69,30 +69,28 @@
           <span class="error-msg">{{ errors.loginPw }}</span>
         </div>
         <button type="submit" @click.prevent="onSubmit">Login</button>
-        <router-link to="../join/member" tag="span" class="caption"
+        <router-link to="../join/user" tag="span" class="caption"
           >Create Member Account</router-link
         >
       </form>
     </div>
 
-    <div class="overlay-container overlay-left" v-if="role === 'store'">
+    <div class="overlay-container overlay-left" v-if="role === 'market'">
       <div class="overlay">
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link to="../login/member" tag="button" class="ghost">
-            Login As Member</router-link
-          >
+          <router-link to="../login/user" tag="button" class="ghost"> Login As Member</router-link>
         </div>
       </div>
     </div>
 
-    <div class="overlay-container overlay-right" v-else-if="role === 'member'">
+    <div class="overlay-container overlay-right" v-else-if="role === 'user'">
       <div class="overlay">
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link to="../login/store" tag="button" class="ghost">Login As Store</router-link>
+          <router-link to="../login/market" tag="button" class="ghost">Login As Store</router-link>
         </div>
       </div>
     </div>
@@ -233,6 +231,14 @@ export default {
               margin: 0 0.1rem;
               height: 40px;
               width: 40px;
+              transition: all 0.2s linear;
+
+              &:hover {
+                box-shadow: $shadow;
+                background: $main-color;
+                border: 1px solid white;
+                color: white;
+              }
             }
           }
 
