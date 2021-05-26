@@ -14,6 +14,15 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
+    proxy: {
+      "/api": {
+        target: "https://maps.googleapis.com",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/api": "",
+        },
+      },
+    },
   },
   entry: {
     // app: "src/main.js"
@@ -36,7 +45,7 @@ module.exports = {
             options: {
               resources: [
                 path.resolve(__dirname, "src/scss/_variables.scss"),
-                path.resolve(__dirname, "src/scss/_reset.scss"),
+                path.resolve(__dirname, "src/scss/_themes.scss"),
               ],
             },
           },
@@ -57,13 +66,8 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "index.html"),
+      template: path.join(__dirname, "public/index.html"),
       minify: { collapseWhitespace: true },
     }),
   ],
-  output: {
-    filename: "[name].js",
-    path: path.join(__dirname, "dist"),
-    publicPath: "/",
-  },
 };
