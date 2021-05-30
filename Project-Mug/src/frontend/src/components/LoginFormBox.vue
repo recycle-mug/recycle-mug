@@ -200,7 +200,7 @@ export default {
     text-align: center;
 
     .wrapper {
-      background-color: map-get($map: $theme, $key: "content-background");
+      background-color: map-get($map: $theme, $key: "background");
       box-sizing: border-box;
       width: 100%;
       height: 100%;
