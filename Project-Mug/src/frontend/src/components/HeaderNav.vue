@@ -20,7 +20,9 @@
         </router-link>
 
         <div class="content-right">
-          <router-link to="/login/user" tag="span" class="login-btn">로그인 / 회원가입</router-link>
+          <router-link :to="{ name: 'login', query: { role: 'user' } }" tag="span" class="login-btn"
+            >로그인 / 회원가입</router-link
+          >
           <router-link to="/profile" tag="div" class="icon-wrapper">
             <font-awesome-icon
               :icon="['fas', 'user']"

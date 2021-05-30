@@ -20,13 +20,13 @@ export default new Router({
       component: MainView,
     },
     {
-      path: "/login/:role",
+      path: "/login",
       name: "login",
       component: LoginView,
       props: true,
     },
     {
-      path: "/join/:role",
+      path: "/join",
       name: "join",
       component: JoinView,
       props: true,
