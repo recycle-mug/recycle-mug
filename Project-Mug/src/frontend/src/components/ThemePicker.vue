@@ -32,7 +32,6 @@ export default {
     },
     toggleSwitch() {
       if (this.theme === "theme-light") {
-        console.log("this.checked :>> ", this.checked);
         this.checked = false;
       } else {
         this.checked = true;

@@ -2,7 +2,7 @@
   <div :class="getTheme">
     <header-nav></header-nav>
     <div class="content-body">
-      <travel-map style="width:500px; height:500px; margin:20px"></travel-map>
+      <get-kakao-map></get-kakao-map>
     </div>
     <footer-nav></footer-nav>
   </div>
@@ -10,11 +10,11 @@
 
 <script>
 import HeaderNav from "../components/HeaderNav";
-import TravelMap from "../components/TravelMap";
 import FooterNav from "../components/FooterNav";
+import GetKakaoMap from "../components/GetKakaoMap";
 
 export default {
-  components: { HeaderNav, TravelMap, FooterNav },
+  components: { HeaderNav, FooterNav, GetKakaoMap },
   computed: {
     getTheme() {
       return this.$store.state.theme;

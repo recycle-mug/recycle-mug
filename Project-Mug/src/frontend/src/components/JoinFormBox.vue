@@ -48,6 +48,8 @@
             @keyup="limitNumber"
           />
         </div>
+
+        <get-address></get-address>
         <button>join</button>
         <router-link to="../login/market" tag="span" class="caption"
           >Already has Account</router-link
@@ -103,6 +105,7 @@
             @keyup="limitNumber"
           />
         </div>
+
         <button>join</button>
         <router-link to="../login/user" tag="span" class="caption">Already has Account</router-link>
       </form>
@@ -136,6 +139,8 @@ import { faFacebookF, faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
 import { faComment, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
+import GetAddress from "./GetAddress";
+
 faLibrary.add(faFacebookF, faGooglePlusG, faComment, faMinus);
 
 export default {
@@ -154,7 +159,7 @@ export default {
     };
   },
   props: ["role"],
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, GetAddress },
   methods: {
     telInput() {
       event.target.nextElementSibling.children[0].focus();
