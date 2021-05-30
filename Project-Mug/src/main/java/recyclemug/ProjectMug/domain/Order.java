@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@Table(name = "orders") //order 로 하면 오류터짐 -> orders 로 변
 public class Order {
 
     @Id @GeneratedValue
@@ -32,6 +33,5 @@ public class Order {
 
     private LocalDateTime orderTime;
     private LocalDateTime returnTime;
-
 
 }
