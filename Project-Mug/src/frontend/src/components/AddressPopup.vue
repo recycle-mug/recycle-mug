@@ -127,6 +127,7 @@ export default {
       height: 100%;
       width: 100%;
       box-sizing: border-box;
+      overflow-y: auto;
 
       form {
         width: 100%;
@@ -189,9 +190,10 @@ export default {
 
         .input-form-error {
           color: $error-msg;
-          font-size: 0.5rem;
+          font-size: 0.8rem;
           user-select: none;
           margin-bottom: 1rem;
+          letter-spacing: 0.12rem;
         }
 
         .address-card {
@@ -250,6 +252,9 @@ export default {
 
               .address-num {
                 padding-right: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
               }
             }
           }
