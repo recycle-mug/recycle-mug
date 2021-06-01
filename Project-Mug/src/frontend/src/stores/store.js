@@ -1,6 +1,7 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import axios from "axios";
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
@@ -50,4 +51,5 @@ export default new Vuex.Store({
       commit("LOGOUT");
     },
   },
+  plugins: [createPersistedState()],
 });
