@@ -48,8 +48,11 @@
             @keyup="limitNumber"
           />
         </div>
+
+        <get-address></get-address>
+        <input type="text" placeholder="상세 주소" />
         <button>join</button>
-        <router-link to="../login/market" tag="span" class="caption"
+        <router-link :to="{ name: 'login', query: { role: 'market' } }" tag="span" class="caption"
           >Already has Account</router-link
         >
       </form>
@@ -103,8 +106,11 @@
             @keyup="limitNumber"
           />
         </div>
+
         <button>join</button>
-        <router-link to="../login/user" tag="span" class="caption">Already has Account</router-link>
+        <router-link :to="{ name: 'login', query: { role: 'user' } }" tag="span" class="caption"
+          >Already has Account</router-link
+        >
       </form>
     </div>
 
@@ -113,7 +119,9 @@
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link to="../join/user" tag="button" class="ghost"> join As user</router-link>
+          <router-link :to="{ name: 'join', query: { role: 'user' } }" tag="button" class="ghost">
+            join As user</router-link
+          >
         </div>
       </div>
     </div>
@@ -123,7 +131,9 @@
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link to="../join/market" tag="button" class="ghost">join As market</router-link>
+          <router-link :to="{ name: 'join', query: { role: 'market' } }" tag="button" class="ghost"
+            >join As market</router-link
+          >
         </div>
       </div>
     </div>
@@ -135,6 +145,8 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFacebookF, faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
 import { faComment, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
+
+import GetAddress from "./GetAddress";
 
 faLibrary.add(faFacebookF, faGooglePlusG, faComment, faMinus);
 
@@ -154,7 +166,7 @@ export default {
     };
   },
   props: ["role"],
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, GetAddress },
   methods: {
     telInput() {
       event.target.nextElementSibling.children[0].focus();
@@ -202,9 +214,9 @@ export default {
       box-shadow: $shadow;
       position: relative;
       overflow: hidden;
-      width: 900px;
+      width: 1050px;
       max-width: 100%;
-      min-height: 640px;
+      min-height: 720px;
       margin: auto;
 
       .form-container {
@@ -264,6 +276,7 @@ export default {
             padding: 1rem 1.4rem;
             margin: 0.7rem 0;
             width: 100%;
+            box-sizing: border-box;
 
             &:focus {
               outline-color: $sub-color;
@@ -289,10 +302,9 @@ export default {
             }
 
             .num-input {
-              margin: 0;
+              margin: 0 1rem;
               height: 43px;
               box-sizing: border-box;
-              width: 75px;
               font-weight: 700;
               text-align: center;
               transition: border-color 0.2s ease-in-out;
@@ -317,6 +329,7 @@ export default {
             font-weight: bold;
             padding: 1rem 3rem;
             text-transform: uppercase;
+            cursor: pointer;
 
             &:active {
               transform: scale(0.95);
@@ -324,6 +337,11 @@ export default {
 
             &:focus {
               outline: none;
+            }
+
+            &:hover {
+              transform: scale(1.05);
+              transition: all 0.2s ease-in-out;
             }
           }
 
@@ -403,6 +421,7 @@ export default {
               font-weight: bold;
               padding: 1rem 3rem;
               letter-spacing: 0.05rem;
+              cursor: pointer;
 
               &:active {
                 transform: scale(0.95);
@@ -410,6 +429,13 @@ export default {
 
               &:focus {
                 outline: none;
+              }
+
+              &:hover {
+                transition: all 0.2s ease-in-out;
+                border: 1px solid $white;
+                background-color: $white;
+                color: $main-color;
               }
             }
           }

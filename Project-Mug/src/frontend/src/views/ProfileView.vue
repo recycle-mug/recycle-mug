@@ -2,7 +2,7 @@
   <div :class="getTheme">
     <header-nav></header-nav>
     <div class="content-body">
-      <router-link to="/" tag="button">return to main page</router-link>
+      <router-link :to="{ name: 'main' }" tag="button">return to main page</router-link>
     </div>
   </div>
 </template>

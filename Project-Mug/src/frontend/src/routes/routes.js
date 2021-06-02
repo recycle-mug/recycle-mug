@@ -8,6 +8,7 @@ import MainView from "../views/MainView";
 import JoinView from "../views/JoinView";
 import LoginView from "../views/LoginView";
 import ProfileView from "../views/ProfileView";
+import AddressPopup from "../components/AddressPopup";
 
 export default new Router({
   mode: "history",
@@ -19,13 +20,13 @@ export default new Router({
       component: MainView,
     },
     {
-      path: "/login/:role",
+      path: "/login",
       name: "login",
       component: LoginView,
       props: true,
     },
     {
-      path: "/join/:role",
+      path: "/join",
       name: "join",
       component: JoinView,
       props: true,
@@ -34,6 +35,11 @@ export default new Router({
       path: "/profile",
       name: "profile",
       component: ProfileView,
+    },
+    {
+      path: "/address",
+      name: "address",
+      component: AddressPopup,
     },
   ],
 });

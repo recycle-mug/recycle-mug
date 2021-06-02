@@ -12,7 +12,11 @@ import HeaderNav from "../components/HeaderNav";
 import JoinFormBox from "../components/JoinFormBox";
 
 export default {
-  props: ["role"],
+  data() {
+    return {
+      role: this.$route.query.role,
+    };
+  },
   components: { JoinFormBox, HeaderNav },
   computed: {
     getTheme() {
@@ -32,7 +36,9 @@ export default {
 
     .content-body {
       width: 100%;
-      max-width: 1140px;
+      height: 100%;
+      background-color: map-get($map: $theme, $key: "background");
+      color: map-get($map: $theme, $key: "text");
       margin: auto;
       box-sizing: border-box;
     }

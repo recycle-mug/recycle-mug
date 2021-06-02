@@ -1,12 +1,24 @@
 <template>
   <div class="toggle-btn">
-    <input class="toggle-input" name="toggle-input" type="checkbox" @change="onChangeTheme" />
+    <input
+      class="toggle-input"
+      name="toggle-input"
+      type="checkbox"
+      @change="onChangeTheme"
+      v-model="checked"
+    />
     <span></span>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      theme: this.getTheme,
+      checked: "",
+    };
+  },
   methods: {
     onChangeTheme() {
       const currentTheme = this.$store.state.theme;
@@ -18,6 +30,22 @@ export default {
         this.themeMode = this.$store.state.theme;
       }
     },
+    toggleSwitch() {
+      if (this.theme === "theme-light") {
+        this.checked = false;
+      } else {
+        this.checked = true;
+      }
+    },
+  },
+  computed: {
+    getTheme() {
+      return this.$store.state.theme;
+    },
+  },
+  mounted() {
+    this.theme = this.getTheme;
+    this.toggleSwitch();
   },
 };
 </script>

@@ -11,7 +11,11 @@
 import HeaderNav from "../components/HeaderNav";
 import LoginFormBox from "../components/LoginFormBox";
 export default {
-  props: ["role"],
+  data() {
+    return {
+      role: this.$route.query.role,
+    };
+  },
   components: { LoginFormBox, HeaderNav },
   computed: {
     getTheme() {

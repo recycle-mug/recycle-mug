@@ -15,13 +15,15 @@
           </div>
         </div>
 
-        <router-link to="/" class="content-center">
+        <router-link :to="{ name: 'main' }" class="content-center">
           <h1>RecycleMug</h1>
         </router-link>
 
         <div class="content-right">
-          <router-link to="/login/user" tag="span" class="login-btn">로그인 / 회원가입</router-link>
-          <router-link to="/profile" tag="div" class="icon-wrapper">
+          <router-link :to="{ name: 'login', query: { role: 'user' } }" tag="span" class="login-btn"
+            >로그인 / 회원가입</router-link
+          >
+          <router-link :to="{ name: 'profile' }" tag="div" class="icon-wrapper">
             <font-awesome-icon
               :icon="['fas', 'user']"
               style="width:100%; cursor:pointer;"
