@@ -1,4 +1,4 @@
-package recyclemug.ProjectMug.domain.exception;
+package recyclemug.ProjectMug.exception;
 
 public class NotEnoughStockException extends RuntimeException{
     public NotEnoughStockException() {

@@ -1,11 +1,9 @@
-package recyclemug.ProjectMug.domain;
+package recyclemug.ProjectMug.domain.cup;
 
 import lombok.Getter;
 import lombok.Setter;
-import recyclemug.ProjectMug.domain.cup.Cup;
-import recyclemug.ProjectMug.domain.user.Admin;
 import recyclemug.ProjectMug.domain.user.Partner;
-import recyclemug.ProjectMug.domain.user.Customer;
+import recyclemug.ProjectMug.exception.NotEnoughStockException;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,7 +24,7 @@ public class PartnerCup {
     @JoinColumn(name = "cup_id")
     private Cup cup;
 
-    private int count;
+    private int stockQuantity;
 
     private LocalDateTime lastModifiedTime;
 
@@ -36,5 +34,14 @@ public class PartnerCup {
         컵을 요청하여 더 받아오는 메서드
         partner 가 가지고 있는 Cup count 가 줄어드는 메서드
      */
+    public void addStock(int quantity){
+        this.stockQuantity += quantity;
+    }
 
+    public void removeStock(int quantity) {
+        int restStock = this.stockQuantity - quantity;
+        if (restStock < 0){
+            throw new NotEnoughStockException("컵이 충분하지 않습니다.");
+        }
+    }
 }
