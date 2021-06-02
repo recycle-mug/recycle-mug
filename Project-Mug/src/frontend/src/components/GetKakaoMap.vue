@@ -1,5 +1,7 @@
 <template>
-  <div id="map" style="width:500px;height:500px;" class="map-container"></div>
+  <div class="container">
+    <div id="map" style="width:500px;height:500px;" class="map-container"></div>
+  </div>
 </template>
 
 <script>
@@ -33,19 +35,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.map-container {
-  margin: 0.5rem;
-  box-sizing: border-box;
-  box-shadow: $shadow-lighter;
-  border-radius: 30px;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
-  width: 100%;
-  height: 100%;
+.container {
+  max-width: 1140px;
+  margin: auto;
 
-  &:hover {
-    box-shadow: $shadow;
+  .map-container {
+    margin: 0.5rem;
+    box-sizing: border-box;
+    box-shadow: $shadow-lighter;
+    border-radius: 30px;
+    overflow: hidden;
     transition: all 0.3s ease-in-out;
+    width: 100%;
+    height: 100%;
+
+    &:hover {
+      box-shadow: $shadow;
+      transition: all 0.3s ease-in-out;
+    }
   }
 }
 </style>

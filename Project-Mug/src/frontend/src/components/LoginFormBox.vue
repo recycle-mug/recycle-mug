@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
     <div class="container">
-      <div class="form-container store-form-container" v-if="role === 'market'">
+      <div class="form-container partner-form-container" v-if="role === 'partner'">
         <form action="#">
-          <h1>Login as Store</h1>
+          <h1>파트너 로그인하기</h1>
           <div class="social-container">
             <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
             <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -13,8 +13,8 @@
           <span>or use your email for registration</span>
           <div class="row">
             <input
-              type="text"
-              placeholder="Store ID"
+              type="email"
+              placeholder="partner ID (Email)"
               v-model="formData.loginId"
               @keydown.enter.prevent="nextInput"
               @keyup="checkId"
@@ -24,7 +24,8 @@
           <div class="row">
             <input
               type="password"
-              placeholder="Store Password"
+              placeholder="partner Password"
+              maxlength="20"
               v-model="formData.loginPw"
               @keydown.enter.prevent="onSubmit"
               @keyup.prevent="checkPassword"
@@ -32,15 +33,15 @@
             <span class="error-msg">{{ errors.loginPw }}</span>
           </div>
           <button type="submit" @click.prevent="onSubmit">Login</button>
-          <router-link :to="{ name: 'join', query: { role: 'market' } }" tag="span" class="caption"
-            >Create Store Account</router-link
+          <router-link :to="{ name: 'join', query: { role: 'partner' } }" tag="span" class="caption"
+            >파트너 계정이 없으신가요?</router-link
           >
         </form>
       </div>
 
-      <div class="form-container member-form-container" v-else-if="role === 'user'">
+      <div class="form-container customer-form-container" v-else-if="role === 'customer'">
         <form action="#">
-          <h1>Login as Member</h1>
+          <h1>일반 사용자로 로그인하기</h1>
           <div class="social-container">
             <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
             <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -50,8 +51,8 @@
           <span>or use your email for registration</span>
           <div class="row">
             <input
-              type="text"
-              placeholder="ID"
+              type="email"
+              placeholder="ID (Email)"
               v-model="formData.loginId"
               @keydown.enter.prevent="nextInput"
               @keyup="checkId"
@@ -63,6 +64,7 @@
             <input
               type="password"
               placeholder="Password"
+              maxlength="20"
               v-model="formData.loginPw"
               @keydown.enter.prevent="onSubmit"
               @keyup="checkPassword"
@@ -70,38 +72,41 @@
             <span class="error-msg">{{ errors.loginPw }}</span>
           </div>
           <button type="submit" @click.prevent="onSubmit">Login</button>
-          <router-link :to="{ name: 'join', query: { role: 'user' } }" tag="span" class="caption"
-            >Create Member Account</router-link
+          <router-link
+            :to="{ name: 'join', query: { role: 'customer' } }"
+            tag="span"
+            class="caption"
+            >계정이 없으신가요?</router-link
           >
         </form>
       </div>
 
-      <div class="overlay-container overlay-left" v-if="role === 'market'">
+      <div class="overlay-container overlay-left" v-if="role === 'partner'">
         <div class="overlay">
           <div class="overlay-panel ">
-            <h1>Welcome Back!</h1>
-            <p>Hi there</p>
+            <h1>위컵 사용자이신가요?</h1>
+            <p>일반 로그인하러가기 👉</p>
             <router-link
-              :to="{ name: 'login', query: { role: 'user' } }"
+              :to="{ name: 'login', query: { role: 'customer' } }"
               tag="button"
               class="ghost"
             >
-              Login As Member</router-link
+              Login As Customer</router-link
             >
           </div>
         </div>
       </div>
 
-      <div class="overlay-container overlay-right" v-else-if="role === 'user'">
+      <div class="overlay-container overlay-right" v-else-if="role === 'customer'">
         <div class="overlay">
           <div class="overlay-panel ">
-            <h1>Welcome Back!</h1>
-            <p>Hi there</p>
+            <h1>카페 사장님이신가요?</h1>
+            <p>파트너 로그인하러가기 👉</p>
             <router-link
-              :to="{ name: 'login', query: { role: 'market' } }"
+              :to="{ name: 'login', query: { role: 'partner' } }"
               tag="button"
               class="ghost"
-              >Login As Store</router-link
+              >Login As Partner</router-link
             >
           </div>
         </div>
@@ -150,10 +155,11 @@ export default {
       }
     },
     checkId() {
-      const pattern_loginId = /^[a-zA-Z가-힣0-9]{4,20}$/;
+      const pattern_loginId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
       try {
         if (!pattern_loginId.test(this.formData.loginId)) {
-          throw "한글, 영어, 숫자로만 이루어진 4~20글자로 입력해주세요";
+          throw "이메일 형식을 확인해주세요";
         } else {
           console.log("test :>> ");
           this.errors.loginId = "";
@@ -163,7 +169,7 @@ export default {
       }
     },
     checkPassword() {
-      const pattern_loginPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d$@$!%*?&]{8,}$/;
+      const pattern_loginPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*]{8,}$/;
 
       try {
         if (!pattern_loginPw.test(this.formData.loginPw)) throw "비밀번호를 확인해주세요";
@@ -264,6 +270,7 @@ export default {
             span {
               font-size: 0.7rem;
               margin-bottom: 0.5rem;
+              user-select: none;
             }
 
             .row {
@@ -290,6 +297,8 @@ export default {
                 color: $error-msg;
                 width: 100%;
                 text-align: left;
+                padding-left: 1rem;
+                user-select: none;
               }
             }
 
@@ -329,14 +338,14 @@ export default {
           }
         }
 
-        .store-form-container {
+        .partner-form-container {
           right: 0;
           width: 50%;
           opacity: 1;
           z-index: 1;
         }
 
-        .member-form-container {
+        .customer-form-container {
           left: 0;
           width: 50%;
           z-index: 2;

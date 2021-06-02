@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="form-container market-form-container" v-if="role === 'market'">
+    <div class="form-container partner-form-container" v-if="role === 'partner'">
       <form action="#">
-        <h1>join as market</h1>
+        <h1>join as partner</h1>
         <div class="social-container">
           <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
           <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -10,9 +10,161 @@
         </div>
 
         <span>or use your email for registration</span>
-        <input type="text" placeholder="market ID" />
-        <input type="password" placeholder="market Password" />
-        <input type="password" placeholder="Password Check" @keydown.enter.prevent="telInput" />
+
+        <!-- Partner ID -->
+        <input
+          type="email"
+          placeholder="Partner ID (Email)"
+          @keydown.enter.prevent="nextPwInput"
+          @keyup="checkId"
+          v-model="formData.joinId"
+        />
+        <span class="error-msg">{{ errors.joinId }}</span>
+
+        <!-- Partner Password -->
+        <span class="password-hint"
+          >8자리 이상: 영어 대문자, 영어 소문자, 숫자, ~ ! @ # $ % ^ & * 중 3종류 조합</span
+        >
+        <input
+          type="password"
+          placeholder="Partner Password"
+          @keydown.enter.prevent="nextInput"
+          @blur="checkPasswordForm"
+          v-model="formData.joinPw"
+        />
+        <span class="error-msg">{{ errors.joinPw }}</span>
+
+        <!-- Partner Password Check -->
+        <input
+          type="password"
+          placeholder="Password Check"
+          @keydown.enter.prevent="telInput"
+          @blur="checkPasswordCheck"
+          v-model="formData.joinPwChk"
+        />
+        <span class="error-msg">{{ errors.joinPwChk }}</span>
+
+        <!-- Partner Tel -->
+        <div class="num-input-wrapper">
+          <input
+            type="number"
+            name="tel_first"
+            class="num-input"
+            v-model="formData.joinTel.first"
+            placeholder="010"
+            @keydown.enter.prevent="nextTelInput"
+            @keyup="limitNumber"
+          />
+          <div class="num-input-connector">
+            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
+          </div>
+          <input
+            type="number"
+            name="tel_second"
+            class="num-input"
+            v-model="formData.joinTel.second"
+            placeholder="0000"
+            @keydown.enter.prevent="nextTelInput"
+            @keyup="limitNumber"
+          />
+          <div class="num-input-connector">
+            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
+          </div>
+          <input
+            type="number"
+            name="tel_third"
+            class="num-input"
+            v-model="formData.joinTel.third"
+            placeholder="0000"
+            @keydown.enter.prevent="goPopup"
+            @keyup="limitNumber"
+          />
+        </div>
+        <span class="error-msg">{{ errors.joinTel }}</span>
+
+        <!-- Partner Address -->
+        <div class="address-input-wrapper">
+          <input
+            type="text"
+            id="location"
+            placeholder="주소"
+            readonly
+            @click.prevent="goPopup"
+            class="address-input"
+            v-model="formData.joinAddress.address"
+          />
+          <button @click.prevent="goPopup" class="address-btn">주소검색</button>
+        </div>
+
+        <div class="address-detail-input-wrapper">
+          <input
+            type="text"
+            placeholder="우편번호"
+            id="location_num"
+            readonly
+            v-model="formData.joinAddress.addressNum"
+          />
+          <input
+            type="text"
+            placeholder="상세 주소"
+            v-model="formData.joinAddress.addressDetail"
+            @keydown.enter.prevent="onSubmitForm"
+          />
+        </div>
+        <span class="error-msg">{{ errors.joinAddress }}</span>
+
+        <button @click.prevent="onSubmitForm">join</button>
+        <router-link :to="{ name: 'login', query: { role: 'partner' } }" tag="span" class="caption"
+          >Already has Account</router-link
+        >
+      </form>
+    </div>
+
+    <div class="form-container customer-form-container" v-else-if="role === 'customer'">
+      <form action="#">
+        <h1>join as customer</h1>
+        <div class="social-container">
+          <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
+          <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
+          <a href="#"><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon></a>
+        </div>
+
+        <span>or use your email for registration</span>
+
+        <!-- ID -->
+        <input
+          type="email"
+          placeholder="ID (Email)"
+          @keydown.enter.prevent="nextPwInput"
+          @keyup="checkId"
+          v-model="formData.joinId"
+        />
+        <span class="error-msg">{{ errors.joinId }}</span>
+
+        <!-- Password -->
+        <span class="password-hint"
+          >8자리 이상: 영어 대문자, 영어 소문자, 숫자, ~ ! @ # $ % ^ & * 중 3종류 조합</span
+        >
+        <input
+          type="password"
+          placeholder="Password"
+          @keydown.enter.prevent="nextInput"
+          @blur="checkPasswordForm"
+          v-model="formData.joinPw"
+        />
+        <span class="error-msg">{{ errors.joinPw }}</span>
+
+        <!-- Password Check -->
+        <input
+          type="password"
+          placeholder="Password Check"
+          @keydown.enter.prevent="telInput"
+          @blur="checkPasswordCheck"
+          v-model="formData.joinPwChk"
+        />
+        <span class="error-msg">{{ errors.joinPwChk }}</span>
+
+        <!-- Tel -->
         <div class="num-input-wrapper">
           <input
             type="number"
@@ -48,91 +200,38 @@
             @keyup="limitNumber"
           />
         </div>
+        <span class="error-msg">{{ errors.joinTel }}</span>
 
-        <get-address></get-address>
-        <input type="text" placeholder="상세 주소" />
-        <button>join</button>
-        <router-link :to="{ name: 'login', query: { role: 'market' } }" tag="span" class="caption"
+        <button @click.prevent="onSubmitForm">join</button>
+        <router-link :to="{ name: 'login', query: { role: 'customer' } }" tag="span" class="caption"
           >Already has Account</router-link
         >
       </form>
     </div>
 
-    <div class="form-container user-form-container" v-else-if="role === 'user'">
-      <form action="#">
-        <h1>join as user</h1>
-        <div class="social-container">
-          <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
-          <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
-          <a href="#"><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon></a>
-        </div>
-
-        <span>or use your email for registration</span>
-        <input type="text" placeholder="ID" />
-        <input type="password" placeholder="Password" />
-        <input type="password" placeholder="Password Check" @keydown.enter.prevent="telInput" />
-        <div class="num-input-wrapper">
-          <input
-            type="number"
-            name="tel_first"
-            class="num-input"
-            v-model="formData.joinTel.first"
-            placeholder="010"
-            @keydown.enter.prevent="nextTelInput"
-            @keyup="limitNumber"
-          />
-          <div class="num-input-connector">
-            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
-          </div>
-          <input
-            type="number"
-            name="tel_second"
-            class="num-input"
-            v-model="formData.joinTel.second"
-            placeholder="0000"
-            @keydown.enter.prevent="nextTelInput"
-            @keyup="limitNumber"
-          />
-          <div class="num-input-connector">
-            <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
-          </div>
-          <input
-            type="number"
-            name="tel_third"
-            class="num-input"
-            v-model="formData.joinTel.third"
-            placeholder="0000"
-            @keydown.enter.prevent="onSubmitForm"
-            @keyup="limitNumber"
-          />
-        </div>
-
-        <button>join</button>
-        <router-link :to="{ name: 'login', query: { role: 'user' } }" tag="span" class="caption"
-          >Already has Account</router-link
-        >
-      </form>
-    </div>
-
-    <div class="overlay-container overlay-left" v-if="role === 'market'">
+    <div class="overlay-container overlay-left" v-if="role === 'partner'">
       <div class="overlay">
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link :to="{ name: 'join', query: { role: 'user' } }" tag="button" class="ghost">
-            join As user</router-link
+          <router-link
+            :to="{ name: 'join', query: { role: 'customer' } }"
+            tag="button"
+            class="ghost"
+          >
+            join As customer</router-link
           >
         </div>
       </div>
     </div>
 
-    <div class="overlay-container overlay-right" v-else-if="role === 'user'">
+    <div class="overlay-container overlay-right" v-else-if="role === 'customer'">
       <div class="overlay">
         <div class="overlay-panel ">
           <h1>Welcome Back!</h1>
           <p>Hi there</p>
-          <router-link :to="{ name: 'join', query: { role: 'market' } }" tag="button" class="ghost"
-            >join As market</router-link
+          <router-link :to="{ name: 'join', query: { role: 'partner' } }" tag="button" class="ghost"
+            >join As partner</router-link
           >
         </div>
       </div>
@@ -146,8 +245,6 @@ import { faFacebookF, faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
 import { faComment, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
-import GetAddress from "./GetAddress";
-
 faLibrary.add(faFacebookF, faGooglePlusG, faComment, faMinus);
 
 export default {
@@ -157,19 +254,50 @@ export default {
         role: this.role,
         joinId: "",
         joinPw: "",
+        joinPwChk: "",
         joinTel: {
           first: "",
           second: "",
           third: "",
         },
+        joinAddress: {
+          address: "",
+          addressNum: "",
+          addressDetail: "",
+        },
       },
+      errors: {
+        joinId: "",
+        joinPw: "",
+        joinPwChk: "",
+        joinTel: "",
+        joinAddress: "",
+      },
+      popup: null,
+      loading: false,
+      post: null,
+      error: null,
     };
   },
   props: ["role"],
-  components: { FontAwesomeIcon, GetAddress },
+  components: { FontAwesomeIcon },
   methods: {
+    goPopup() {
+      const routeData = this.$router.resolve({ name: "address" });
+      this.popup = window.open(
+        routeData.href,
+        "pop",
+        "width=570, height=420,scrollbars=yes,resizable=yes",
+      );
+    },
     telInput() {
-      event.target.nextElementSibling.children[0].focus();
+      event.target.nextElementSibling.nextElementSibling.children[0].focus();
+    },
+    nextInput() {
+      event.target.nextElementSibling.nextElementSibling.focus();
+    },
+    nextPwInput() {
+      event.target.nextElementSibling.nextElementSibling.nextElementSibling.focus();
     },
     nextTelInput() {
       event.target.nextElementSibling.nextElementSibling.focus();
@@ -194,6 +322,116 @@ export default {
         this.formData.joinTel.third = event.target.value;
       }
     },
+    setValue() {
+      this.formData.joinAddress.address = document.getElementById("location").value;
+      this.formData.joinAddress.addressNum = document.getElementById("location_num").value;
+    },
+    checkRequired() {
+      for (const item in this.formData) {
+        try {
+          if (!this.formData[item]) {
+            console.log("this.formData[item] :>> ", this.formData[item]);
+            throw "빈 칸을 모두 채워주세요";
+          } else {
+            throw "";
+          }
+        } catch (error) {
+          this.errors[item] = error;
+        }
+      }
+
+      for (const item in this.formData.joinTel) {
+        try {
+          if (!this.formData.joinTel[item]) {
+            throw "빈 칸을 모두 채워주세요";
+          }
+        } catch (error) {
+          this.errors.joinTel = error;
+        }
+      }
+
+      if (this.formData.role === "partner") {
+        for (const item in this.formData.joinAddress) {
+          try {
+            if (!this.formData.joinAddress[item]) {
+              throw "빈 칸을 모두 채워주세요";
+            }
+          } catch (error) {
+            this.errors.joinAddress = error;
+          }
+        }
+      }
+    },
+    checkId() {
+      const pattern_joinId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+      try {
+        if (!pattern_joinId.test(this.formData.joinId)) {
+          throw "이메일 형식을 확인해주세요";
+        } else {
+          console.log("test :>> ");
+          this.errors.joinId = "";
+        }
+      } catch (error) {
+        this.errors.joinId = error;
+      }
+    },
+    checkPasswordForm() {
+      const pattern_joinPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*]{8,}$/;
+
+      try {
+        if (!pattern_joinPw.test(this.formData.joinPw)) throw "비밀번호 형식을 확인해주세요";
+        else this.errors.joinPw = "";
+      } catch (error) {
+        this.errors.joinPw = error;
+      }
+    },
+    checkPasswordCheck() {
+      try {
+        if (this.formData.joinPw !== this.formData.joinPwChk) {
+          throw "비밀번호가 위와 다릅니다";
+        } else {
+          this.errors.joinPwChk = "";
+        }
+      } catch (error) {
+        this.errors.joinPwChk = error;
+      }
+    },
+    validate() {
+      this.checkRequired();
+      this.checkId();
+      this.checkPasswordForm();
+      this.checkPasswordCheck();
+    },
+    onSubmitForm(e) {
+      e.preventDefault();
+      this.validate();
+
+      if (
+        !this.errors.joinId &&
+        !this.errors.joinPw &&
+        !this.errors.joinPwChk &&
+        !this.errors.joinTel &&
+        !this.errors.joinAddress
+      ) {
+        const path = "http://localhost:5000/orders";
+
+        const payload = {
+          role: this.formData.role,
+          id: this.formData.joinId,
+          pw: this.formData.joinPw,
+          tel:
+            this.formData.joinTel.first +
+            this.formData.joinTel.second +
+            this.formData.joinTel.third,
+          address: this.formData.joinAddress.address,
+          address_num: this.formData.joinAddress.addressNum,
+          address_detail: this.formData.joinAddress.addressDetail,
+        };
+
+        console.log("payload :>> ", payload);
+      }
+    },
   },
 };
 </script>
@@ -216,7 +454,7 @@ export default {
       overflow: hidden;
       width: 1050px;
       max-width: 100%;
-      min-height: 720px;
+      min-height: 840px;
       margin: auto;
 
       .form-container {
@@ -269,12 +507,27 @@ export default {
             margin-bottom: 0.5rem;
           }
 
+          .error-msg {
+            color: $error-msg;
+            user-select: none;
+            width: 100%;
+            text-align: left;
+            padding-left: 1rem;
+            height: 0.8rem;
+          }
+
+          .password-hint {
+            color: map-get($map: $theme, $key: "text-light");
+            user-select: none;
+            height: 0.8rem;
+          }
+
           input {
             background-color: map-get($map: $theme, $key: "background");
             color: map-get($map: $theme, $key: "text");
             border: none;
             padding: 1rem 1.4rem;
-            margin: 0.7rem 0;
+            margin: 0.3rem 0;
             width: 100%;
             box-sizing: border-box;
 
@@ -289,7 +542,7 @@ export default {
             justify-content: space-between;
             border: none;
             padding: 1rem 1.4rem;
-            margin: 0.7rem 0;
+            margin: 0.3rem 0;
             width: 100%;
 
             .num-input-connector {
@@ -345,6 +598,54 @@ export default {
             }
           }
 
+          .address-input-wrapper {
+            display: flex;
+            width: 100%;
+
+            input {
+              cursor: pointer;
+              border: none;
+              padding: 1rem 1.4rem;
+              width: 100%;
+              margin-right: 1rem;
+              box-sizing: border-box;
+              background-color: map-get($map: $theme, $key: "content-blocked");
+            }
+            .address-btn {
+              border-radius: 10px;
+              cursor: pointer;
+              font-weight: normal;
+              padding: 0.5rem;
+              box-sizing: border-box;
+              white-space: nowrap;
+              margin: 0.5rem;
+
+              &:hover {
+                transform: scale(1.05);
+                transition: all 0.2s ease-in-out;
+              }
+            }
+          }
+
+          .address-detail-input-wrapper {
+            display: flex;
+            width: 100%;
+
+            #location_num {
+              width: 20%;
+              margin-right: 0.5rem;
+              padding: 0.5rem;
+              box-sizing: border-box;
+              text-align: center;
+              cursor: default;
+              user-select: none;
+              -webkit-user-select: none;
+              -ms-user-select: none;
+              white-space: nowrap;
+              background-color: map-get($map: $theme, $key: "content-blocked");
+            }
+          }
+
           .caption {
             margin: 1rem;
             text-decoration: underline;
@@ -354,14 +655,14 @@ export default {
         }
       }
 
-      .market-form-container {
+      .partner-form-container {
         right: 0;
         width: 50%;
         opacity: 1;
         z-index: 1;
       }
 
-      .user-form-container {
+      .customer-form-container {
         left: 0;
         width: 50%;
         z-index: 2;

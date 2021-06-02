@@ -33,9 +33,11 @@ export default {
 
     .content-body {
       width: 100%;
-      max-width: 1140px;
       margin: auto;
       box-sizing: border-box;
+      background-color: map-get($map: $theme, $key: "background");
+      color: map-get($map: $theme, $key: "text");
+      padding-bottom: 4rem;
     }
   }
 }
