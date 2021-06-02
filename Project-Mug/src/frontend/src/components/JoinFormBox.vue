@@ -405,7 +405,7 @@ export default {
       this.checkPasswordForm();
       this.checkPasswordCheck();
     },
-    onSubmitForm(e) {
+    async onSubmitForm(e) {
       e.preventDefault();
       this.validate();
 
@@ -433,7 +433,14 @@ export default {
 
         console.log("payload :>> ", payload);
 
-        axios
+        let sendJoinForm = axios.create({
+          baseURL: path,
+        });
+
+        sendJoinForm.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+        sendJoinForm.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
+
+        await sendJoinForm
           .post(path, payload)
           .then((res) => {
             console.log("res :>> ", res);
