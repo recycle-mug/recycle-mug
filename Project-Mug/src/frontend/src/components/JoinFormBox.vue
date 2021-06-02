@@ -244,10 +244,13 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faFacebookF, faGooglePlusG } from "@fortawesome/free-brands-svg-icons";
 import { faComment, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
+import axios from "axios";
+import router from "../routes/routes";
 
 faLibrary.add(faFacebookF, faGooglePlusG, faComment, faMinus);
 
 export default {
+  router,
   data() {
     return {
       formData: {
@@ -369,7 +372,6 @@ export default {
         if (!pattern_joinId.test(this.formData.joinId)) {
           throw "이메일 형식을 확인해주세요";
         } else {
-          console.log("test :>> ");
           this.errors.joinId = "";
         }
       } catch (error) {
@@ -430,6 +432,20 @@ export default {
         };
 
         console.log("payload :>> ", payload);
+
+        axios
+          .post(path, payload)
+          .then((res) => {
+            console.log("res :>> ", res);
+            if (res.data.error) {
+              console.log("res.data.error :>> ", res.data.error);
+            } else {
+              router.push({ name: "login" });
+            }
+          })
+          .catch((error) => {
+            console.log("error :>> ", error);
+          });
       }
     },
   },
