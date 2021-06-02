@@ -52,4 +52,7 @@ public class PartnerService {
         return partnerRepository.findAll();
     }
 
+    public List<Partner> findByEmail(String email) {
+        return partnerRepository.findByEmail(email);
+    }
 }

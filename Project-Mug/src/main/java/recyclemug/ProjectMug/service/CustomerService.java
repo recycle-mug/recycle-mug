@@ -42,4 +42,16 @@ public class CustomerService {
             throw new IllegalStateException("비밀번호를 양식에 맞게 작성해야 합니다");
         }
     }
+
+    public Customer findById(Long id) {
+        return customerRepository.findOne(id);
+    }
+
+    public List<Customer> findCustomers() {
+        return customerRepository.findAll();
+    }
+
+    public List<Customer> findByEmail(String email) {
+        return customerRepository.findByEmail(email);
+    }
 }

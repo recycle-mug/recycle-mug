@@ -16,10 +16,8 @@ public class Cup {
     private Long id;
 
     private String name;
+    private int price;
 
     private String profilePicture;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
 }

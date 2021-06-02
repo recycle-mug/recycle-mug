@@ -37,6 +37,8 @@ public class Customer {
         customer.email = email;
         customer.password = password;
         customer.phoneNumber = phoneNumber;
+        customer.setPoint(0);
+        customer.setCustomerState(CustomerState.NONE);
 
         return customer;
     }

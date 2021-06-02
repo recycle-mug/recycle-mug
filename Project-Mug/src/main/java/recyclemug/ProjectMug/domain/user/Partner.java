@@ -26,4 +26,16 @@ public class Partner {
     private String detailAddress;
     private String registrationNumber;
 
+    protected Partner(){}
+
+    // 생성 메서드 //
+    public Partner createPartner(String email, String password, String phoneNumber, String registrationNumber) {
+        Partner partner = new Partner();
+        partner.email = email;
+        partner.password = password;
+        partner.phoneNumber = phoneNumber;
+        partner.registrationNumber = registrationNumber;
+
+        return partner;
+    }
 }
