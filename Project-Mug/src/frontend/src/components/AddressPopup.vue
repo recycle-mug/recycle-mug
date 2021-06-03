@@ -43,9 +43,8 @@ export default {
       query: "",
       queryError: "",
       searchData: [],
-      address: "",
+      addressRoad: "",
       addressNum: "",
-      addressDetail: "",
     };
   },
   methods: {
@@ -96,8 +95,17 @@ export default {
     },
     setData(e) {
       console.log("e :>> ", e);
-      this.address = e.road_address.address_name;
-      window.opener.document.getElementById("location").value = this.address;
+      this.addressRoad = e.road_address.address_name;
+      this.addressNum = e.road_address.zone_no;
+
+      let location = window.opener.document.getElementById("location");
+      location.value = this.addressRoad;
+      location.dispatchEvent(new Event("input"));
+
+      let location_num = window.opener.document.getElementById("location_num");
+      location_num.value = this.addressNum;
+      location_num.dispatchEvent(new Event("input"));
+
       window.close();
     },
     inputFocus() {
@@ -127,6 +135,7 @@ export default {
       height: 100%;
       width: 100%;
       box-sizing: border-box;
+      overflow-y: auto;
 
       form {
         width: 100%;
@@ -189,9 +198,10 @@ export default {
 
         .input-form-error {
           color: $error-msg;
-          font-size: 0.5rem;
+          font-size: 0.8rem;
           user-select: none;
           margin-bottom: 1rem;
+          letter-spacing: 0.12rem;
         }
 
         .address-card {
@@ -250,6 +260,9 @@ export default {
 
               .address-num {
                 padding-right: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
               }
             }
           }
