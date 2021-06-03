@@ -416,6 +416,7 @@ export default {
         !this.errors.joinTel &&
         !this.errors.joinAddress
       ) {
+        // path
         const path = "http://localhost:5000/join/" + this.formData.role;
 
         const payload = {
