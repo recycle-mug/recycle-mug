@@ -416,7 +416,8 @@ export default {
         !this.errors.joinTel &&
         !this.errors.joinAddress
       ) {
-        const path = "http://localhost:5000/orders";
+        // path
+        const path = "http://localhost:5000/join/" + this.formData.role;
 
         const payload = {
           role: this.formData.role,
@@ -447,7 +448,7 @@ export default {
             if (res.data.error) {
               console.log("res.data.error :>> ", res.data.error);
             } else {
-              router.push({ name: "login" });
+              router.push({ name: "login", params: this.formData.role });
             }
           })
           .catch((error) => {
