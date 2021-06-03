@@ -16,7 +16,7 @@ public class CustomerApiController {
 
     private final CustomerService customerService;
 
-    @PostMapping("/orders")
+    @PostMapping("/join/customer")
     public CreateCustomerResponse saveCustomerV1(@RequestBody @Valid CreateCustomerRequest request) {
         Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel());
         Long customerId = customerService.join(customer);
