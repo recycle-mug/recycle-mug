@@ -20,6 +20,7 @@ public class CustomerApiController {
     public CreateCustomerResponse saveCustomerV1(@RequestBody @Valid CreateCustomerRequest request) {
         Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel());
         Long customerId = customerService.join(customer);
+
         return new CreateCustomerResponse(customerId);
     }
 
@@ -43,4 +44,8 @@ public class CustomerApiController {
         }
     }
 
+    @Data
+    static class ReturnException{
+        private String errorMessage;
+    }
 }
