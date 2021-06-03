@@ -448,7 +448,7 @@ export default {
             if (res.data.error) {
               console.log("res.data.error :>> ", res.data.error);
             } else {
-              router.push({ name: "login", params: this.formData.role });
+              router.push({ name: "login", query: { role: this.formData.role } });
             }
           })
           .catch((error) => {
