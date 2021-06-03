@@ -17,10 +17,12 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public void join(Customer customer) {
+    public Long join(Customer customer) {
         validateDuplicate(customer); // 중복 회원 체크
         validatePassword(customer);
         customerRepository.save(customer);
+        return customer.getId();
+
     }
 
     // 중복되는 이메일을 가지는 회원이 있는지를 판별
@@ -54,4 +56,5 @@ public class CustomerService {
     public List<Customer> findByEmail(String email) {
         return customerRepository.findByEmail(email);
     }
+
 }
