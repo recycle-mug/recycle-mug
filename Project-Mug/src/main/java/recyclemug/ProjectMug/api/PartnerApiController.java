@@ -1,5 +1,6 @@
 package recyclemug.ProjectMug.api;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -20,8 +21,13 @@ public class PartnerApiController {
     public CreatePartnerResponse savePartner(@RequestBody @Valid CreatePartnerRequest request) {
         Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
                 request.getRegistrationNumber(), request.getZipcode(), request.getDetailAddress());
-        Long partnerId = partnerService.join(partner);
-        return new CreatePartnerResponse(partnerId);
+        try {
+            partnerService.join(partner);
+        } catch (IllegalStateException e) {
+            return new CreatePartnerResponse("fail", e.toString());
+        }
+
+        return new CreatePartnerResponse("success", "회원가입에 성공했습니다.");
     }
 
 
@@ -36,11 +42,9 @@ public class PartnerApiController {
     }
 
     @Data
+    @AllArgsConstructor
     static class CreatePartnerResponse {
-        private Long id;
-
-        public CreatePartnerResponse(Long id) {
-            this.id = id;
-        }
+        private String result;
+        private String message;
     }
 }

@@ -21,10 +21,9 @@ public class CustomerApiController {
     public CreateCustomerResponse saveCustomerV1(@RequestBody @Valid CreateCustomerRequest request) {
         Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel());
         try {
-            Long customerId = customerService.join(customer);
+            customerService.join(customer);
         } catch (IllegalStateException e) {
             String message = e.toString();
-            System.out.println(message);
             return new CreateCustomerResponse("fail", message);
         }
 
