@@ -43,9 +43,14 @@ export default new Vuex.Store({
     SETSTYLE({ commit }) {
       commit("SETSTYLE");
     },
-    LOGIN({ commit }, { role, email, password }) {
+    LOGIN({ commit }, { role, id, pw }) {
+      const payload = {
+        id: id,
+        pw: pw,
+      };
+      console.log("payload :>> ", payload);
       return axios
-        .post(`${resourceHost}/login/${role}`, { email, password })
+        .post(`${resourceHost}/login/${role}`, payload)
         .then(({ data }) => {
           console.log("data :>> ", data);
           commit("LOGIN", data);

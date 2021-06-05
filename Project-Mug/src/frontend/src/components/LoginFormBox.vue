@@ -192,12 +192,8 @@ export default {
       const pw = this.formData.loginPw;
 
       if (!this.errors.loginId && !this.errors.loginPw) {
-        this.$store.dispatch("LOGIN", { role, id, pw }).then(() => this.redirect());
+        this.$store.dispatch("LOGIN", { role, id, pw });
       }
-
-      console.log("this.formData.role :>> ", this.formData.role);
-      console.log("this.formData.loginId :>> ", this.formData.loginId);
-      console.log("this.formData.loginPw :>> ", this.formData.loginPw);
     },
     redirect() {
       console.log("Login Success");
