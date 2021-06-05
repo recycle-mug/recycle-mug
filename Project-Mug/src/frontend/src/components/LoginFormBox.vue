@@ -155,7 +155,7 @@ export default {
       }
     },
     checkId() {
-      const pattern_loginId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+      const pattern_loginId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
       try {
         if (!pattern_loginId.test(this.formData.loginId)) {
@@ -187,9 +187,21 @@ export default {
       e.preventDefault();
       this.validate();
 
+      const role = this.formData.role;
+      const id = this.formData.loginId;
+      const pw = this.formData.loginPw;
+
+      if (!this.errors.loginId && !this.errors.loginPw) {
+        this.$store.dispatch("LOGIN", { role, id, pw }).then(() => this.redirect());
+      }
+
       console.log("this.formData.role :>> ", this.formData.role);
       console.log("this.formData.loginId :>> ", this.formData.loginId);
       console.log("this.formData.loginPw :>> ", this.formData.loginPw);
+    },
+    redirect() {
+      console.log("Login Success");
+      this.$router.push({ name: "main" });
     },
   },
 };

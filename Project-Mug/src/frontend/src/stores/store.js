@@ -5,13 +5,15 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://localhost:9000";
+const resourceHost = "http://localhost:5000";
 
 const enhanceAccessToken = () => {
   const { accessToken } = localStorage;
   if (!accessToken) return;
-  axios.defaults.headers.common["Authorization"] = `${accessToken}`;
+  axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 };
+
+enhanceAccessToken();
 
 export default new Vuex.Store({
   state: {
@@ -41,11 +43,17 @@ export default new Vuex.Store({
     SETSTYLE({ commit }) {
       commit("SETSTYLE");
     },
-    LOGIN({ commit }, { email, password }) {
-      return axios.post(`${resourceHost}/login`, { email, password }).then(({ data }) => {
-        commit("LOGIN", data);
-        axios.defaults.headers.common["Authorization"] = `${data.accessToken}`;
-      });
+    LOGIN({ commit }, { role, email, password }) {
+      return axios
+        .post(`${resourceHost}/login/${role}`, { email, password })
+        .then(({ data }) => {
+          console.log("data :>> ", data);
+          commit("LOGIN", data);
+          axios.defaults.headers.common["Authorization"] = `${data.accessToken}`;
+        })
+        .catch((error) => {
+          console.log("error :>> ", error);
+        });
     },
     LOGOUT({ commit }) {
       commit("LOGOUT");
