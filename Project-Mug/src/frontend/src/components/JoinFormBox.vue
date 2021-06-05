@@ -333,7 +333,6 @@ export default {
       for (const item in this.formData) {
         try {
           if (!this.formData[item]) {
-            console.log("this.formData[item] :>> ", this.formData[item]);
             throw "빈 칸을 모두 채워주세요";
           } else {
             throw "";
@@ -366,7 +365,7 @@ export default {
       }
     },
     checkId() {
-      const pattern_joinId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+      const pattern_joinId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
       try {
         if (!pattern_joinId.test(this.formData.joinId)) {
@@ -379,11 +378,31 @@ export default {
       }
     },
     checkPasswordForm() {
-      const pattern_joinPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*]{8,}$/;
+      // const pattern_joinPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*]{8,}$/;
+      // const pw = !/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$/;
+
+      // try {
+      //   if (!pattern_joinPw.test(this.formData.joinPw)) throw "비밀번호 형식을 확인해주세요";
+      //   else this.errors.joinPw = "";
+      // } catch (error) {
+      //   this.errors.joinPw = error;
+      // }
+
+      const num = this.formData.joinPw.search(/[0-9]/g);
+      const smallEng = this.formData.joinPw.search(/[a-z]/g);
+      const bigEng = this.formData.joinPw.search(/[A-Z]/g);
+      const spe = this.formData.joinPw.search(/[~!@@#$%^&*]/gi);
 
       try {
-        if (!pattern_joinPw.test(this.formData.joinPw)) throw "비밀번호 형식을 확인해주세요";
-        else this.errors.joinPw = "";
+        if (this.formData.joinPw.length < 8) {
+          throw "8자리 이상으로 입력해주세요";
+        } else if (this.formData.joinPw.search(/\s/) != -1) {
+          throw "비밀번호는 공백없이 입력해주세요";
+        } else if (num + smallEng + bigEng + spe < -1) {
+          throw "영문 소문자, 대문자, 숫자, 특수문자 중 3가지 이상을 혼합해주세요";
+        } else {
+          this.errors.joinPw = "";
+        }
       } catch (error) {
         this.errors.joinPw = error;
       }
