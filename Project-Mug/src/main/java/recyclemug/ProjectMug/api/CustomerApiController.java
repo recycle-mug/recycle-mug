@@ -44,8 +44,4 @@ public class CustomerApiController {
         }
     }
 
-    @Data
-    static class ReturnException{
-        private String errorMessage;
-    }
 }

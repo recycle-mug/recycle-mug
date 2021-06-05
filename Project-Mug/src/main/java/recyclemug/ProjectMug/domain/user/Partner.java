@@ -16,6 +16,7 @@ public class Partner {
     @Column(name = "partner_id")
     private Long id;
 
+    // 필수 생성 목록 //
     private String email;
     private String password;
     private String phoneNumber;
@@ -35,12 +36,15 @@ public class Partner {
     protected Partner(){}
 
     // 생성 메서드 //
-    public Partner createPartner(String email, String password, String phoneNumber, String registrationNumber) {
+    public static Partner createPartner(String email, String password, String phoneNumber, String registrationNumber,
+                                        String zipcode, String detailAddress) {
         Partner partner = new Partner();
-        partner.email = email;
-        partner.password = password;
-        partner.phoneNumber = phoneNumber;
-        partner.registrationNumber = registrationNumber;
+        partner.setEmail(email);
+        partner.setPassword(password);
+        partner.setPhoneNumber(phoneNumber);
+        partner.setZipcode(zipcode);
+        partner.setDetailAddress(detailAddress);
+        partner.setRegistrationNumber(registrationNumber);
 
         return partner;
     }

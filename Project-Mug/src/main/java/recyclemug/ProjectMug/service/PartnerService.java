@@ -18,10 +18,11 @@ public class PartnerService {
     private final PartnerRepository partnerRepository;
 
     @Transactional
-    public void join(Partner partner) {
+    public Long join(Partner partner) {
         validateDuplicate(partner); // 중복 회원 체크
         validatePassword(partner);
         partnerRepository.save(partner);
+        return partner.getId();
     }
 
     // 중복되는 이메일을 가지는 회원이 있는지를 판별
