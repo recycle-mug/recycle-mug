@@ -1,5 +1,6 @@
 package recyclemug.ProjectMug.api;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +20,14 @@ public class CustomerApiController {
     @PostMapping("/join/customer")
     public CreateCustomerResponse saveCustomerV1(@RequestBody @Valid CreateCustomerRequest request) {
         Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel());
-        Long customerId = customerService.join(customer);
-        return new CreateCustomerResponse(customerId);
+        try {
+            customerService.join(customer);
+        } catch (IllegalStateException e) {
+            String message = e.toString();
+            return new CreateCustomerResponse("fail", message);
+        }
+
+        return new CreateCustomerResponse("success", "회원가입에 성공했습니다.");
     }
 
     @Data
@@ -35,12 +42,10 @@ public class CustomerApiController {
     }
 
     @Data
+    @AllArgsConstructor
     static class CreateCustomerResponse {
-        private Long id;
-
-        public CreateCustomerResponse(Long id) {
-            this.id = id;
-        }
+        private String result;
+        private String message;
     }
 
 }
