@@ -113,6 +113,7 @@
         </div>
         <span class="error-msg">{{ errors.joinAddress }}</span>
 
+        <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
         <button @click.prevent="onSubmitForm">join</button>
         <router-link :to="{ name: 'login', query: { role: 'partner' } }" tag="span" class="caption"
           >Already has Account</router-link
@@ -201,7 +202,7 @@
           />
         </div>
         <span class="error-msg">{{ errors.joinTel }}</span>
-
+        <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
         <button @click.prevent="onSubmitForm">join</button>
         <router-link :to="{ name: 'login', query: { role: 'customer' } }" tag="span" class="caption"
           >Already has Account</router-link
@@ -275,6 +276,7 @@ export default {
         joinPwChk: "",
         joinTel: "",
         joinAddress: "",
+        response: "",
       },
       popup: null,
       loading: false,
@@ -464,14 +466,14 @@ export default {
           .post(path, payload)
           .then((res) => {
             console.log("res :>> ", res);
-            if (res.data.error) {
-              console.log("res.data.error :>> ", res.data.error);
+            if (res.data.result == "fail") {
+              throw res.data.message;
             } else {
               router.push({ name: "login", query: { role: this.formData.role } });
             }
           })
           .catch((error) => {
-            console.log("error :>> ", error);
+            this.errors.response = error;
           });
       }
     },
