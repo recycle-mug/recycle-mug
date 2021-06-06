@@ -14,15 +14,15 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    proxy: {
-      "/api": {
-        target: "https://maps.googleapis.com",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/api": "",
-        },
-      },
-    },
+    // proxy: {
+    //   "/api": {
+    //     target: "https://accounts.kakao.com",
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       "^/api": "",
+    //     },
+    //   },
+    // },
   },
   entry: {
     // app: "src/main.js"
