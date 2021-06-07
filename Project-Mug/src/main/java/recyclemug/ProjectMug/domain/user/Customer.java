@@ -5,6 +5,7 @@ import lombok.Setter;
 import recyclemug.ProjectMug.domain.cup.Cup;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -27,6 +28,15 @@ public class Customer {
 
     @Enumerated(EnumType.STRING)
     private CustomerState customerState;
+
+    private boolean activated;
+
+    // 예제 코드
+    @ManyToMany
+    @JoinTable(name = "customer_authority",
+            joinColumns = {@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+    private Set<Authority> authorities;
 
     protected Customer() {
     }
