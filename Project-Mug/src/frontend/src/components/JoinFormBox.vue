@@ -129,7 +129,7 @@
         <div class="social-container">
           <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
           <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
-          <a href="#" @click="getKaKaoApi"
+          <a href="#" @click="openKakaoLogin"
             ><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon
           ></a>
         </div>
