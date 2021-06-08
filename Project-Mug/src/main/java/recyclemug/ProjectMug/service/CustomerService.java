@@ -1,28 +1,62 @@
 package recyclemug.ProjectMug.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.domain.user.Authority;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.repository.CustomerRepository;
+import recyclemug.ProjectMug.repository.CustomerRepositoryInterface;
+import recyclemug.ProjectMug.util.SecurityUtil;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerRepositoryInterface customerRepositoryInterface;
+    private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public Long join(Customer customer) {
         validateDuplicate(customer); // 중복 회원 체크
         validatePassword(customer);
+
+        Authority authority = Authority.builder().authorityName("ROLE_CUSTOMER").build();
+
+        // 형식 나중에 바꿔주기
+//        Customer customer = Customer.builder()
+//                .email(customerDto.getEmail)
+//                .password(customerDto.getPassword)
+//                .nickName(customerDto.getNickName)
+//                .authorities(Collections.singleton(authority))
+//                .activated(true)
+//                .build();
+
+//        passwordEncoder 에서 찾는데 오류가나서 일단 인코딩 없이 저장되게끔 해놓앗다.
+//        customer.setPassword("{noop}" + passwordEncoder.encode(customer.getPassword()));
+        customer.setPassword("{noop}" + customer.getPassword());
+        customer.setActivated(true);
+        customer.setAuthorities(Collections.singleton(authority));
+
         customerRepository.save(customer);
         return customer.getId();
+    }
 
+    public Optional<Customer> getCustomerWithAuthorities(String email) {
+        return customerRepositoryInterface.findOneWithAuthoritiesByEmail(email);
+    }
+
+    public Optional<Customer> getMyCustomerWithAuthorities() {
+        return SecurityUtil.getCurrentEmail().flatMap(customerRepositoryInterface::findOneWithAuthoritiesByEmail);
     }
 
     // 중복되는 이메일을 가지는 회원이 있는지를 판별

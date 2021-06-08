@@ -18,10 +18,11 @@ import recyclemug.ProjectMug.jwt.TokenAuthenticationProvider;
 
 
 /*
-    1. configure 메소드를 통해 정적 자원들에 대해서는 Security를 적용하지 않음을 추가한다.
+    1. configure 메소드를 통해 정적 자원들에 대해서는 Security 를 적용하지 않음을 추가한다.
     2. configure 메소드를 통해 어떤 요청에 대해서는 로그인을 요구하고, 어떤 요청에 대해서 로그인을 요구하지 않을지 설정한다.
     3. session/form 기반의 로그인을 비활성화한다.
  */
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -76,6 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/signup").permitAll()
                 .antMatchers("/join/**").permitAll()
+                .antMatchers("/login/**").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
 
