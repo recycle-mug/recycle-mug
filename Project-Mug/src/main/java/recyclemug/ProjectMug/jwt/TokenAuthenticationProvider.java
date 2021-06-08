@@ -42,6 +42,7 @@ public class TokenAuthenticationProvider implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
+
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 

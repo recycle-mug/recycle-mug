@@ -9,8 +9,8 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class CustomerDto {
 
-    @NotNull 
-    private String username;
+    @NotNull
+    private String email;
 
     @NotNull
     private String password;
