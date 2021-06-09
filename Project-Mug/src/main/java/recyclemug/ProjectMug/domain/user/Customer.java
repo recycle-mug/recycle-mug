@@ -1,9 +1,7 @@
 package recyclemug.ProjectMug.domain.user;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import recyclemug.ProjectMug.domain.cup.Cup;
 
 import javax.persistence.*;
 import java.util.Set;

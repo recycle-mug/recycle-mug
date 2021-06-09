@@ -188,11 +188,11 @@ export default {
       this.validate();
 
       const role = this.formData.role;
-      const id = this.formData.loginId;
-      const pw = this.formData.loginPw;
+      const email = this.formData.loginId;
+      const password = this.formData.loginPw;
 
       if (!this.errors.loginId && !this.errors.loginPw) {
-        this.$store.dispatch("LOGIN", { role, id, pw });
+        this.$store.dispatch("LOGIN", { role, email, password });
       }
     },
     redirect() {
