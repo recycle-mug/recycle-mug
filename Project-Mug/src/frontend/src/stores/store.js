@@ -27,11 +27,11 @@ export default new Vuex.Store({
     SETSTYLE(state, mode) {
       state.theme = mode;
     },
-    LOGIN(state, { accessToken }) {
+    LOGIN(state, accessToken) {
+      console.log("accessToken :>> ", accessToken);
       state.accessToken = accessToken;
       localStorage.accessToken = accessToken;
-      console.log("state.accessToken :", state.accessToken);
-      axios.defaults.headers.common["Authorization"] = `${accessToken}`;
+      axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     },
     LOGOUT(state) {
       state.accessToken = null;
@@ -58,9 +58,7 @@ export default new Vuex.Store({
       return sendData
         .post(`${resourceHost}/login/${role}`, payload)
         .then(({ data }) => {
-          console.log("data :>> ", data);
-          commit("LOGIN", data);
-          axios.defaults.headers.common["Authorization"] = `${data.accessToken}`;
+          commit("LOGIN", data.token);
         })
         .catch((error) => {
           console.log("error :>> ", error);

@@ -161,7 +161,6 @@ export default {
         if (!pattern_loginId.test(this.formData.loginId)) {
           throw "이메일 형식을 확인해주세요";
         } else {
-          console.log("test :>> ");
           this.errors.loginId = "";
         }
       } catch (error) {
@@ -192,7 +191,7 @@ export default {
       const password = this.formData.loginPw;
 
       if (!this.errors.loginId && !this.errors.loginPw) {
-        this.$store.dispatch("LOGIN", { role, email, password });
+        this.$store.dispatch("LOGIN", { role, email, password }).then(this.redirect);
       }
     },
     redirect() {
