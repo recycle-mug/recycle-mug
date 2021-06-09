@@ -43,13 +43,19 @@ export default new Vuex.Store({
     SETSTYLE({ commit }) {
       commit("SETSTYLE");
     },
-    LOGIN({ commit }, { role, id, pw }) {
+    LOGIN({ commit }, { role, email, password }) {
       const payload = {
-        id: id,
-        pw: pw,
+        email: email,
+        password: password,
       };
       console.log("payload :>> ", payload);
-      return axios
+      let sendData = axios.create({
+        baseURL: `${resourceHost}/login/${role}`,
+      });
+      sendData.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+      sendData.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
+
+      return sendData
         .post(`${resourceHost}/login/${role}`, payload)
         .then(({ data }) => {
           console.log("data :>> ", data);
