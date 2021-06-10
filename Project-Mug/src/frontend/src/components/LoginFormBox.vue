@@ -32,6 +32,7 @@
             />
             <span class="error-msg">{{ errors.loginPw }}</span>
           </div>
+          <span class="error-msg">{{ errors.response }}</span>
           <button type="submit" @click.prevent="onSubmit">Login</button>
           <router-link :to="{ name: 'join', query: { role: 'partner' } }" tag="span" class="caption"
             >파트너 계정이 없으신가요?</router-link
@@ -71,6 +72,7 @@
             />
             <span class="error-msg">{{ errors.loginPw }}</span>
           </div>
+          <span class="error-msg">{{ errors.response }}</span>
           <button type="submit" @click.prevent="onSubmit">Login</button>
           <router-link
             :to="{ name: 'join', query: { role: 'customer' } }"
@@ -134,6 +136,7 @@ export default {
       errors: {
         loginId: "",
         loginPw: "",
+        response: "",
       },
     };
   },
@@ -191,7 +194,10 @@ export default {
       const password = this.formData.loginPw;
 
       if (!this.errors.loginId && !this.errors.loginPw) {
-        this.$store.dispatch("LOGIN", { role, email, password }).then(this.redirect);
+        this.$store
+          .dispatch("LOGIN", { role, email, password })
+          .then(this.redirect)
+          .catch((err) => (this.errors.response = err));
       }
     },
     redirect() {
@@ -306,7 +312,16 @@ export default {
                 text-align: left;
                 padding-left: 1rem;
                 user-select: none;
+                height: 0.8rem;
               }
+            }
+
+            .error-msg {
+              color: $error-msg;
+              width: 100%;
+              text-align: center;
+              user-select: none;
+              height: 0.8rem;
             }
 
             button {

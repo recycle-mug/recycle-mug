@@ -384,28 +384,27 @@ export default {
       }
     },
     checkPasswordForm() {
-      // const pattern_joinPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*]{8,}$/;
-      // const pw = !/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,}$/;
-
-      // try {
-      //   if (!pattern_joinPw.test(this.formData.joinPw)) throw "비밀번호 형식을 확인해주세요";
-      //   else this.errors.joinPw = "";
-      // } catch (error) {
-      //   this.errors.joinPw = error;
-      // }
-
       const num = this.formData.joinPw.search(/[0-9]/g);
       const smallEng = this.formData.joinPw.search(/[a-z]/g);
       const bigEng = this.formData.joinPw.search(/[A-Z]/g);
       const spe = this.formData.joinPw.search(/[~!@@#$%^&*]/gi);
+
+      let cnt = 0;
+
+      if (num == -1) cnt += 1;
+      if (smallEng == -1) cnt += 1;
+      if (bigEng == -1) cnt += 1;
+      if (spe == -1) cnt += 1;
 
       try {
         if (this.formData.joinPw.length < 8) {
           throw "8자리 이상으로 입력해주세요";
         } else if (this.formData.joinPw.search(/\s/) != -1) {
           throw "비밀번호는 공백없이 입력해주세요";
-        } else if (num + smallEng + bigEng + spe < -1) {
+        } else if (cnt > 1) {
           throw "영문 소문자, 대문자, 숫자, 특수문자 중 3가지 이상을 혼합해주세요";
+        } else if (this.formData.joinPw.search(/[()_+|<>?:{}/[\]/\\//"':;.,]/) != -1) {
+          throw "정해진 특수문자 외 특수문자는 사용할 수 없습니다";
         } else {
           this.errors.joinPw = "";
         }
@@ -526,13 +525,14 @@ export default {
       width: 1050px;
       max-width: 100%;
       min-height: 840px;
-      margin: auto;
+      margin: 2rem auto;
 
       .form-container {
         position: absolute;
         top: 0;
         height: 100%;
         transition: all 0.6s ease-in-out;
+        box-sizing: border-box;
 
         form {
           background-color: map-get($map: $theme, $key: "content-background");
@@ -543,6 +543,7 @@ export default {
           padding: 1rem 3rem;
           height: 100%;
           text-align: center;
+          box-sizing: border-box;
 
           h1 {
             font-weight: bold;
