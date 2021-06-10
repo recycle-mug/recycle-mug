@@ -20,4 +20,16 @@ public class Cup {
 
     private String profilePicture;
 
+    protected Cup() {
+
+    }
+
+    public static Cup createCup(String name, int price, String profilePicture) {
+        Cup cup = new Cup();
+        cup.name = name;
+        cup.price = price;
+        cup.profilePicture = profilePicture;
+        return cup;
+    }
+
 }
