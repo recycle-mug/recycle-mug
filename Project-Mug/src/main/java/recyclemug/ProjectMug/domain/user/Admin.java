@@ -7,22 +7,10 @@ import recyclemug.ProjectMug.domain.cup.Cup;
 import javax.persistence.*;
 
 @Entity
-@DiscriminatorValue("admin")
+@DiscriminatorValue("A")
 @Getter @Setter
-public class Admin {
+public class Admin extends User{
 
-    @Id
-    @GeneratedValue
-    @Column(name = "admin_id")
-    private Long id;
-
-    private String email;
-    private String password;
-    private String phoneNumber;
-
-    private String name;
-
-
-
+    private String adminName;
 
 }
