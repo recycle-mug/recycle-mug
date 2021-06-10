@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import recyclemug.ProjectMug.domain.user.Authority;
 import recyclemug.ProjectMug.domain.user.Customer;
+import recyclemug.ProjectMug.domain.user.User;
 import recyclemug.ProjectMug.repository.CustomerRepository;
-import recyclemug.ProjectMug.repository.CustomerRepositoryInterface;
+import recyclemug.ProjectMug.repository.UserRepositoryInterface;
 import recyclemug.ProjectMug.util.SecurityUtil;
 
 import java.util.Collections;
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
-    private final CustomerRepositoryInterface customerRepositoryInterface;
+    private final UserRepositoryInterface userRepositoryInterface;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -51,12 +52,12 @@ public class CustomerService {
         return customer.getId();
     }
 
-    public Optional<Customer> getCustomerWithAuthorities(String email) {
-        return customerRepositoryInterface.findOneWithAuthoritiesByEmail(email);
+    public Optional<User> getCustomerWithAuthorities(String email) {
+        return userRepositoryInterface.findOneWithAuthoritiesByEmail(email);
     }
 
-    public Optional<Customer> getMyCustomerWithAuthorities() {
-        return SecurityUtil.getCurrentEmail().flatMap(customerRepositoryInterface::findOneWithAuthoritiesByEmail);
+    public Optional<User> getMyCustomerWithAuthorities() {
+        return SecurityUtil.getCurrentEmail().flatMap(userRepositoryInterface::findOneWithAuthoritiesByEmail);
     }
 
     // 중복되는 이메일을 가지는 회원이 있는지를 판별

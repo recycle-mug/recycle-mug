@@ -20,7 +20,7 @@ public class PartnerApiController {
     @PostMapping("/join/partner")
     public CreatePartnerResponse savePartner(@RequestBody @Valid CreatePartnerRequest request) {
         Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
-                request.getRegistrationNumber(), request.getZipcode(), request.getDetailAddress());
+                request.getZipcode(), request.getAddress()+request.getAddressDetail(), request.getBusinessName());
         try {
             partnerService.join(partner);
         } catch (IllegalStateException e) {
@@ -37,8 +37,9 @@ public class PartnerApiController {
         private String password;
         private String phoneNumber;
         private String zipcode;
-        private String detailAddress;
-        private String registrationNumber;
+        private String address;
+        private String addressDetail;
+        private String businessName;
     }
 
     @Data

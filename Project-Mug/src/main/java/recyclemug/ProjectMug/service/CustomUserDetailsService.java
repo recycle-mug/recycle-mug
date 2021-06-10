@@ -8,37 +8,36 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import recyclemug.ProjectMug.domain.user.Customer;
-import recyclemug.ProjectMug.repository.CustomerRepositoryInterface;
+import recyclemug.ProjectMug.repository.UserRepositoryInterface;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component("userDetailsService")
-public class CustomCustomerDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
-    private final CustomerRepositoryInterface customerRepositoryInterface;
+    private final UserRepositoryInterface userRepositoryInterface;
 
-    public CustomCustomerDetailsService(CustomerRepositoryInterface customerRepositoryInterface) {
-        this.customerRepositoryInterface = customerRepositoryInterface;
+    public CustomUserDetailsService(UserRepositoryInterface userRepositoryInterface) {
+        this.userRepositoryInterface = userRepositoryInterface;
     }
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return customerRepositoryInterface.findOneWithAuthoritiesByEmail(email)
-                .map(customer -> createCustomer(email, customer))
+        return userRepositoryInterface.findOneWithAuthoritiesByEmail(email)
+                .map(user -> createUser(email, user))
                 .orElseThrow(()-> new UsernameNotFoundException(email + "-> 데이터베이스에서 찾을 수 없습니다,"));
     }
 
-    private User createCustomer(String email, Customer customer) {
-        if (!customer.isActivated()) {
+    private User createUser(String email, recyclemug.ProjectMug.domain.user.User user) {
+        if (!user.isActivated()) {
             throw new RuntimeException(email + " -> 활성화되어 있지 않습니다.");
         }
-        List<GrantedAuthority> grantedAuthorities = customer.getAuthorities().stream()
+        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                 .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
                 .collect(Collectors.toList());
 
-        return new User(customer.getEmail(), customer.getPassword(), grantedAuthorities);
+        return new User(user.getEmail(), user.getPassword(), grantedAuthorities);
     }
 }
