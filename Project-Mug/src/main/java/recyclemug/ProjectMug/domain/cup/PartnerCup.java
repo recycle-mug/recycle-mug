@@ -17,7 +17,7 @@ public class PartnerCup {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "partner_id")
+    @JoinColumn(name = "user_id")
     private Partner partner;
 
     @OneToOne(fetch = FetchType.LAZY)

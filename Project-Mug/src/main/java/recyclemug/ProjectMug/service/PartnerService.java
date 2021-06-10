@@ -1,11 +1,15 @@
 package recyclemug.ProjectMug.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.domain.user.Authority;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.repository.PartnerRepository;
+import recyclemug.ProjectMug.repository.UserRepositoryInterface;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,11 +20,20 @@ import java.util.regex.Pattern;
 public class PartnerService {
 
     private final PartnerRepository partnerRepository;
+    private final UserRepositoryInterface userRepositoryInterface;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long join(Partner partner) {
         validateDuplicate(partner); // 중복 회원 체크
         validatePassword(partner);
+
+        Authority authority = Authority.builder().authorityName("ROLE_PARTNER").build();
+
+        partner.setPassword("{noop}" + partner.getPassword());
+        partner.setActivated(true);
+        partner.setAuthorities(Collections.singleton(authority));
+
         partnerRepository.save(partner);
         return partner.getId();
     }
