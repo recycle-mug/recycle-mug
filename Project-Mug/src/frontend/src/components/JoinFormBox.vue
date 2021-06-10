@@ -478,29 +478,12 @@ export default {
       }
     },
     async openKakaoLogin() {
-      const REST_API_KEY = "210e6ee868e2837c5e6d0805cc037348";
-      const REDIRECT_URI = "http://localhost:8080";
-      const path = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`;
-
-      // let kakaoLogin = axios.create({ baseURL: path });
-      // const config = {
-      //   headers: {
-      //     "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-      //   },
-      // };
-
-      // kakaoLogin.defaults.headers.common["access-control-allow-origin"] = "*";
-      // kakaoLogin.defaults.headers.common["Access-Control-Allow-Headers"] = "*";
-      // kakaoLogin.defaults.headers.common["Content-Type"] = "application/x-www-form-urlencoded";
-      // kakaoLogin.defaults.params = {
-      //   response_type: "code",
-      //   client_id: REST_API_KEY,
-      //   redirect_uri: REDIRECT_URI,
-      // };
-
-      // kakaoLogin.get(path, config).then((res) => console.log("res :>> ", res));
-
-      window.open(path, "pop", "width=570, height=420,scrollbars=yes,resizable=yes");
+      const routeData = this.$router.resolve({ name: "kakao" });
+      this.popup = window.open(
+        routeData.href,
+        "pop",
+        "width=570, height=420,scrollbars=yes,resizable=yes",
+      );
     },
   },
 };
