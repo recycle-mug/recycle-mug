@@ -28,10 +28,9 @@
               maxlength="20"
               v-model="formData.loginPw"
               @keydown.enter.prevent="onSubmit"
-              @keyup.prevent="checkPassword"
             />
-            <span class="error-msg">{{ errors.loginPw }}</span>
           </div>
+          <span class="error-msg">{{ errors.response }}</span>
           <button type="submit" @click.prevent="onSubmit">Login</button>
           <router-link :to="{ name: 'join', query: { role: 'partner' } }" tag="span" class="caption"
             >파트너 계정이 없으신가요?</router-link
@@ -67,10 +66,9 @@
               maxlength="20"
               v-model="formData.loginPw"
               @keydown.enter.prevent="onSubmit"
-              @keyup="checkPassword"
             />
-            <span class="error-msg">{{ errors.loginPw }}</span>
           </div>
+          <span class="error-msg">{{ errors.response }}</span>
           <button type="submit" @click.prevent="onSubmit">Login</button>
           <router-link
             :to="{ name: 'join', query: { role: 'customer' } }"
@@ -134,6 +132,7 @@ export default {
       errors: {
         loginId: "",
         loginPw: "",
+        response: "",
       },
     };
   },
@@ -167,20 +166,9 @@ export default {
         this.errors.loginId = error;
       }
     },
-    checkPassword() {
-      const pattern_loginPw = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*]{8,}$/;
-
-      try {
-        if (!pattern_loginPw.test(this.formData.loginPw)) throw "비밀번호를 확인해주세요";
-        else this.errors.loginPw = "";
-      } catch (error) {
-        this.errors.loginPw = error;
-      }
-    },
     validate() {
       this.checkRequired();
       this.checkId();
-      this.checkPassword();
     },
     onSubmit(e) {
       e.preventDefault();
@@ -190,8 +178,11 @@ export default {
       const email = this.formData.loginId;
       const password = this.formData.loginPw;
 
-      if (!this.errors.loginId && !this.errors.loginPw) {
-        this.$store.dispatch("LOGIN", { role, email, password }).then(this.redirect);
+      if (!this.errors.loginId) {
+        this.$store
+          .dispatch("LOGIN", { role, email, password })
+          .then(this.redirect)
+          .catch((err) => (this.errors.response = err));
       }
     },
     redirect() {
@@ -212,6 +203,10 @@ export default {
     box-sizing: border-box;
     text-align: center;
 
+    * {
+      box-sizing: border-box;
+    }
+
     .wrapper {
       background-color: map-get($map: $theme, $key: "background");
       box-sizing: border-box;
@@ -224,9 +219,9 @@ export default {
         box-shadow: $shadow;
         position: relative;
         overflow: hidden;
-        width: 768px;
+        width: 1050px;
         max-width: 100%;
-        min-height: 480px;
+        min-height: 540px;
         margin: auto;
 
         .form-container {
@@ -244,6 +239,7 @@ export default {
             padding: 0 3rem;
             height: 100%;
             text-align: center;
+            box-sizing: border-box;
 
             h1 {
               font-weight: bold;
@@ -306,7 +302,16 @@ export default {
                 text-align: left;
                 padding-left: 1rem;
                 user-select: none;
+                height: 0.8rem;
               }
+            }
+
+            .error-msg {
+              color: $error-msg;
+              width: 100%;
+              text-align: center;
+              user-select: none;
+              height: 0.8rem;
             }
 
             button {

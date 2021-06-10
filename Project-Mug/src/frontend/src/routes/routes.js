@@ -9,6 +9,8 @@ import JoinView from "../views/JoinView";
 import LoginView from "../views/LoginView";
 import ProfileView from "../views/ProfileView";
 import AddressPopup from "../components/AddressPopup";
+import KakaoLogin from "../components/KakaoLogin";
+import GetKakaoKey from "../components/GetKakaoKey";
 
 export default new Router({
   mode: "history",
@@ -40,6 +42,17 @@ export default new Router({
       path: "/address",
       name: "address",
       component: AddressPopup,
+    },
+    {
+      path: "/kakao",
+      name: "kakao",
+      component: KakaoLogin,
+    },
+    {
+      path: "/getKakaoKey",
+      name: "getKakaoKey",
+      component: GetKakaoKey,
+      props: true,
     },
   ],
 });
