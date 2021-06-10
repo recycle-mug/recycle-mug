@@ -61,7 +61,7 @@ export default new Vuex.Store({
           commit("LOGIN", data.token);
         })
         .catch((error) => {
-          console.log("error :>> ", error);
+          throw error;
         });
     },
     LOGOUT({ commit }) {
