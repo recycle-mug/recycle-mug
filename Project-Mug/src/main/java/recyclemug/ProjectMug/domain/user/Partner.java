@@ -9,20 +9,10 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Partner {
+@DiscriminatorValue("P")
+public class Partner extends User{
 
-    @Id
-    @GeneratedValue
-    @Column(name = "partner_id")
-    private Long id;
-
-    // 필수 생성 목록 //
-    private String email;
-    private String password;
-    private String phoneNumber;
-
-    private String partnerName;
-    private String profilePicture;
+    private String businessName;
 
     // 주소: 우편번호(zipcode) + 상세주소(detailAddress)
     private String zipcode;
@@ -36,15 +26,15 @@ public class Partner {
     protected Partner(){}
 
     // 생성 메서드 //
-    public static Partner createPartner(String email, String password, String phoneNumber, String registrationNumber,
-                                        String zipcode, String detailAddress) {
+    public static Partner createPartner(String email, String password, String phoneNumber,
+                                        String zipcode, String detailAddress, String businessName) {
         Partner partner = new Partner();
         partner.setEmail(email);
         partner.setPassword(password);
         partner.setPhoneNumber(phoneNumber);
         partner.setZipcode(zipcode);
         partner.setDetailAddress(detailAddress);
-        partner.setRegistrationNumber(registrationNumber);
+        partner.setBusinessName(businessName);
 
         return partner;
     }
@@ -53,4 +43,5 @@ public class Partner {
         partnerCups.add(partnerCup);
         partnerCup.setPartner(this);
     }
+
 }
