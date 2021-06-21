@@ -14,15 +14,22 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    // proxy: {
-    //   "/api": {
-    //     target: "https://accounts.kakao.com",
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       "^/api": "",
-    //     },
-    //   },
-    // },
+    proxy: {
+      "/tokenApi": {
+        target: "https://kauth.kakao.com",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/tokenApi": "",
+        },
+      },
+      "/infoApi": {
+        target: "https://kapi.kakao.com",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/infoApi": "",
+        },
+      },
+    },
   },
   entry: {
     // app: "src/main.js"
