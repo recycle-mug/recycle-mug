@@ -30,8 +30,8 @@ public class AuthController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-    @PostMapping("/login/customer")
-    public ResponseEntity<TokenDto> authorizeCustomer(@Valid @RequestBody LoginDto loginDto) {
+    @PostMapping("/login/*")
+    public ResponseEntity<TokenDto> authorizeUser(@Valid @RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
@@ -47,20 +47,37 @@ public class AuthController {
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 
-    @PostMapping("/login/partner")
-    public ResponseEntity<TokenDto> authorizePartner(@Valid @RequestBody LoginDto loginDto) {
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenAuthenticationProvider.createToken(authentication);
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
-    }
+//    @PostMapping("/login/customer")
+//    public ResponseEntity<TokenDto> authorizeCustomer(@Valid @RequestBody LoginDto loginDto) {
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+//
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        String jwt = tokenAuthenticationProvider.createToken(authentication);
+//
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+//
+//        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+//    }
+//
+//    @PostMapping("/login/partner")
+//    public ResponseEntity<TokenDto> authorizePartner(@Valid @RequestBody LoginDto loginDto) {
+//        UsernamePasswordAuthenticationToken authenticationToken =
+//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+//
+//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+//
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        String jwt = tokenAuthenticationProvider.createToken(authentication);
+//
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+//
+//        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+//    }
 }
