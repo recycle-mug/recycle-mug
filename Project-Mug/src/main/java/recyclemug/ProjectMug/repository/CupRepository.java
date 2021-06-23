@@ -17,15 +17,19 @@ public class CupRepository {
         em.persist(cup);
     }
 
+    public void remove(Cup cup) {
+        em.remove(cup);
+    }
+
     public List<Cup> findAllCup() {
         return em.createQuery("select c from Cup c", Cup.class).getResultList();
     }
 
     // 하나만 찾아오는 메서드들
-    public Cup findByCupName(String name) {
+    public List<Cup> findByCupName(String name) {
         return em.createQuery("select c from Cup c where c.name = :name", Cup.class)
                 .setParameter("name", name)
-                .getSingleResult();
+                .getResultList();
     }
 
     public Cup findByCupId(Long id) {

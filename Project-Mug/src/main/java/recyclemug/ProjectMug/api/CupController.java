@@ -3,9 +3,7 @@ package recyclemug.ProjectMug.api;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.service.CupService;
 
@@ -21,8 +19,14 @@ public class CupController {
     @PostAuthorize("hasAnyRole('ADMIN')")
     public void saveCup(@RequestBody @Valid CreateCupRequest request) {
         Cup cup = Cup.createCup(request.name, request.price, request.profilePicture);
-
         cupService.addCup(cup);
+    }
+
+    @DeleteMapping("/cup/remove")
+    @PostAuthorize("hasAnyRole('ADMIN')")
+    public void removeCup(@RequestBody @Valid CreateCupRequest request) {
+        String cupName = request.getName();
+        cupService.removeCup(cupName);
     }
 
     @Data
