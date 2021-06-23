@@ -14,8 +14,7 @@ public class Customer extends User{
     @Enumerated(EnumType.STRING)
     private CustomerState customerState;
 
-    protected Customer() {
-    }
+    protected Customer() { }
 
     // 생성 메서드 //
     public static Customer createCustomer(String email, String password, String phoneNumber) {
