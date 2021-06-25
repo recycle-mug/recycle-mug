@@ -38,9 +38,15 @@
 
           <div class="btn-wrapper">
             <button type="submit" @click.prevent="onSubmit">Login</button>
-            <button type="submit" @click.prevent="onSubmit" class="sub-btn">
-              Forgot Password?
-            </button>
+            <router-link
+              :to="{ name: 'admin' }"
+              tag="button"
+              type="submit"
+              @click.prevent="onSubmit"
+              class="sub-btn"
+            >
+              Forgot Password?</router-link
+            >
           </div>
           <span class="error-msg">{{ errors.response }}</span>
         </form>

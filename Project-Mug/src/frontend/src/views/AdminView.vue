@@ -1,11 +1,14 @@
 <template>
   <div :class="getTheme">
-    <router-link :to="{ name: 'adminLogin' }"><button></button></router-link>
+    <admin-header></admin-header>
   </div>
 </template>
 
 <script>
+import AdminHeader from "../components/AdminHeader.vue";
+
 export default {
+  components: { AdminHeader },
   computed: {
     getTheme() {
       return this.$store.state.theme;
