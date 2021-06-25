@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import recyclemug.ProjectMug.domain.cup.Cup;
-import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.repository.CupRepository;
 
 import java.util.List;
@@ -23,14 +22,12 @@ public class CupService {
     }
 
     @Transactional
-    public void removeCup(String name){
-        List<Cup> cups = cupRepository.findByCupName(name);
-        if (!cups.isEmpty()) {
-            for (Cup cup : cups) {
-                cupRepository.remove(cup);
-            }
+    public void removeCup(Long cupId){
+        Cup cup = cupRepository.findByCupId(cupId);
+        if (cup == null) {
+            throw new IllegalStateException("컵이 존재하지 않습니다.");
         } else {
-            throw new IllegalStateException("지우려는 컵이 존재하지 않습니다.");
+            cupRepository.remove(cup);
         }
     }
 

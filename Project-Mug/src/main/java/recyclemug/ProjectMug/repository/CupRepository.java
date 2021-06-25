@@ -3,7 +3,6 @@ package recyclemug.ProjectMug.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import recyclemug.ProjectMug.domain.cup.Cup;
-
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -21,11 +20,14 @@ public class CupRepository {
         em.remove(cup);
     }
 
-    public List<Cup> findAllCup() {
+    /**
+     * findAllCups: 모든 컵 리스트를 JSON 형태로 반환
+     * findByCupName: 이름 기반으로 컵 반환
+     */
+    public List<Cup> findAllCups() {
         return em.createQuery("select c from Cup c", Cup.class).getResultList();
     }
 
-    // 하나만 찾아오는 메서드들
     public List<Cup> findByCupName(String name) {
         return em.createQuery("select c from Cup c where c.name = :name", Cup.class)
                 .setParameter("name", name)
