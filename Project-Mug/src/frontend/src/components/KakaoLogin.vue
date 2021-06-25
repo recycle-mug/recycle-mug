@@ -52,8 +52,8 @@ export default {
             // window.location.href = re_path;
           }
         })
-        .catch((apierr) => {
-          console.log("apierr :>> ", apierr);
+        .catch(() => {
+          this.openKakaoLogin();
         });
     },
     async getKakaoInfo() {
@@ -77,10 +77,11 @@ export default {
       await getInfo
         .post(path)
         .then((res) => {
-          console.log("res.data.kakao_account.email :>> ", res.data.kakao_account.email);
+          // console.log("res.data.kakao_account.email :>> ", res.data.kakao_account.email);
+          console.log("res :>> ", res);
         })
         .catch((err) => {
-          console.log("err :>> ", err);
+          throw err;
         });
     },
   },
