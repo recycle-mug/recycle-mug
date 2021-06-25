@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import recyclemug.ProjectMug.domain.cup.Cup;
-import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.repository.CupRepository;
 
 import java.util.List;

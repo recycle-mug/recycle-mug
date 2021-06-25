@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import recyclemug.ProjectMug.dto.LoginDto;
 import recyclemug.ProjectMug.dto.TokenDto;
@@ -47,37 +46,4 @@ public class AuthController {
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 
-//    @PostMapping("/login/customer")
-//    public ResponseEntity<TokenDto> authorizeCustomer(@Valid @RequestBody LoginDto loginDto) {
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-//
-//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        String jwt = tokenAuthenticationProvider.createToken(authentication);
-//
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-//
-//        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/login/partner")
-//    public ResponseEntity<TokenDto> authorizePartner(@Valid @RequestBody LoginDto loginDto) {
-//        UsernamePasswordAuthenticationToken authenticationToken =
-//                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-//
-//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        String jwt = tokenAuthenticationProvider.createToken(authentication);
-//
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-//
-//        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
-//    }
 }
