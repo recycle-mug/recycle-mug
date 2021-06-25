@@ -28,11 +28,14 @@ public class CupController {
         cupService.addCup(cup);
     }
 
-    @DeleteMapping("/cup/remove")
+    @DeleteMapping("/cup/remove/{cupId}")
     @PostAuthorize("hasAnyRole('ADMIN')")
-    public void removeCup(@RequestBody @Valid CreateCupRequest request) {
-        String cupName = request.getName();
-        cupService.removeCup(cupName);
+    public void removeCup(@PathVariable Long cupId) {
+        try {
+            cupService.removeCup(cupId);
+        } catch (IllegalStateException e) {
+            log.error("컵이 존재하지 않는 상태에서 삭제하려 합니다.");
+        }
     }
 
     @GetMapping("/cup/list")
@@ -41,11 +44,10 @@ public class CupController {
         return cupRepository.findAllCups();
     }
 
-    @GetMapping("/cup/{cupName}")
+    @GetMapping("/cup/{cupId}")
     @PostAuthorize("hasAnyRole('ADMIN')")
-    public Cup findCup(@PathVariable("cupName") String cupName) {
-        List<Cup> cups = cupRepository.findByCupName(cupName);
-        return cups.get(0);
+    public Cup findCup(@PathVariable("cupName") Long cupId) {
+        return cupRepository.findByCupId(cupId);
     }
 
     @Data
