@@ -1,14 +1,16 @@
 <template>
   <div :class="getTheme">
     <admin-header></admin-header>
+    <admin-carousel></admin-carousel>
   </div>
 </template>
 
 <script>
 import AdminHeader from "../components/AdminHeader.vue";
+import AdminCarousel from "../components/AdminCarousel.vue";
 
 export default {
-  components: { AdminHeader },
+  components: { AdminHeader, AdminCarousel },
   computed: {
     getTheme() {
       return this.$store.state.theme;
