@@ -4,6 +4,15 @@
       <side-bar :isActive="isActive"></side-bar>
       <div class="content-wrapper">
         <div class="content-left">
+          <div class="icon-wrapper">
+            <div
+              style="width:100%; cursor:pointer;"
+              :class="isActive + ' menu-toggler'"
+              @click="activeMenu"
+            >
+              <span></span>
+            </div>
+          </div>
           <h1>Dashboard</h1>
         </div>
 
@@ -96,12 +105,11 @@ export default {
     }
 
     .header-container {
-      background-color: transparent;
+      background-color: map-get($map: $theme, $key: "content-background");
       color: map-get($map: $theme, $key: "text");
       box-sizing: border-box;
       width: 100%;
       margin-bottom: 3rem;
-      padding: 0.3rem 0;
 
       .header {
         width: 100%;
