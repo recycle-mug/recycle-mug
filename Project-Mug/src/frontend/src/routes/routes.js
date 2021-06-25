@@ -8,8 +8,12 @@ import MainView from "../views/MainView";
 import JoinView from "../views/JoinView";
 import LoginView from "../views/LoginView";
 import ProfileView from "../views/ProfileView";
+import AdminView from "../views/AdminView";
+import AdminLoginView from "../views/AdminLoginView";
+
 import AddressPopup from "../components/AddressPopup";
 import KakaoLogin from "../components/KakaoLogin";
+import AdminLogin from "../components/AdminLogin";
 
 export default new Router({
   mode: "history",
@@ -46,6 +50,17 @@ export default new Router({
       path: "/kakao",
       name: "kakao",
       component: KakaoLogin,
+    },
+    {
+      path: "/admin",
+      component: AdminView,
+      name: "admin",
+    },
+    {
+      path: "/adminLogin",
+      name: "adminLogin",
+      component: AdminLoginView,
+      alias: "/admin",
     },
   ],
 });
