@@ -1,6 +1,7 @@
 <template>
   <div :class="getTheme">
     <admin-header></admin-header>
+    <admin-chart></admin-chart>
     <admin-carousel></admin-carousel>
     <admin-user-table></admin-user-table>
     <footer-nav></footer-nav>
@@ -10,11 +11,12 @@
 <script>
 import AdminHeader from "../components/AdminHeader.vue";
 import AdminCarousel from "../components/AdminCarousel.vue";
+import AdminChart from "../components/AdminChart.vue";
 import AdminUserTable from "../components/AdminUserTable.vue";
 import FooterNav from "../components/FooterNav.vue";
 
 export default {
-  components: { AdminHeader, AdminCarousel, AdminUserTable, FooterNav },
+  components: { AdminHeader, AdminCarousel, AdminUserTable, FooterNav, AdminChart },
   computed: {
     getTheme() {
       return this.$store.state.theme;
