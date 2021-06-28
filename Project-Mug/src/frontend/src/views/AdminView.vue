@@ -1,14 +1,8 @@
 <template>
   <div :class="getTheme">
     <admin-header></admin-header>
-    <transition appear name="slide-fade" :duration="{ enter: 500 }">
-      <admin-carousel></admin-carousel>
-    </transition>
-
-    <transition appear name="slide-fade" :duration="{ enter: 500 }">
-      <admin-user-table style="transition-delay:0.3s"></admin-user-table>
-    </transition>
-
+    <admin-carousel></admin-carousel>
+    <admin-user-table></admin-user-table>
     <footer-nav></footer-nav>
   </div>
 </template>
@@ -36,18 +30,6 @@ export default {
     color: map-get($map: $theme, $key: "text");
     width: 100%;
     min-height: 100%;
-
-    .slide-fade-enter-active {
-      transition: all 0.8s ease;
-    }
-    .slide-fade-leave-active {
-      transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-    }
-    .slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
-      transform: translateY(-10px);
-      opacity: 0;
-    }
   }
 }
 </style>

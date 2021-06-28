@@ -904,7 +904,7 @@ export default {
       box-shadow: $shadow-light;
       background-color: map-get($map: $theme, $key: "content-background");
       border-radius: 0.428rem;
-      transition: all 0.3s ease-in-out, background 0s, color 0s, border-color 0s;
+      transition: all 0.3s ease-in-out;
       position: relative;
       display: flex;
       flex-direction: column;
