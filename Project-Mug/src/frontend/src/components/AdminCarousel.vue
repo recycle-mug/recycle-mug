@@ -275,8 +275,13 @@ export default {
                 border-radius: 14px;
                 background-color: map-get($map: $theme, $key: "background");
                 padding: 18px;
-                overflow: hidden;
                 cursor: pointer;
+
+                &:hover {
+                  transition: all 0.2s ease;
+                  transform: scale(0.95);
+                  box-shadow: $shadow;
+                }
 
                 .item-title {
                   font-size: 1.2rem;
