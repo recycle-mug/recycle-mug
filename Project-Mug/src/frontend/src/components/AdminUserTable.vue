@@ -56,7 +56,13 @@
         </thead>
 
         <tbody role="rowgroup">
-          <tr role="row" v-for="index in parseInt(perPage)" :key="index">
+          <tr
+            role="row"
+            v-for="index in parseInt(perPage)"
+            :key="index"
+            @click="activeUserTable((currentPage - 1) * perPage + index - 1)"
+            :class="{ active: entryList[(currentPage - 1) * perPage + index - 1].active }"
+          >
             <td
               aria-colindex="1"
               role="cell"
@@ -77,16 +83,19 @@
               aria-colindex="3"
               role="cell"
               v-if="entryList[(currentPage - 1) * perPage + index - 1]"
+              style="display:flex; flex-direction:row; align-items:center"
             >
-              <div class="profile-wrapper">
-                <div class="profile-pic-wrapper">
-                  <img
-                    :src="entryList[(currentPage - 1) * perPage + index - 1].profilePic"
-                    alt=""
-                    class="profile-pic"
-                  />
-                </div>
-                {{ entryList[(currentPage - 1) * perPage + index - 1].username }}
+              <div class="profile-pic-wrapper">
+                <img
+                  :src="entryList[(currentPage - 1) * perPage + index - 1].profilePic"
+                  alt=""
+                  class="profile-pic"
+                />
+              </div>
+              {{ entryList[(currentPage - 1) * perPage + index - 1].username }}
+
+              <div class="user-detail">
+                <h1>{{ entryList[(currentPage - 1) * perPage + index - 1].username }}</h1>
               </div>
             </td>
             <td
@@ -254,6 +263,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -262,6 +272,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -270,6 +281,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -278,6 +290,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -286,6 +299,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -294,6 +308,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -302,6 +317,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -310,6 +326,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -318,6 +335,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -326,6 +344,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -334,6 +353,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -342,6 +362,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -350,6 +371,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -358,6 +380,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -366,6 +389,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -374,6 +398,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -382,6 +407,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -390,6 +416,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -398,6 +425,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -406,6 +434,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -414,6 +443,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -422,6 +452,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -430,6 +461,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -438,6 +470,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -446,6 +479,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -454,6 +488,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -462,6 +497,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -470,6 +506,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -478,6 +515,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -486,6 +524,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -494,6 +533,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -502,6 +542,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -510,6 +551,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -518,6 +560,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -526,6 +569,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -534,6 +578,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -542,6 +587,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -550,6 +596,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -558,6 +605,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -566,6 +614,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -574,6 +623,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -582,6 +632,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -590,6 +641,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -598,6 +650,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -606,6 +659,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -614,6 +668,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -622,6 +677,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -630,6 +686,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -638,6 +695,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -646,6 +704,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -654,6 +713,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -662,6 +722,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -670,6 +731,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -678,6 +740,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -686,6 +749,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -694,6 +758,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -702,6 +767,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -710,6 +776,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -718,6 +785,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -726,6 +794,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -734,6 +803,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -742,6 +812,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -750,6 +821,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -758,6 +830,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -766,6 +839,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -774,6 +848,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -782,6 +857,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -790,6 +866,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -798,6 +875,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -806,6 +884,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -814,6 +893,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -822,6 +902,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -830,6 +911,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -838,6 +920,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -846,6 +929,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -854,6 +938,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
         {
           role: "customer",
@@ -862,6 +947,7 @@ export default {
           username: "tester",
           lastLogin: "2021-06-29",
           signUpDate: "2021-06-29",
+          active: false,
         },
       ],
       writingMode: false,
@@ -887,6 +973,14 @@ export default {
     onWriting(e) {
       e.preventDefault();
       this.writingMode = !this.writingMode;
+    },
+    activeUserTable(index) {
+      for (let entry in this.entryList) {
+        if (index != entry) {
+          this.entryList[entry].active = false;
+        }
+      }
+      this.entryList[index].active = !this.entryList[index].active;
     },
   },
   mounted: function() {
@@ -915,6 +1009,7 @@ export default {
       width: 100%;
       max-width: 1020px;
       margin: 1rem auto;
+      overflow: hidden;
 
       .table-header {
         margin: 1.5rem;
@@ -1058,6 +1153,8 @@ export default {
             outline: none;
             padding: 0.72rem 2rem;
             text-align: left;
+            box-sizing: border-box;
+            height: 40px;
 
             &.index {
               width: 10%;
@@ -1083,6 +1180,24 @@ export default {
             }
           }
 
+          tbody tr.active {
+            background-color: map-get($map: $theme, $key: "table");
+
+            td .user-detail {
+              position: absolute;
+              background-color: map-get($map: $theme, $key: "table");
+              width: 50%;
+              height: calc(100% - 40px);
+              top: 40px;
+              left: 50%;
+              padding: 2rem;
+              box-sizing: border-box;
+              z-index: 99;
+              cursor: default;
+              display: block;
+            }
+          }
+
           tbody tr td {
             padding: 0.72rem 2rem;
             border-top: 1px solid map-get($map: $theme, $key: "table-border");
@@ -1091,24 +1206,21 @@ export default {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 0;
             font-weight: 100;
             cursor: pointer;
 
-            .profile-wrapper {
-              display: flex;
-              flex-direction: row;
-              align-items: center;
+            .user-detail {
+              display: none;
+            }
 
-              .profile-pic-wrapper {
-                width: 2rem;
-                border-radius: 50%;
-                overflow: hidden;
-                margin-right: 1rem;
+            .profile-pic-wrapper {
+              width: 2rem;
+              border-radius: 50%;
+              overflow: hidden;
+              margin-right: 1rem;
 
-                img {
-                  width: 100%;
-                }
+              img {
+                width: 100%;
               }
             }
 
