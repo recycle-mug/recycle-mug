@@ -444,7 +444,6 @@ export default {
         const path = "http://localhost:5000/join/" + this.formData.role;
 
         const payload = {
-          role: this.formData.role,
           id: this.formData.joinId,
           pw: this.formData.joinPw,
           tel:
@@ -463,6 +462,7 @@ export default {
         sendJoinForm.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
         sendJoinForm.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
 
+        console.log("payload :>> ", payload);
         await sendJoinForm
           .post(path, payload)
           .then((res) => {

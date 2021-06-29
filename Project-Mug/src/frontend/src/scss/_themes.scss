@@ -5,7 +5,11 @@ $theme-light: (
   "content-blocked": #eaeaea,
   "text": #151515,
   "text-light": #6e6b7b,
+  "text-muted": #b9b9c3,
   "text-reverse-color": #d0d2d6,
+  "border": rgb(216, 214, 222),
+  "table": #f3f2f7,
+  "table-border": #ebe9f1,
 );
 
 $theme-dark: (
@@ -15,7 +19,11 @@ $theme-dark: (
   "content-blocked": #141525,
   "text": #f7f7f7,
   "text-light": #d0d2d6,
+  "text-muted": #676d7d,
   "text-reverse-color": #151515,
+  "border": rgb(64, 70, 86),
+  "table": #343d55,
+  "table-border": #3b4253,
 );
 
 $themes: $theme-light, $theme-dark;
