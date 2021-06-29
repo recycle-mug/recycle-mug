@@ -1,5 +1,5 @@
 <template>
-  <div class="table-card" v-if="!writingMode">
+  <div class="table-card">
     <div class="table-header">
       <div class="header-content">
         <div class="content-left">
@@ -15,7 +15,9 @@
         <div class="content-right">
           <input type="text" placeholder="Search..." class="content-form" />
           <button @click="onWriting">
-            <span> <font-awesome-icon :icon="['fas', 'pen']"></font-awesome-icon> 글쓰기</span>
+            <span>
+              <font-awesome-icon :icon="['fas', 'search']"></font-awesome-icon> 유저 검색</span
+            >
           </button>
         </div>
       </div>
@@ -232,10 +234,10 @@
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faAngleLeft, faAngleRight, faPen } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
-faLibrary.add(faAngleLeft, faAngleRight, faPen);
+faLibrary.add(faAngleLeft, faAngleRight, faSearch);
 
 export default {
   data() {

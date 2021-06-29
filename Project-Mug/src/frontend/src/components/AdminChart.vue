@@ -1,22 +1,38 @@
 <template>
-  <div class="chart-wrapper">
+  <div class="charts-wrapper">
     <!-- Pie Chart -->
-    <apexchart
-      v-if="renderComponent"
-      width="400"
-      :options="updatePieChartTheme"
-      :series="pieChart.series"
-      class="pie-chart chart"
-    ></apexchart>
+    <div class="inner-box">
+      <div class="box-title">
+        <h3>Pie Chart</h3>
+        <div>Usage Rank</div>
+      </div>
+      <div class="box-chart pie-chart">
+        <apexchart
+          v-if="renderComponent"
+          width="100%"
+          :options="updatePieChartTheme"
+          :series="pieChart.series"
+          class="chart"
+        ></apexchart>
+      </div>
+    </div>
 
     <!-- Line Chart -->
-    <apexchart
-      v-if="renderComponent"
-      width="500"
-      :options="updateLineChartTheme"
-      :series="lineChart.series"
-      class="line-chart chart"
-    ></apexchart>
+    <div class="inner-box">
+      <div class="box-title">
+        <h3>Line Chart</h3>
+        <div>Recent Usage Statistics</div>
+      </div>
+      <div class="box-chart line-chart ">
+        <apexchart
+          v-if="renderComponent"
+          width="100%"
+          :options="updateLineChartTheme"
+          :series="lineChart.series"
+          class="chart"
+        ></apexchart>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -202,24 +218,57 @@ export default {
     * {
       box-sizing: border-box;
     }
-    .chart-wrapper {
+    .charts-wrapper {
       width: 100%;
       max-width: 1020px;
       margin: 1rem auto;
       display: flex;
       justify-content: space-between;
 
-      .chart {
+      .inner-box {
         background-color: map-get($map: $theme, $key: "content-background");
         color: map-get($map: $theme, $key: "text");
         position: relative;
         border: 1px solid map-get($map: $theme, $key: "content-blocked");
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
         padding: 20px;
         box-shadow: $shadow-lighter;
         border-radius: 6px;
+
+        .box-title {
+          text-align: left;
+          width: 100%;
+          padding: 5px 15px;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+
+          h3 {
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 0.1rem;
+          }
+          div {
+            color: map-get($map: $theme, $key: "text-light");
+            font-size: 0.8rem;
+            margin: 0.7rem 0;
+          }
+        }
+
+        .box-chart {
+          padding: 1.2rem;
+        }
+
+        .pie-chart {
+          width: 400px;
+        }
+
+        .line-chart {
+          width: 520px;
+        }
       }
     }
   }
