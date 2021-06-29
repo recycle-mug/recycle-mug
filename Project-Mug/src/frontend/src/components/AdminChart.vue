@@ -15,6 +15,17 @@
           class="chart"
         ></apexchart>
       </div>
+      <div class="option-btn-wrapper">
+        <button @click.prevent="activeButton" id="week" :class="{ active: activeBtns.week }">
+          This Week
+        </button>
+        <button @click.prevent="activeButton" id="month" :class="{ active: activeBtns.month }">
+          This Month
+        </button>
+        <button @click.prevent="activeButton" id="year" :class="{ active: activeBtns.year }">
+          This Year
+        </button>
+      </div>
     </div>
 
     <!-- Line Chart -->
@@ -82,7 +93,7 @@ export default {
             type: "area",
             background: "transparent",
           },
-          dataLabels: { enabled: false, style: { colors: ["#000"] } },
+          dataLabels: { enabled: false },
           xaxis: {
             categories: [1, 2, 3, 4, 5, 6],
           },
@@ -107,6 +118,11 @@ export default {
             data: [30, 10, 45, 60, 100, 91],
           },
         ],
+      },
+      activeBtns: {
+        week: true,
+        month: false,
+        year: false,
       },
     };
   },
@@ -206,6 +222,25 @@ export default {
       }
     },
   },
+  methods: {
+    activeButton(e) {
+      for (let item in this.activeBtns) {
+        if (e.target.id === item) {
+          this.activeBtns[item] = true;
+          const first = Math.floor(Math.random() * (50 - 1)) + 1;
+          const second = Math.floor(Math.random() * (50 - first - 1)) + 1;
+          const third = Math.floor(Math.random() * (50 - (first + second) - 1)) + 1;
+          const fourth = Math.floor(Math.random() * (100 - (first + second + third) - 1)) + 1;
+          const fifth =
+            Math.floor(Math.random() * (100 - (first + second + third + fourth) - 0)) + 0;
+
+          this.pieChart.series = [first, second, third, fourth, fifth];
+        } else {
+          this.activeBtns[item] = false;
+        }
+      }
+    },
+  },
 };
 </script>
 
@@ -268,6 +303,35 @@ export default {
 
         .line-chart {
           width: 520px;
+        }
+
+        .option-btn-wrapper {
+          width: 100%;
+          display: flex;
+          justify-content: space-evenly;
+
+          button {
+            padding: 1rem;
+            color: map-get($map: $theme, $key: "text");
+            border-radius: 6px;
+            border: 1px solid map-get($map: $theme, $key: "border");
+            background-color: map-get($map: $theme, $key: "background");
+            box-shadow: $shadow-light;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &.active {
+              background-color: $main-color;
+              color: $white;
+              box-shadow: $shadow;
+            }
+
+            &:hover {
+              background-color: $main-color;
+              color: $white;
+              box-shadow: $shadow;
+            }
+          }
         }
       }
     }
