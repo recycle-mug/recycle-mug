@@ -7,10 +7,12 @@
     "dev": "webpack-dev-server --mode development --hot"
   },
   "dependencies": {
+    "apexcharts": "^3.27.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "google-maps-api-loader": "^1.1.1",
     "vue": "^2.6.11",
+    "vue-apexcharts": "^1.6.1",
     "vue-router": "^3.5.1"
   },
   "devDependencies": {
