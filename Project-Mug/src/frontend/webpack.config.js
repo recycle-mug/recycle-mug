@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
 module.exports = {
-  mode: "production",
+  mode: "history",
   devtool: "eval",
   resolve: {
     extensions: [".js", ".vue"],
@@ -14,6 +14,22 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
+    proxy: {
+      "/tokenApi": {
+        target: "https://kauth.kakao.com",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/tokenApi": "",
+        },
+      },
+      "/infoApi": {
+        target: "https://kapi.kakao.com",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/infoApi": "",
+        },
+      },
+    },
   },
   entry: {
     // app: "src/main.js"
@@ -36,7 +52,7 @@ module.exports = {
             options: {
               resources: [
                 path.resolve(__dirname, "src/scss/_variables.scss"),
-                path.resolve(__dirname, "src/scss/_reset.scss"),
+                path.resolve(__dirname, "src/scss/_themes.scss"),
               ],
             },
           },
@@ -57,13 +73,8 @@ module.exports = {
   plugins: [
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "index.html"),
+      template: path.join(__dirname, "public/index.html"),
       minify: { collapseWhitespace: true },
     }),
   ],
-  output: {
-    filename: "[name].js",
-    path: path.join(__dirname, "dist"),
-    publicPath: "/",
-  },
 };
