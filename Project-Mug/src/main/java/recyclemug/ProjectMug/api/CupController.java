@@ -51,9 +51,9 @@ public class CupController {
     }
 
     @Data
-    static class CreateCupRequest {
-        private String name;
-        private int price;
-        private String profilePicture;
+        static class CreateCupRequest {
+            private String name;
+            private int price;
+            private String profilePicture;
     }
 }
