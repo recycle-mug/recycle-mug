@@ -18,7 +18,7 @@ public abstract class User {
 
     @Column(length = 30)
     private String email;
-    @Column(length = 20)
+    @Column(length = 1024)
     private String password;
     @Column(length = 13)
     private String phoneNumber;

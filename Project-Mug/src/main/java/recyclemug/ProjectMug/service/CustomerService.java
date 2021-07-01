@@ -44,7 +44,7 @@ public class CustomerService {
 
 //        passwordEncoder 에서 찾는데 오류가나서 일단 인코딩 없이 저장되게끔 해놓앗다.
 //        customer.setPassword("{noop}" + passwordEncoder.encode(customer.getPassword()));
-        customer.setPassword("{noop}" + customer.getPassword());
+        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
         customer.setActivated(true);
         customer.setAuthorities(Collections.singleton(authority));
 
