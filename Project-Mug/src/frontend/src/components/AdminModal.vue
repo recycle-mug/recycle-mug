@@ -7,6 +7,13 @@ export default {
   data() {
     return {};
   },
+  props: ["cupId"],
+  methods: {
+    getCupInfo() {},
+  },
+  mounted() {
+    this.getCupInfo();
+  },
 };
 </script>
 
