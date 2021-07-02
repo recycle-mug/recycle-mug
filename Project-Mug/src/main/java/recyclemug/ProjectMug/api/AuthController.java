@@ -93,17 +93,17 @@ public class AuthController {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.email);
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
             }
         } else if (headerDTO.role.equals("ROLE_PARTNER")) {
             List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.email);
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
             }
         } else {
             User user = adminRepository.findByEmail(headerDTO.email);
-            return new ResponseProfileDTO(user.getId(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
         }
 
         return null;
@@ -123,12 +123,14 @@ public class AuthController {
     @Setter
     static class ResponseProfileDTO {
         private Long id;
+        private String email;
         private String nickname;
         private String profilePicture;
         private String role;
 
-        public ResponseProfileDTO(Long id, String nickname, String profilePicture, String role) {
+        public ResponseProfileDTO(Long id, String email, String nickname, String profilePicture, String role) {
             this.id = id;
+            this.email = email;
             this.nickname = nickname;
             this.profilePicture = profilePicture;
             this.role = role;
