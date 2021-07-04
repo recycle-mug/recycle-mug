@@ -100,12 +100,9 @@ export default {
               this.formData.imgSrc = reader.result;
             };
             reader.readAsDataURL(file);
-            console.log("this.formData.imgSrc :>> ", this.formData.imgSrc);
           } else {
             throw "올바른 이미지 형식이 아닙니다";
           }
-        } else {
-          throw "파일을 찾을 수 없습니다";
         }
       } catch (error) {
         console.log("error :>> ", error);
@@ -118,8 +115,6 @@ export default {
       const result = inputText.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       e.target.value = result;
       e.target.id === "price" ? (this.formData.price = result) : (this.formData.num = result);
-      // this.formData.price = result;
-      console.log("e.target.id :>> ", e.target.id);
     },
     checkRequired() {
       for (const item in this.formData) {
@@ -141,13 +136,15 @@ export default {
       const path = "/backend/cup/add";
 
       const payload = {
-        img: this.formData.imgSrc,
+        profilePicture: this.formData.imgSrc,
         name: this.formData.name,
-        price: this.formData.price,
-        num: this.formData.num,
+        price: this.formData.price.replace(/[^0-9]/g, ""),
+        num: this.formData.num.replace(/[^0-9]/g, ""),
       };
 
-      let cupForm = axios.create({ baseURL: path });
+      console.log("payload :>> ", payload);
+
+      let cupForm = axios.create();
 
       await cupForm
         .post(path, payload)
