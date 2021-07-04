@@ -80,6 +80,12 @@ export default {
         this.isActive = "active";
       }
     },
+    logout() {
+      this.$store
+        .dispatch("LOGOUT")
+        .then(this.redirect)
+        .catch((err) => (this.errors.response = err));
+    },
   },
   computed: {
     getTheme() {
@@ -91,7 +97,6 @@ export default {
 
     const { accessToken } = localStorage;
     if (!accessToken) {
-      alert("로그아웃 되었습니다");
       this.isLogin = false;
       this.username = "";
     } else {

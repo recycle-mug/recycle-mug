@@ -65,6 +65,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
+import axios from "axios";
 
 faLibrary.add(faUpload);
 
@@ -134,10 +135,28 @@ export default {
     validate() {
       this.checkRequired();
     },
-    onSubmit() {
+    async onSubmit() {
       this.validate();
 
-      const path = "localhost:5000/cup/add";
+      const path = "/backend/cup/add";
+
+      const payload = {
+        img: this.formData.imgSrc,
+        name: this.formData.name,
+        price: this.formData.price,
+        num: this.formData.num,
+      };
+
+      let cupForm = axios.create({ baseURL: path });
+
+      await cupForm
+        .post(path, payload)
+        .then((res) => {
+          console.log("res :>> ", res);
+        })
+        .catch((err) => {
+          this.errorMsg = err;
+        });
     },
   },
 };
@@ -204,6 +223,8 @@ export default {
               color: $error-msg;
               transform: translateY(2rem);
               font-size: 0.8rem;
+              height: 0.8rem;
+              user-select: none;
             }
           }
         }
@@ -281,6 +302,8 @@ export default {
               color: $error-msg;
               font-size: 0.8rem;
               text-align: center;
+              height: 0.8rem;
+              user-select: none;
             }
           }
         }
