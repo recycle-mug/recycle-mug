@@ -13,7 +13,79 @@ import AdminLoginView from "../views/AdminLoginView";
 
 import AddressPopup from "../components/AddressPopup";
 import KakaoLogin from "../components/KakaoLogin";
-import AdminLogin from "../components/AdminLogin";
+
+const requireAuth = () => (from, to, next) => {
+  const path = "/backend/profile";
+
+  const { accessToken } = localStorage;
+  if (!accessToken) {
+    alert("로그인 해주세요");
+    next({ path: "/" });
+  } else {
+    const authUser = axios.create({ baseUrl: path });
+    authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+    authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
+      "GET,POST,PUT,DELETE,OPTIONS";
+
+    authUser.defaults.headers.common["Content-Type"] =
+      "application/x-www-form-urlencoded;charset=utf-8";
+
+    authUser
+      .get(path)
+      .then((res) => {
+        console.log("res.data :", res.data);
+        if (res.data.error) {
+          throw res.data.error;
+        } else {
+          return next();
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("로그인 해주세요");
+        next({ path: "/" });
+      });
+  }
+};
+
+const checkAdmin = () => (from, to, next) => {
+  const path = "/backend/profile";
+
+  const { accessToken } = localStorage;
+  if (!accessToken) {
+    alert("로그인 해주세요");
+    next({ path: "/" });
+  } else {
+    const getRole = axios.create({ baseUrl: path });
+    getRole.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+    getRole.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    getRole.defaults.headers.common["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS";
+
+    getRole.defaults.headers.common["Content-Type"] =
+      "application/x-www-form-urlencoded;charset=utf-8";
+
+    getRole
+      .get(path)
+      .then((res) => {
+        console.log("res.data :", res.data);
+        if (res.data.error) {
+          throw res.data.error;
+        } else {
+          if (res.data.role === "ROLE_ADMIN") {
+            return next();
+          } else {
+            throw "권한이 없습니다";
+          }
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        alert(error);
+        next({ path: "/" });
+      });
+  }
+};
 
 export default new Router({
   mode: "history",
@@ -40,6 +112,7 @@ export default new Router({
       path: "/profile",
       name: "profile",
       component: ProfileView,
+      beforeEnter: requireAuth(),
     },
     {
       path: "/address",
@@ -55,6 +128,7 @@ export default new Router({
       path: "/admin",
       component: AdminView,
       name: "admin",
+      beforeEnter: checkAdmin(),
     },
     {
       path: "/adminLogin",

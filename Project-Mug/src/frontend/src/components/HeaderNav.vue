@@ -20,18 +20,23 @@
         </router-link>
 
         <div class="content-right">
+          <router-link :to="{ name: 'profile' }" tag="div" class="profile-btn" v-if="isLogin">
+            <span>{{ username }}님 안녕하세요</span>
+            <div class="icon-wrapper">
+              <font-awesome-icon
+                :icon="['fas', 'user']"
+                style="width:100%; cursor:pointer;"
+              ></font-awesome-icon>
+            </div>
+          </router-link>
+
           <router-link
             :to="{ name: 'login', query: { role: 'customer' } }"
             tag="span"
             class="login-btn"
+            v-else
             >로그인 / 회원가입</router-link
           >
-          <router-link :to="{ name: 'profile' }" tag="div" class="icon-wrapper">
-            <font-awesome-icon
-              :icon="['fas', 'user']"
-              style="width:100%; cursor:pointer;"
-            ></font-awesome-icon>
-          </router-link>
         </div>
 
         <div class="theme-picker-wrapper">
@@ -50,11 +55,16 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
 faLibrary.add(faUser);
+
+import axios from "axios";
+
 export default {
   data() {
     return {
       theme: this.getTheme,
       isActive: "",
+      username: "",
+      isLogin: false,
     };
   },
   components: {
@@ -70,11 +80,50 @@ export default {
         this.isActive = "active";
       }
     },
+    logout() {
+      this.$store
+        .dispatch("LOGOUT")
+        .then(this.redirect)
+        .catch((err) => (this.errors.response = err));
+    },
   },
   computed: {
     getTheme() {
       return this.$store.state.theme;
     },
+  },
+  mounted() {
+    const path = "/backend/profile";
+
+    const { accessToken } = localStorage;
+    if (!accessToken) {
+      this.isLogin = false;
+      this.username = "";
+    } else {
+      const authUser = axios.create({ baseUrl: path });
+      authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+      authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
+        "GET,POST,PUT,DELETE,OPTIONS";
+
+      authUser.defaults.headers.common["Content-Type"] =
+        "application/x-www-form-urlencoded;charset=utf-8";
+
+      authUser
+        .get(path)
+        .then((res) => {
+          if (res.data.error) {
+            throw res.data.error;
+          } else {
+            this.isLogin = true;
+            this.username = res.data.id;
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert(error);
+        });
+    }
   },
 };
 </script>
@@ -204,6 +253,25 @@ export default {
           }
 
           .login-btn {
+            font-weight: bold;
+            user-select: none;
+            cursor: pointer;
+            color: map-get($map: $theme, $key: "text-light");
+            &::after {
+              content: "";
+              width: 0px;
+              height: 0.125rem;
+              display: block;
+              background: map-get($map: $theme, $key: "text");
+              transition: all 0.3s ease-in-out;
+            }
+            &:hover::after {
+              font-weight: bolder;
+              width: 100%;
+            }
+          }
+
+          .profile-btn {
             font-weight: bold;
             user-select: none;
             cursor: pointer;

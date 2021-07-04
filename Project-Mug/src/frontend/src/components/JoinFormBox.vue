@@ -441,7 +441,7 @@ export default {
         !this.errors.joinAddress
       ) {
         // path
-        const path = "http://localhost:5000/join/" + this.formData.role;
+        const path = "/backend/join/" + this.formData.role;
 
         const payload = {
           id: this.formData.joinId,
