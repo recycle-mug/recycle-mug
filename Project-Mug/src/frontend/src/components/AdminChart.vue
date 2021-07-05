@@ -253,6 +253,13 @@ export default {
     * {
       box-sizing: border-box;
     }
+
+    @media screen and (max-width: 1019px) {
+      .charts-wrapper {
+        display: flex;
+        flex-direction: column;
+      }
+    }
     .charts-wrapper {
       width: 100%;
       max-width: 1020px;
