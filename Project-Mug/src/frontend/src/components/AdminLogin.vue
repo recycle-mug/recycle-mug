@@ -66,6 +66,7 @@ export default {
   data() {
     return {
       formData: {
+        role: "admin",
         loginId: "",
         loginPw: "",
       },
@@ -93,17 +94,16 @@ export default {
       }
     },
     checkId() {
-      const pattern_loginId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-
-      try {
-        if (!pattern_loginId.test(this.formData.loginId)) {
-          throw "이메일 형식을 확인해주세요";
-        } else {
-          this.errors.loginId = "";
-        }
-      } catch (error) {
-        this.errors.loginId = error;
-      }
+      // const pattern_loginId = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+      // try {
+      //   if (!pattern_loginId.test(this.formData.loginId)) {
+      //     throw "이메일 형식을 확인해주세요";
+      //   } else {
+      //     this.errors.loginId = "";
+      //   }
+      // } catch (error) {
+      //   this.errors.loginId = error;
+      // }
     },
     validate() {
       this.checkRequired();

@@ -1,10 +1,9 @@
 <template>
   <div class="header-container">
-    <div class="header">
-      <side-bar :isActive="isActive"></side-bar>
+    <div class="header" :class="{ active: !isScrollDown }">
       <div class="content-wrapper">
         <div class="content-left">
-          <div class="icon-wrapper">
+          <div class="icon-wrapper" v-if="windowWidth < 1020">
             <div
               style="width:100%; cursor:pointer;"
               :class="isActive + ' menu-toggler'"
@@ -13,6 +12,8 @@
               <span></span>
             </div>
           </div>
+          <admin-sidebar v-if="isActive"></admin-sidebar>
+          <span>admin / </span>
           <h1>Dashboard</h1>
         </div>
 
@@ -59,7 +60,7 @@
 
 <script>
 import ThemePicker from "./ThemePicker.vue";
-import SideBar from "./SideBar";
+import AdminSidebar from "./AdminSidebar.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBell, faEnvelope } from "@fortawesome/fontawesome-free-regular";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
@@ -70,12 +71,15 @@ export default {
     return {
       theme: this.getTheme,
       isActive: "",
+      windowWidth: window.innerWidth,
+      isScrollDown: true,
+      lastScroll: 0,
     };
   },
   components: {
     ThemePicker,
-    SideBar,
     FontAwesomeIcon,
+    AdminSidebar,
   },
   methods: {
     activeMenu() {
@@ -85,11 +89,32 @@ export default {
         this.isActive = "active";
       }
     },
+    onResize() {
+      this.windowWidth = window.innerWidth;
+    },
+    onScroll(event) {
+      if (event.target.scrollTop <= this.lastScroll) {
+        this.isScrollDown = true;
+      } else {
+        this.isScrollDown = false;
+      }
+
+      this.lastScroll = event.target.scrollTop;
+    },
   },
   computed: {
     getTheme() {
       return this.$store.state.theme;
     },
+    getCurrentRouteName() {
+      return this.$route.name;
+    },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener("resize", this.onResize);
+      document.querySelector(".page").addEventListener("scroll", this.onScroll);
+    });
   },
 };
 </script>
@@ -105,11 +130,15 @@ export default {
     }
 
     .header-container {
-      background-color: map-get($map: $theme, $key: "content-background");
+      background-color: map-get($map: $theme, $key: "background");
       color: map-get($map: $theme, $key: "text");
       box-sizing: border-box;
       width: 100%;
       margin-bottom: 3rem;
+      padding: 0.25rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       .header {
         width: 100%;
@@ -119,6 +148,17 @@ export default {
         position: relative;
         z-index: 10;
         padding: 0 2rem;
+        transition: all 0.3s ease;
+
+        &.active {
+          background-color: map-get($map: $theme, $key: "content-background");
+          z-index: 50;
+          margin: 1rem auto;
+          position: fixed;
+          top: 0;
+          border-radius: 6px;
+          box-shadow: $shadow;
+        }
 
         .content-wrapper {
           box-sizing: border-box;
@@ -135,12 +175,12 @@ export default {
             width: 100%;
             align-items: center;
             display: flex;
+            user-select: none;
 
             .icon-wrapper {
               width: 30px;
-              padding: 20px;
               color: map-get($map: $theme, $key: "text");
-              margin-right: 1rem;
+              margin-right: 0.5rem;
 
               .menu-toggler {
                 top: 20px;
@@ -151,7 +191,6 @@ export default {
                 display: flex;
                 align-items: center;
                 z-index: 999;
-
                 span,
                 span::before,
                 span::after {
@@ -163,40 +202,40 @@ export default {
                   border-radius: 20px;
                   transition: 500ms cubic-bezier(0.77, 0, 0.175, 1);
                 }
-
                 span::before {
                   top: -5px;
                 }
-
                 span::after {
                   top: 5px;
                 }
-
                 &.active > span {
                   background: transparent;
                 }
-
                 &.active > span::before,
                 &.active > span::after {
                   top: 0px;
                 }
-
                 &.active > span::before {
                   transform: rotate(-225deg);
                 }
-
                 &.active > span::after {
                   transform: rotate(225deg);
                 }
               }
             }
 
+            span {
+              font-size: 1rem;
+              color: map-get($map: $theme, $key: "text-light");
+              font-weight: bold;
+              margin-right: 10px;
+              cursor: pointer;
+            }
+
             h1 {
               font-weight: bolder;
               font-size: 1.2rem;
               text-align: center;
-              transition: 0.3s color linear;
-              user-select: none;
             }
           }
 

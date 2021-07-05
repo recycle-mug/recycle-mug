@@ -1,28 +1,36 @@
 <template>
   <div class="form-wrapper">
-    <form>
+    <form action="#">
       <div class="image-wrapper" @click="chooseImg">
         <input type="file" id="fileBtn" style="display:none" @change="addImgByClick" />
-        <img :src="imgSrc" v-if="imgSrc.length > 0" />
+        <img :src="formData.imgSrc" v-if="formData.imgSrc.length > 0" />
         <div class="upload-img-icon" v-else>
           <div class="upload-icon">
             <font-awesome-icon :icon="['fas', 'upload']"></font-awesome-icon>
           </div>
           <span class="upload-text">Image Upload</span>
-          <span class="error-msg">{{ errorMsg }}</span>
+          <span class="error-msg">{{ imgErr }}</span>
         </div>
       </div>
       <div class="content-wrapper">
         <div class="content-row">
           <div class="row-title">Name</div>
-          <input type="text" class="row-input" placeholder="Cup Name" />
+          <input type="text" class="row-input" placeholder="Cup Name" v-model="formData.name" />
         </div>
 
         <div class="content-row" style="display:flex; flex-direction:row;margin:0">
           <div class="content-row" style="margin-right:1.5rem">
             <div class="row-title">가격</div>
             <div class="input-wrapper" style="display:flex">
-              <input type="text" class="row-input" placeholder="2,000" style="text-align:right" />
+              <input
+                type="text"
+                class="row-input"
+                placeholder="2,000"
+                v-model="formData.price"
+                @keyup="setInputFilter"
+                style="text-align:right"
+                id="price"
+              />
               <p>원</p>
             </div>
           </div>
@@ -30,14 +38,23 @@
           <div class="content-row">
             <div class="row-title">수량</div>
             <div class="input-wrapper" style="display:flex">
-              <input type="text" class="row-input" placeholder="2,000" style="text-align:right" />
+              <input
+                type="text"
+                class="row-input"
+                placeholder="2,000"
+                v-model="formData.num"
+                @keyup="setInputFilter"
+                style="text-align:right"
+                id="num"
+              />
               <p>개</p>
             </div>
           </div>
         </div>
 
         <div class="content-row">
-          <button type="submit">컵 추가하기</button>
+          <span class="error-msg">{{ errorMsg }}</span>
+          <button type="submit" @click.prevent="onSubmit">컵 추가하기</button>
         </div>
       </div>
     </form>
@@ -48,13 +65,20 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
+import axios from "axios";
 
 faLibrary.add(faUpload);
 
 export default {
   data() {
     return {
-      imgSrc: "",
+      formData: {
+        imgSrc: "",
+        name: "",
+        price: "",
+        num: "",
+      },
+      imgErr: "",
       errorMsg: "",
     };
   },
@@ -73,21 +97,63 @@ export default {
           if (file.type.match(imgType)) {
             const reader = new FileReader();
             reader.onload = () => {
-              this.imgSrc = reader.result;
+              this.formData.imgSrc = reader.result;
             };
             reader.readAsDataURL(file);
-            console.log("this.imgSrc :>> ", this.imgSrc);
           } else {
             throw "올바른 이미지 형식이 아닙니다";
           }
-        } else {
-          throw "파일을 찾을 수 없습니다";
         }
       } catch (error) {
         console.log("error :>> ", error);
-        this.errorMsg = error;
-        this.imgSrc = "";
+        this.imgErr = error;
+        this.formData.imgSrc = "";
       }
+    },
+    setInputFilter(e) {
+      let inputText = e.target.value.replace(/[^0-9]/g, "");
+      const result = inputText.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      e.target.value = result;
+      e.target.id === "price" ? (this.formData.price = result) : (this.formData.num = result);
+    },
+    checkRequired() {
+      for (const item in this.formData) {
+        try {
+          if (!this.formData[item]) {
+            throw "빈 칸을 모두 채워주세요";
+          }
+        } catch (error) {
+          this.errorMsg = error;
+        }
+      }
+    },
+    validate() {
+      this.checkRequired();
+    },
+    async onSubmit() {
+      this.validate();
+
+      const path = "/backend/cup/add";
+
+      const payload = {
+        profilePicture: this.formData.imgSrc,
+        name: this.formData.name,
+        price: this.formData.price.replace(/[^0-9]/g, ""),
+        num: this.formData.num.replace(/[^0-9]/g, ""),
+      };
+
+      console.log("payload :>> ", payload);
+
+      let cupForm = axios.create();
+
+      await cupForm
+        .post(path, payload)
+        .then((res) => {
+          console.log("res :>> ", res);
+        })
+        .catch((err) => {
+          this.errorMsg = err;
+        });
     },
   },
 };
@@ -154,6 +220,8 @@ export default {
               color: $error-msg;
               transform: translateY(2rem);
               font-size: 0.8rem;
+              height: 0.8rem;
+              user-select: none;
             }
           }
         }
@@ -225,6 +293,14 @@ export default {
                 transition: all 0.3s ease;
                 transform: translateY(-2px);
               }
+            }
+
+            .error-msg {
+              color: $error-msg;
+              font-size: 0.8rem;
+              text-align: center;
+              height: 0.8rem;
+              user-select: none;
             }
           }
         }

@@ -5,7 +5,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://localhost:5000";
+const resourceHost = "/backend";
 
 const enhanceAccessToken = () => {
   const { accessToken } = localStorage;
@@ -49,9 +49,7 @@ export default new Vuex.Store({
         password: password,
       };
       console.log("payload :>> ", payload);
-      let sendData = axios.create({
-        baseURL: `${resourceHost}/login/${role}`,
-      });
+      let sendData = axios.create();
       sendData.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
       sendData.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
 
