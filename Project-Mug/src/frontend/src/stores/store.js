@@ -49,9 +49,7 @@ export default new Vuex.Store({
         password: password,
       };
       console.log("payload :>> ", payload);
-      let sendData = axios.create({
-        baseURL: `${resourceHost}/login/${role}`,
-      });
+      let sendData = axios.create();
       sendData.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
       sendData.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
 
