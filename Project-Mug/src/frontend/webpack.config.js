@@ -4,12 +4,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 
 module.exports = {
-  mode: "history",
+  mode: "production",
   devtool: "eval",
   resolve: {
     extensions: [".js", ".vue"],
     alias: {
-      "@": path.resolve(__dirname, "public/"),
+      "@": path.resolve(__dirname, "src/"),
     },
   },
   devServer: {
@@ -87,6 +87,7 @@ module.exports = {
   output: {
     filename: "[name].js",
     path: path.join(__dirname, "../../../docs"),
-    publicPath: process.env.NODE_ENV === "production" ? "/recycle-mug/" : "/",
+    // publicPath: process.env.NODE_ENV === "production" ? "/recycle-mug/" : "/",
+    publicPath: "/recycle-mug/",
   },
 };
