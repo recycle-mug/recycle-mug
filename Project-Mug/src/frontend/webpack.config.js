@@ -84,4 +84,10 @@ module.exports = {
       minify: { collapseWhitespace: true },
     }),
   ],
+  output: {
+    filename: "[name].js",
+    path: path.join(__dirname, "../../../docs"),
+    // publicPath: process.env.NODE_ENV === "production" ? "/recycle-mug/" : "/",
+    publicPath: "/recycle-mug/",
+  },
 };

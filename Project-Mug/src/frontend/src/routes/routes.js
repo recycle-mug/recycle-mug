@@ -89,7 +89,7 @@ const checkAdmin = () => (from, to, next) => {
 
 export default new Router({
   mode: "history",
-  base: process.env.BASE_URL,
+  base: "/recycle-mug/",
   routes: [
     {
       path: "/",

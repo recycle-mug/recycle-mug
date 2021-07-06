@@ -4,6 +4,4 @@ import App from "./App.vue";
 Vue.config.productionTip = false;
 import "./scss/style.scss";
 
-new Vue({
-  render: (h) => h(App),
-}).$mount("#app");
+new Vue(App).$mount("#app");
