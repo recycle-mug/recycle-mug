@@ -84,4 +84,9 @@ module.exports = {
       minify: { collapseWhitespace: true },
     }),
   ],
+  output: {
+    filename: "[name].js",
+    path: path.join(__dirname, "docs"),
+    publicPath: "/recycle-mug/",
+  },
 };
