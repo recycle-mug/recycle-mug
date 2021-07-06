@@ -88,6 +88,7 @@ const checkAdmin = () => (from, to, next) => {
 };
 
 export default new Router({
+  mode: "hash",
   base: "/recycle-mug/",
   routes: [
     {
@@ -111,7 +112,7 @@ export default new Router({
       path: "/profile",
       name: "profile",
       component: ProfileView,
-      // beforeEnter: requireAuth(),
+      beforeEnter: requireAuth(),
     },
     {
       path: "/address",
@@ -127,7 +128,7 @@ export default new Router({
       path: "/admin",
       component: AdminView,
       name: "admin",
-      // beforeEnter: checkAdmin(),
+      beforeEnter: checkAdmin(),
     },
     {
       path: "/adminLogin",
