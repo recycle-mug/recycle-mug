@@ -1,24 +1,17 @@
 package recyclemug.ProjectMug.api;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.slf4j.Logger;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.repository.CupRepository;
 import recyclemug.ProjectMug.service.CupService;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +31,7 @@ public class CupController {
         // Image File 처리 original File name 을 만들어 새로운 src 주소를 만들어낸다.
         Date date = new Date();
         StringBuilder sb = new StringBuilder();
-        String picturePathName = "/Users/hanjaeseo/images/cups/";
+        String picturePathName = "C:\\Users\\torry\\Desktop\\images\\";
 
         // file image 가 없을 경우
         if (file.isEmpty()) {
