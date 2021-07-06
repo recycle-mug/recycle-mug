@@ -9,7 +9,7 @@ module.exports = {
   resolve: {
     extensions: [".js", ".vue"],
     alias: {
-      "@": path.resolve(__dirname, "src/"),
+      "@": path.resolve(__dirname, "public/"),
     },
   },
   devServer: {
@@ -87,6 +87,6 @@ module.exports = {
   output: {
     filename: "[name].js",
     path: path.join(__dirname, "../../../docs"),
-    publicPath: "/recycle-mug/",
+    publicPath: process.env.NODE_ENV === "production" ? "/recycle-mug/" : "/",
   },
 };
