@@ -16,9 +16,12 @@ public class Cup {
     private Long id;
 
     private String name;
+
     private int price;
 
-    private String profilePicture;
+    private int stockQuantity;
+
+    private String profilePictureAddress;
 
     protected Cup() {
 
@@ -28,7 +31,7 @@ public class Cup {
         Cup cup = new Cup();
         cup.name = name;
         cup.price = price;
-        cup.profilePicture = profilePictureAddress;
+        cup.profilePictureAddress = profilePictureAddress;
         return cup;
     }
 
