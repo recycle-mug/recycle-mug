@@ -3,22 +3,18 @@ package recyclemug.ProjectMug.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import recyclemug.ProjectMug.domain.user.Admin;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.domain.user.User;
@@ -29,10 +25,6 @@ import recyclemug.ProjectMug.jwt.TokenAuthenticationProvider;
 import recyclemug.ProjectMug.repository.AdminRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
-import recyclemug.ProjectMug.service.CustomerService;
-import recyclemug.ProjectMug.service.PartnerService;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Base64;
 import java.util.List;
@@ -93,17 +85,17 @@ public class AuthController {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.email);
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
             }
         } else if (headerDTO.role.equals("ROLE_PARTNER")) {
             List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.email);
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
             }
         } else {
             User user = adminRepository.findByEmail(headerDTO.email);
-            return new ResponseProfileDTO(user.getId(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
         }
 
         return null;
@@ -123,12 +115,14 @@ public class AuthController {
     @Setter
     static class ResponseProfileDTO {
         private Long id;
+        private String email;
         private String nickname;
         private String profilePicture;
         private String role;
 
-        public ResponseProfileDTO(Long id, String nickname, String profilePicture, String role) {
+        public ResponseProfileDTO(Long id, String email, String nickname, String profilePicture, String role) {
             this.id = id;
+            this.email = email;
             this.nickname = nickname;
             this.profilePicture = profilePicture;
             this.role = role;
