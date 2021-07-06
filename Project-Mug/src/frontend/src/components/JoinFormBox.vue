@@ -455,9 +455,7 @@ export default {
           address_detail: this.formData.joinAddress.addressDetail,
         };
 
-        let sendJoinForm = axios.create({
-          baseURL: path,
-        });
+        let sendJoinForm = axios.create();
 
         sendJoinForm.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
         sendJoinForm.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
