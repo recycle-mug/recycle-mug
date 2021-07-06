@@ -24,11 +24,11 @@ public class Cup {
 
     }
 
-    public static Cup createCup(String name, int price, String profilePicture) {
+    public static Cup createCup(String name, int price, String profilePictureAddress) {
         Cup cup = new Cup();
         cup.name = name;
         cup.price = price;
-        cup.profilePicture = profilePicture;
+        cup.profilePicture = profilePictureAddress;
         return cup;
     }
 
