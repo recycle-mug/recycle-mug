@@ -21,7 +21,7 @@
 
         <div class="content-right">
           <router-link :to="{ name: 'profile' }" tag="div" class="profile-btn" v-if="isLogin">
-            <span>{{ username }}님 안녕하세요</span>
+            <span @click="logout">{{ username }}님 안녕하세요</span>
             <div class="icon-wrapper">
               <font-awesome-icon
                 :icon="['fas', 'user']"
@@ -83,8 +83,41 @@ export default {
     logout() {
       this.$store
         .dispatch("LOGOUT")
-        .then(this.redirect)
+        .then((window.location.href = "/"))
         .catch((err) => (this.errors.response = err));
+    },
+    getProfile() {
+      const path = "/backend/profile";
+
+      const { accessToken } = localStorage;
+      if (!accessToken) {
+        this.isLogin = false;
+        this.username = "";
+      } else {
+        const authUser = axios.create({ baseUrl: path });
+        authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+        authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
+          "GET,POST,PUT,DELETE,OPTIONS";
+
+        authUser.defaults.headers.common["Content-Type"] =
+          "application/x-www-form-urlencoded;charset=utf-8";
+
+        authUser
+          .get(path)
+          .then((res) => {
+            if (res.data.error) {
+              throw res.data.error;
+            } else {
+              this.isLogin = true;
+              this.username = res.data.id;
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert(error);
+          });
+      }
     },
   },
   computed: {
@@ -93,36 +126,8 @@ export default {
     },
   },
   mounted() {
-    const path = "/backend/profile";
-
-    const { accessToken } = localStorage;
-    if (!accessToken) {
-      this.isLogin = false;
-      this.username = "";
-    } else {
-      const authUser = axios.create({ baseUrl: path });
-      authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-      authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
-        "GET,POST,PUT,DELETE,OPTIONS";
-
-      authUser.defaults.headers.common["Content-Type"] =
-        "application/x-www-form-urlencoded;charset=utf-8";
-
-      authUser
-        .get(path)
-        .then((res) => {
-          if (res.data.error) {
-            throw res.data.error;
-          } else {
-            this.isLogin = true;
-            this.username = res.data.id;
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          alert(error);
-        });
+    if (localStorage.getItem("accessToken")) {
+      this.getProfile();
     }
   },
 };
@@ -276,17 +281,26 @@ export default {
             user-select: none;
             cursor: pointer;
             color: map-get($map: $theme, $key: "text-light");
-            &::after {
-              content: "";
-              width: 0px;
-              height: 0.125rem;
-              display: block;
-              background: map-get($map: $theme, $key: "text");
-              transition: all 0.3s ease-in-out;
-            }
-            &:hover::after {
-              font-weight: bolder;
-              width: 100%;
+            display: flex;
+            align-items: center;
+
+            span {
+              font-weight: bold;
+              user-select: none;
+              cursor: pointer;
+              color: map-get($map: $theme, $key: "text-light");
+              &::after {
+                content: "";
+                width: 0px;
+                height: 0.125rem;
+                display: block;
+                background: map-get($map: $theme, $key: "text");
+                transition: all 0.3s ease-in-out;
+              }
+              &:hover::after {
+                font-weight: bolder;
+                width: 100%;
+              }
             }
           }
 
