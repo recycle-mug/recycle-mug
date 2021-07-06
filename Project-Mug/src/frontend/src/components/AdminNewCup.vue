@@ -3,7 +3,7 @@
     <form action="#">
       <div class="image-wrapper" @click="chooseImg">
         <input type="file" id="fileBtn" style="display:none" @change="addImgByClick" />
-        <img :src="formData.imgSrc" v-if="formData.imgSrc.length > 0" />
+        <img :src="imgSrc" v-if="imgSrc.length > 0" />
         <div class="upload-img-icon" v-else>
           <div class="upload-icon">
             <font-awesome-icon :icon="['fas', 'upload']"></font-awesome-icon>
@@ -15,7 +15,7 @@
       <div class="content-wrapper">
         <div class="content-row">
           <div class="row-title">Name</div>
-          <input type="text" class="row-input" placeholder="Cup Name" v-model="formData.name" />
+          <input type="text" class="row-input" placeholder="Cup Name" v-model="name" />
         </div>
 
         <div class="content-row" style="display:flex; flex-direction:row;margin:0">
@@ -26,7 +26,7 @@
                 type="text"
                 class="row-input"
                 placeholder="2,000"
-                v-model="formData.price"
+                v-model="price"
                 @keyup="setInputFilter"
                 style="text-align:right"
                 id="price"
@@ -42,7 +42,7 @@
                 type="text"
                 class="row-input"
                 placeholder="2,000"
-                v-model="formData.num"
+                v-model="num"
                 @keyup="setInputFilter"
                 style="text-align:right"
                 id="num"
@@ -72,12 +72,12 @@ faLibrary.add(faUpload);
 export default {
   data() {
     return {
-      formData: {
-        imgSrc: "",
-        name: "",
-        price: "",
-        num: "",
-      },
+      imgSrc: "",
+      name: "",
+      price: "",
+      num: "",
+
+      formData: new FormData(),
       imgErr: "",
       errorMsg: "",
     };
@@ -89,6 +89,9 @@ export default {
     },
     addImgByClick(e) {
       const files = e.target.files;
+      this.formData = new FormData();
+      this.formData.append("file", files[0]);
+
       try {
         if (files.length) {
           const file = files[0];
@@ -97,7 +100,7 @@ export default {
           if (file.type.match(imgType)) {
             const reader = new FileReader();
             reader.onload = () => {
-              this.formData.imgSrc = reader.result;
+              this.imgSrc = reader.result;
             };
             reader.readAsDataURL(file);
           } else {
@@ -107,14 +110,14 @@ export default {
       } catch (error) {
         console.log("error :>> ", error);
         this.imgErr = error;
-        this.formData.imgSrc = "";
+        this.imgSrc = "";
       }
     },
     setInputFilter(e) {
       let inputText = e.target.value.replace(/[^0-9]/g, "");
       const result = inputText.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       e.target.value = result;
-      e.target.id === "price" ? (this.formData.price = result) : (this.formData.num = result);
+      e.target.id === "price" ? (this.price = result) : (this.num = result);
     },
     checkRequired() {
       for (const item in this.formData) {
@@ -135,19 +138,20 @@ export default {
 
       const path = "/backend/cup/add";
 
-      const payload = {
-        profilePicture: this.formData.imgSrc,
-        name: this.formData.name,
-        price: this.formData.price.replace(/[^0-9]/g, ""),
-        num: this.formData.num.replace(/[^0-9]/g, ""),
-      };
-
-      console.log("payload :>> ", payload);
+      this.formData.append("price", this.price.replace(/[^0-9]/g, ""));
+      this.formData.append("name", this.name);
+      this.formData.append("num", this.num.replace(/[^0-9]/g, ""));
 
       let cupForm = axios.create();
 
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
       await cupForm
-        .post(path, payload)
+        .post(path, this.formData, config)
         .then((res) => {
           console.log("res :>> ", res);
         })
