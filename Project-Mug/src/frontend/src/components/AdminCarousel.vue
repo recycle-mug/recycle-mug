@@ -216,7 +216,7 @@
           <font-awesome-icon :icon="['fas', 'times']" style="width:100%;"></font-awesome-icon>
         </button>
       </div>
-      <admin-new-cup></admin-new-cup>
+      <admin-new-cup v-on:modeSwitch="TurnOffWritingMode()"></admin-new-cup>
     </div>
 
     <div v-if="opened" style="position:absolute;top:0;left:0;" @click="closeModal()">

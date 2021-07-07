@@ -42,10 +42,10 @@
                 type="text"
                 class="row-input"
                 placeholder="2,000"
-                v-model="num"
+                v-model="stockQuantity"
                 @keyup="setInputFilter"
                 style="text-align:right"
-                id="num"
+                id="stockQuantity"
               />
               <p>개</p>
             </div>
@@ -72,11 +72,11 @@ faLibrary.add(faUpload);
 export default {
   data() {
     return {
+      writingMode: true,
       imgSrc: "",
       name: "",
       price: "",
-      num: "",
-
+      stockQuantity: "",
       formData: new FormData(),
       imgErr: "",
       errorMsg: "",
@@ -84,6 +84,12 @@ export default {
   },
   components: { FontAwesomeIcon },
   methods: {
+    TurnOnWritingMode() {
+      this.writingMode = true;
+    },
+    TurnOffWritingMode() {
+      this.writingMode = false;
+    },
     chooseImg() {
       document.getElementById("fileBtn").click();
     },
@@ -117,7 +123,7 @@ export default {
       let inputText = e.target.value.replace(/[^0-9]/g, "");
       const result = inputText.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       e.target.value = result;
-      e.target.id === "price" ? (this.price = result) : (this.num = result);
+      e.target.id === "price" ? (this.price = result) : (this.stockQuantity = result);
     },
     checkRequired() {
       for (const item in this.formData) {
@@ -140,7 +146,7 @@ export default {
 
       this.formData.append("price", this.price.replace(/[^0-9]/g, ""));
       this.formData.append("name", this.name);
-      this.formData.append("num", this.num.replace(/[^0-9]/g, ""));
+      this.formData.append("stockQuantity", this.stockQuantity.replace(/[^0-9]/g, ""));
 
       let cupForm = axios.create();
 
@@ -153,7 +159,9 @@ export default {
       await cupForm
         .post(path, this.formData, config)
         .then((res) => {
+          this.errorMsg = "";
           console.log("res :>> ", res);
+          this.$emit("modeSwitch");
         })
         .catch((err) => {
           this.errorMsg = err;
