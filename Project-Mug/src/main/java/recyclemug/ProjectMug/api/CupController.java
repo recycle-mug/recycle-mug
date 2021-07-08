@@ -54,7 +54,7 @@ public class CupController {
             }
         }
 
-        Cup cup = Cup.createCup(request.name, request.price, picturePathName);
+        Cup cup = Cup.createCup(request.name, request.price, request.stockQuantity, picturePathName);
         cupService.addCup(cup);
     }
 

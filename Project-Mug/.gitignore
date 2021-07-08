@@ -25,7 +25,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-!**/src/main/webapp/images/
+!**/src/main/webapp/images/**
 
 ### NetBeans ###
 /nbproject/private/
