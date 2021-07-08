@@ -14,11 +14,11 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
+        show_sql:
+        format_sql:
 
 logging.level:
   org.hibernate.SQL: debug
