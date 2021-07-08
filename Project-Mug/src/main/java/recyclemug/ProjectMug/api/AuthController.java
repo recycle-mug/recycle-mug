@@ -85,17 +85,17 @@ public class AuthController {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.email);
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
             }
         } else if (headerDTO.role.equals("ROLE_PARTNER")) {
             List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.email);
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
             }
         } else {
             User user = adminRepository.findByEmail(headerDTO.email);
-            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePicture(), headerDTO.getRole());
+            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
         }
 
         return null;
@@ -128,5 +128,4 @@ public class AuthController {
             this.role = role;
         }
     }
-
 }
