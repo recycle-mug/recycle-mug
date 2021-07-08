@@ -27,10 +27,11 @@ public class Cup {
 
     }
 
-    public static Cup createCup(String name, int price, String profilePictureAddress) {
+    public static Cup createCup(String name, int price, int stockQuantity, String profilePictureAddress) {
         Cup cup = new Cup();
         cup.name = name;
         cup.price = price;
+        cup.stockQuantity = stockQuantity;
         cup.profilePictureAddress = profilePictureAddress;
         return cup;
     }

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,6 +26,12 @@ public class CupController {
     private final CupService cupService;
     private final CupRepository cupRepository;
 
+    /**
+     * 컵 저장 컨트롤러
+     * @param file
+     * @param request
+     * @param httpServletRequest
+     */
     @PostMapping("/cup/add")
     @PostAuthorize("hasAnyRole('ADMIN')")
     public void saveCup(@RequestParam("file") MultipartFile file,
@@ -54,10 +61,14 @@ public class CupController {
             }
         }
 
-        Cup cup = Cup.createCup(request.name, request.price, picturePathName);
+        Cup cup = Cup.createCup(request.name, request.price, request.stockQuantity, picturePathName);
         cupService.addCup(cup);
     }
 
+    /**
+     * 컵 삭제 컨트롤러
+     * @param cupId
+     */
     @DeleteMapping("/cup/remove/{cupId}")
     @PostAuthorize("hasAnyRole('ADMIN')")
     public void removeCup(@PathVariable Long cupId) {
@@ -75,22 +86,48 @@ public class CupController {
         }
     }
 
+    /**
+     *
+     * @return 모든 컵 리스트 (이미지 포함)
+     * @throws IOException
+     */
     @GetMapping("/cup/list")
     @PostAuthorize("hasAnyRole('ADMIN')")
-    public List<Cup> findAllCups() {
-        return cupRepository.findAllCups();
+    public List<CreateCupResponse> findAllCups() throws IOException {
+        ArrayList<CreateCupResponse> cups = new ArrayList<>();
+        for (Cup cup : cupRepository.findAllCups()) {
+            cups.add(createCupResponse(cup));
+        }
+        return cups;
     }
 
+    /**
+     *
+     * @param cupId
+     * @return 컵 하나를 반환
+     * @throws IOException
+     */
     @GetMapping("/cup/{cupId}")
     @PostAuthorize("hasAnyRole('ADMIN')")
     public CreateCupResponse findCup(@PathVariable Long cupId) throws IOException {
         Cup cup = cupRepository.findByCupId(cupId);
+        return createCupResponse(cup);
+    }
+
+    /**
+     *
+     * @param cup
+     * @return CreateCupResponse
+     * @throws IOException
+     */
+    public CreateCupResponse createCupResponse(Cup cup) throws IOException {
         FileInputStream imageStream = new FileInputStream(cup.getProfilePictureAddress());
         byte[] imageByteArray = imageStream.readAllBytes();
         imageStream.close();
 
         return new CreateCupResponse(cup.getName(), cup.getPrice(), cup.getStockQuantity(), imageByteArray);
     }
+
 
     @Data
     static class CreateCupRequest {
