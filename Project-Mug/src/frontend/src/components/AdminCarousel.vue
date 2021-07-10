@@ -16,9 +16,10 @@
           :paginationPadding="5"
           :paginationSize="8"
           class="cup-carousel"
+          v-if="cups.length > 0"
         >
           <slide class="cup-carousel-item" v-for="(cup, index) in cups" :key="index">
-            <div class="item-wrapper" @click="openModal(index)">
+            <div class="item-wrapper" @click="openModal(cup.id)">
               <div class="item-title">{{ cup.name }}</div>
               <div class="item-image">
                 <img :src="'data:image/jpeg;base64,' + cup.image" alt="" />
@@ -50,13 +51,23 @@
           </slide>
         </carousel>
 
-        <div class="cup-add-btn-wrapper">
+        <div class="cup-add-btn-wrapper" v-if="cups.length > 0">
           <div class="cup-add-btn" @click="TurnOnWritingMode()">
             <font-awesome-icon
               :icon="['fas', 'plus']"
               style="width:100%; cursor:pointer;"
             ></font-awesome-icon>
           </div>
+        </div>
+
+        <div class="cup-add-btn-wrapper wide" v-else @click="TurnOnWritingMode()">
+          <div class="cup-add-btn">
+            <font-awesome-icon
+              :icon="['fas', 'plus']"
+              style="width:100%; cursor:pointer;"
+            ></font-awesome-icon>
+          </div>
+          Click to Add New Cup
         </div>
       </div>
     </div>
@@ -114,7 +125,7 @@ export default {
   methods: {
     openModal(id) {
       this.opened = true;
-      this.clickedCupId = id + 1;
+      this.clickedCupId = id;
     },
     closeModal() {
       this.opened = false;
@@ -236,8 +247,9 @@ export default {
                 .item-image {
                   width: 100%;
                   height: 150px;
-                  padding: 10px;
                   margin: 15px 0;
+                  border-radius: 6px;
+                  overflow: hidden;
 
                   img {
                     object-fit: contain;
@@ -308,6 +320,37 @@ export default {
                 border: 1px solid $main-color;
                 color: $main-color;
                 transform: translateY(-2px);
+              }
+            }
+
+            &.wide {
+              width: 100%;
+              border-radius: 6px;
+              border: 2px dashed map-get($map: $theme, $key: "border");
+              background-color: rgba(map-get($map: $theme, $key: "table"), 0.5);
+              cursor: pointer;
+              transition: all 0.3s ease;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              color: map-get($map: $theme, $key: "text-light");
+              user-select: none;
+              letter-spacing: 0.1rem;
+
+              &:hover {
+                background-color: rgba(map-get($map: $theme, $key: "table"), 1);
+                box-shadow: $shadow-lighter;
+                color: map-get($map: $theme, $key: "text");
+
+                .cup-add-btn {
+                  border: 1px solid map-get($map: $theme, $key: "text");
+                  color: map-get($map: $theme, $key: "text");
+                }
+              }
+
+              .cup-add-btn {
+                margin: 1rem;
               }
             }
           }
