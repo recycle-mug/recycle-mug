@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import recyclemug.ProjectMug.domain.cup.Cup;
@@ -33,7 +34,7 @@ public class CupController {
      * @param httpServletRequest
      */
     @PostMapping("/cup/add")
-    @PostAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public void saveCup(@RequestParam("file") MultipartFile file,
                         @ModelAttribute("request") CreateCupRequest request,
                         HttpServletRequest httpServletRequest) {
@@ -52,6 +53,9 @@ public class CupController {
 
         picturePathName += sb.toString();
 
+        Cup cup = Cup.createCup(request.name, request.price, request.stockQuantity, picturePathName);
+        cupService.addCup(cup);
+
         if (!file.isEmpty()) {
             File dest = new File(picturePathName);
             try {
@@ -60,9 +64,6 @@ public class CupController {
                 e.printStackTrace();
             }
         }
-
-        Cup cup = Cup.createCup(request.name, request.price, request.stockQuantity, picturePathName);
-        cupService.addCup(cup);
     }
 
     /**
@@ -70,7 +71,7 @@ public class CupController {
      * @param cupId
      */
     @DeleteMapping("/cup/remove/{cupId}")
-    @PostAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public void removeCup(@PathVariable Long cupId) {
         try {
             Cup cup = cupRepository.findByCupId(cupId);
@@ -82,7 +83,7 @@ public class CupController {
             }
             cupService.removeCup(cupId);
         } catch (NullPointerException e) {
-            log.error("삭제하려는 컵이 존재하지 않습니다.");
+            log.error("삭제하려는 컵이 존재하지 않습니다." + e.toString());
         }
     }
 
@@ -92,7 +93,7 @@ public class CupController {
      * @throws IOException
      */
     @GetMapping("/cup/list")
-    @PostAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public List<CreateCupResponse> findAllCups() throws IOException {
         ArrayList<CreateCupResponse> cups = new ArrayList<>();
         for (Cup cup : cupRepository.findAllCups()) {
@@ -108,7 +109,7 @@ public class CupController {
      * @throws IOException
      */
     @GetMapping("/cup/{cupId}")
-    @PostAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public CreateCupResponse findCup(@PathVariable Long cupId) throws IOException {
         Cup cup = cupRepository.findByCupId(cupId);
         return createCupResponse(cup);
@@ -125,7 +126,7 @@ public class CupController {
         byte[] imageByteArray = imageStream.readAllBytes();
         imageStream.close();
 
-        return new CreateCupResponse(cup.getName(), cup.getPrice(), cup.getStockQuantity(), imageByteArray);
+        return new CreateCupResponse(cup.getId(), cup.getName(), cup.getPrice(), cup.getStockQuantity(), imageByteArray);
     }
 
 
@@ -138,12 +139,14 @@ public class CupController {
 
     @Data
     static class CreateCupResponse {
+        private Long id;
         private String name;
         private int price;
         private int stockQuantity;
         private byte[] image;
 
-        public CreateCupResponse(String name, int price, int stockQuantity, byte[] image) {
+        public CreateCupResponse(Long id, String name, int price, int stockQuantity, byte[] image) {
+            this.id = id;
             this.name = name;
             this.price = price;
             this.stockQuantity = stockQuantity;

@@ -24,7 +24,7 @@ public abstract class User {
     private String phoneNumber;
 
     // Customer -> 개인사진, Partner -> 매장사진
-    private String profilePicture;
+    private String profilePictureAddress;
 
     private int point;
     private String nickname;

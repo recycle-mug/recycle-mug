@@ -17,12 +17,13 @@ public class Customer extends User{
     protected Customer() { }
 
     // 생성 메서드 //
-    public static Customer createCustomer(String email, String password, String phoneNumber) {
+    public static Customer createCustomer(String email, String password, String phoneNumber, String profilePictureAddress) {
         Customer customer = new Customer();
         customer.setEmail(email);
         customer.setPassword(password);
         customer.setPhoneNumber(phoneNumber);
         customer.setPoint(0);
+        customer.setProfilePictureAddress(profilePictureAddress);
         customer.setCustomerState(CustomerState.NONE);
 
         return customer;
