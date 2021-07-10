@@ -3,21 +3,27 @@ package recyclemug.ProjectMug.api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.service.CustomerService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerApiController {
 
     private final CustomerService customerService;
 
     @PostMapping("/join/customer")
-    public CreateCustomerResponse saveCustomerV1(@RequestBody @Valid CreateCustomerRequest request) {
-        Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel());
+    public CreateCustomerResponse saveCustomer(@RequestBody @Valid CreateCustomerRequest request,
+                                               HttpServletRequest httpServletRequest) {
+        String picturePath = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
+        Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel(), picturePath);
+
         try {
             customerService.join(customer);
         } catch (IllegalStateException e) {
