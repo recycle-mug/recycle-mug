@@ -5,7 +5,7 @@
         <font-awesome-icon :icon="['fas', 'times']" style="width:100%;"></font-awesome-icon>
       </div>
       <span>Close This Page</span>
-      <div class="icon-wrapper hover-change" style="float:left;">
+      <div class="icon-wrapper hover-change" style="float:left;" @click="deleteThis()">
         <font-awesome-icon :icon="['far', 'trash-alt']" style="width:100%;"></font-awesome-icon>
       </div>
     </nav>
@@ -76,6 +76,16 @@ export default {
     },
     closeThisModal() {
       this.$emit("closeModal");
+    },
+    deleteThis() {
+      if (confirm("정말 이 컵을 삭제하시겠습니까?")) {
+        const path = "/backend/cup/remove/" + this.cupId;
+        let deleteRequest = axios.create();
+
+        deleteRequest.delete(path).then((res) => {
+          this.closeThisModal();
+        });
+      }
     },
   },
   mounted() {
