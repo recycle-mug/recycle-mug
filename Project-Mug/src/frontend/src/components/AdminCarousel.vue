@@ -17,172 +17,24 @@
           :paginationSize="8"
           class="cup-carousel"
         >
-          <slide class="cup-carousel-item">
-            <div class="item-wrapper" @click="openModal()">
-              <div class="item-title">Cup A</div>
-              <div class="item-image"><img src="../assets/test-images/cup-a.png" alt="" /></div>
-              <div class="item-description">
-                <div class="description-row">
-                  <p>가격</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>수량</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(개)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>price</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
+          <slide class="cup-carousel-item" v-for="(cup, index) in cups" :key="index">
+            <div class="item-wrapper" @click="openModal(index)">
+              <div class="item-title">{{ cup.name }}</div>
+              <div class="item-image">
+                <img :src="'data:image/jpeg;base64,' + cup.image" alt="" />
               </div>
-            </div>
-          </slide>
-
-          <slide class="cup-carousel-item">
-            <div class="item-wrapper" @click="openModal()">
-              <div class="item-title">Cup B</div>
-              <div class="item-image"><img src="../assets/test-images/cup-b.png" alt="" /></div>
               <div class="item-description">
                 <div class="description-row">
                   <p>가격</p>
                   <div class="row-num">
-                    <span>2,000</span>
+                    <span>{{ addComma(cup.price) }}</span>
                     <span class="unit">(원)</span>
                   </div>
                 </div>
                 <div class="description-row">
                   <p>수량</p>
                   <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(개)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>price</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </slide>
-
-          <slide class="cup-carousel-item">
-            <div class="item-wrapper" @click="openModal()">
-              <div class="item-title">Cup C</div>
-              <div class="item-image"><img src="../assets/test-images/cup-c.png" alt="" /></div>
-              <div class="item-description">
-                <div class="description-row">
-                  <p>가격</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>수량</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(개)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>price</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </slide>
-
-          <slide class="cup-carousel-item">
-            <div class="item-wrapper" @click="openModal()">
-              <div class="item-title">Cup D</div>
-              <div class="item-image"><img src="../assets/test-images/cup-d.png" alt="" /></div>
-              <div class="item-description">
-                <div class="description-row">
-                  <p>가격</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>수량</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(개)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>price</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </slide>
-
-          <slide class="cup-carousel-item">
-            <div class="item-wrapper" @click="openModal()">
-              <div class="item-title">Cup E</div>
-              <div class="item-image"><img src="../assets/test-images/cup-e.png" alt="" /></div>
-              <div class="item-description">
-                <div class="description-row">
-                  <p>가격</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>수량</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(개)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>price</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </slide>
-
-          <slide class="cup-carousel-item">
-            <div class="item-wrapper" @click="openModal()">
-              <div class="item-title">Cup F</div>
-              <div class="item-image"><img src="../assets/test-images/cup-f.png" alt="" /></div>
-              <div class="item-description">
-                <div class="description-row">
-                  <p>가격</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
-                <div class="description-row">
-                  <p>수량</p>
-                  <div class="row-num">
-                    <span>2,000</span>
+                    <span>{{ addComma(cup.stockQuantity) }}</span>
                     <span class="unit">(개)</span>
                   </div>
                 </div>
@@ -222,7 +74,7 @@
     <div v-if="opened" style="position:absolute;top:0;left:0;" @click="closeModal()">
       <div class="modal-wrapper">
         <div class="modal" @click.stop>
-          <admin-modal></admin-modal>
+          <admin-modal :cupId="clickedCupId" v-on:closeModal="closeModal"></admin-modal>
         </div>
       </div>
     </div>
@@ -238,6 +90,8 @@ import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 import AdminModal from "./AdminModal.vue";
 import AdminNewCup from "./AdminNewCup.vue";
 
+import axios from "axios";
+
 faLibrary.add(faPlus, faTimes);
 
 export default {
@@ -245,6 +99,8 @@ export default {
     return {
       opened: false,
       writingMode: false,
+      cups: {},
+      clickedCupId: 0,
     };
   },
   components: {
@@ -254,9 +110,11 @@ export default {
     AdminModal,
     AdminNewCup,
   },
+  computed: {},
   methods: {
-    openModal() {
+    openModal(id) {
       this.opened = true;
+      this.clickedCupId = id + 1;
     },
     closeModal() {
       this.opened = false;
@@ -267,6 +125,27 @@ export default {
     TurnOffWritingMode() {
       this.writingMode = false;
     },
+    async getCups() {
+      const path = "/backend/cup/list";
+      let getCup = axios.create();
+      await getCup
+        .get(path)
+        .then((res) => {
+          this.cups = res.data;
+          this.cupLength = res.data.length;
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
+    },
+    addComma(str) {
+      let text = str.toString().replace(/[^0-9]/g, "");
+      const result = text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return result;
+    },
+  },
+  mounted() {
+    this.getCups();
   },
 };
 </script>
@@ -328,6 +207,7 @@ export default {
 
           .cup-carousel {
             max-width: 90%;
+            width: 100%;
 
             .cup-carousel-item {
               .item-wrapper {
@@ -340,6 +220,7 @@ export default {
                 background-color: map-get($map: $theme, $key: "background");
                 padding: 18px;
                 cursor: pointer;
+                margin-right: 1.5rem;
 
                 &:hover {
                   transition: all 0.2s ease;
@@ -452,7 +333,6 @@ export default {
         background-color: map-get($map: $theme, $key: "content-background");
         z-index: 999;
         position: fixed;
-        padding: 2rem;
         border-radius: 6px;
       }
     }

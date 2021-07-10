@@ -34,7 +34,6 @@ const requireAuth = () => (from, to, next) => {
     authUser
       .get(path)
       .then((res) => {
-        console.log("res.data :", res.data);
         if (res.data.error) {
           throw res.data.error;
         } else {
@@ -68,7 +67,6 @@ const checkAdmin = () => (from, to, next) => {
     getRole
       .get(path)
       .then((res) => {
-        console.log("res.data :", res.data);
         if (res.data.error) {
           throw res.data.error;
         } else {
