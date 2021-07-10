@@ -158,9 +158,8 @@ export default {
 
       await cupForm
         .post(path, this.formData, config)
-        .then((res) => {
+        .then(() => {
           this.errorMsg = "";
-          console.log("res :>> ", res);
           this.$emit("modeSwitch");
         })
         .catch((err) => {
