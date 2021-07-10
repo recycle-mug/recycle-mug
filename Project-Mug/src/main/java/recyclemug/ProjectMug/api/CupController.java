@@ -53,6 +53,9 @@ public class CupController {
 
         picturePathName += sb.toString();
 
+        Cup cup = Cup.createCup(request.name, request.price, request.stockQuantity, picturePathName);
+        cupService.addCup(cup);
+
         if (!file.isEmpty()) {
             File dest = new File(picturePathName);
             try {
@@ -61,9 +64,6 @@ public class CupController {
                 e.printStackTrace();
             }
         }
-
-        Cup cup = Cup.createCup(request.name, request.price, request.stockQuantity, picturePathName);
-        cupService.addCup(cup);
     }
 
     /**
