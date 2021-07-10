@@ -82,8 +82,11 @@ export default {
         const path = "/backend/cup/remove/" + this.cupId;
         let deleteRequest = axios.create();
 
+        deleteRequest.defaults.headers["withCredentials"] = true;
+
         deleteRequest.delete(path).then((res) => {
           this.closeThisModal();
+          window.location.reload();
         });
       }
     },
