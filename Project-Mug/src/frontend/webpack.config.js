@@ -87,7 +87,6 @@ module.exports = {
   output: {
     filename: "[name].js",
     path: path.join(__dirname, "../../../docs"),
-    // publicPath: process.env.NODE_ENV === "production" ? "/recycle-mug/" : "/",
-    publicPath: "/recycle-mug/",
+    publicPath: process.env.NODE_ENV === "production" ? "/recycle-mug/" : "/",
   },
 };

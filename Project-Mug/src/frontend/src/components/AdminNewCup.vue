@@ -80,6 +80,7 @@ export default {
       formData: new FormData(),
       imgErr: "",
       errorMsg: "",
+      imgFile: "",
     };
   },
   components: { FontAwesomeIcon },
@@ -95,8 +96,9 @@ export default {
     },
     addImgByClick(e) {
       const files = e.target.files;
-      this.formData = new FormData();
-      this.formData.append("file", files[0]);
+      // this.formData = new FormData();
+      // this.formData.append("file", files[0]);
+      this.imgFile = files[0];
 
       try {
         if (files.length) {
@@ -144,6 +146,14 @@ export default {
 
       const path = "/backend/cup/add";
 
+      let file = this.imgFile;
+      const blob = file.slice(0, file.size, "image/jpeg");
+      const newFile = new File([blob], this.name.replace(/\s/g, "-") + ".jpeg", {
+        type: "image/jpeg",
+      });
+
+      this.formData = new FormData();
+      this.formData.append("file", newFile);
       this.formData.append("price", this.price.replace(/[^0-9]/g, ""));
       this.formData.append("name", this.name);
       this.formData.append("stockQuantity", this.stockQuantity.replace(/[^0-9]/g, ""));
@@ -161,6 +171,7 @@ export default {
         .then(() => {
           this.errorMsg = "";
           this.$emit("modeSwitch");
+          window.location.reload();
         })
         .catch((err) => {
           this.errorMsg = err;
