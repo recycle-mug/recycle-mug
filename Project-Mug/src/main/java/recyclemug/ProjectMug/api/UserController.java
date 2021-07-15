@@ -23,12 +23,6 @@ public class UserController {
     private final PartnerService partnerService;
     private final UserRepository userRepository;
 
-    @GetMapping("/user/{email}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
-    public ResponseEntity<User> getUserInfo(@PathVariable String email) {
-        return ResponseEntity.ok(customerService.getCustomerWithAuthorities(email).get());
-    }
-
     @GetMapping("/user/findAllUsers")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public List<User> getAllUsers() {
