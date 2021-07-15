@@ -1,10 +1,11 @@
 package recyclemug.ProjectMug.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import recyclemug.ProjectMug.data.CreateCustomerRequest;
+import recyclemug.ProjectMug.data.CreateCustomerResponse;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.service.CustomerService;
 
@@ -22,34 +23,16 @@ public class CustomerApiController {
     public CreateCustomerResponse saveCustomer(@RequestBody @Valid CreateCustomerRequest request,
                                                HttpServletRequest httpServletRequest) {
         String picturePath = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
-        Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel(), picturePath);
 
         try {
+            Customer customer = Customer.createCustomer(request.getId(), request.getPw(), request.getTel(), picturePath);
             customerService.join(customer);
+            return new CreateCustomerResponse("success", "회원가입에 성공했습니다.");
         } catch (IllegalStateException e) {
             String message = e.toString();
-            return new CreateCustomerResponse("fail", message);
+            log.error("FAIL TO JOIN PARTNER");
         }
-
-        return new CreateCustomerResponse("success", "회원가입에 성공했습니다.");
-    }
-
-    @Data
-    static class CreateCustomerRequest {
-        private String role; // "customer" or "partner"
-        private String id; 	// String (email)
-        private String pw;		// String
-        private String tel;		// String
-        private String address;	// String (partner일경우 "")
-        private String address_num;	// String (5자리숫자, partner일경우 "")
-        private String address_detail;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class CreateCustomerResponse {
-        private String result;
-        private String message;
+        return null;
     }
 
 }

@@ -3,10 +3,11 @@ package recyclemug.ProjectMug.api;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import recyclemug.ProjectMug.data.CreateCupRequest;
+import recyclemug.ProjectMug.data.CreateCupResponse;
 import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.repository.CupRepository;
 import recyclemug.ProjectMug.service.CupService;
@@ -53,7 +54,7 @@ public class CupController {
 
         picturePathName += sb.toString();
 
-        Cup cup = Cup.createCup(request.name, request.price, request.stockQuantity, picturePathName);
+        Cup cup = Cup.createCup(request.getName(), request.getPrice(), request.getStockQuantity(), picturePathName);
         cupService.addCup(cup);
 
         if (!file.isEmpty()) {
@@ -130,28 +131,5 @@ public class CupController {
     }
 
 
-    @Data
-    static class CreateCupRequest {
-        private String name;
-        private int price;
-        private int stockQuantity;
-    }
-
-    @Data
-    static class CreateCupResponse {
-        private Long id;
-        private String name;
-        private int price;
-        private int stockQuantity;
-        private byte[] image;
-
-        public CreateCupResponse(Long id, String name, int price, int stockQuantity, byte[] image) {
-            this.id = id;
-            this.name = name;
-            this.price = price;
-            this.stockQuantity = stockQuantity;
-            this.image = image;
-        }
-    }
 
 }
