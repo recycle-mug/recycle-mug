@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class CreatePartnerResponse {
+public class CreatePartnerJoinResponse {
     private String result;
     private String message;
 }
