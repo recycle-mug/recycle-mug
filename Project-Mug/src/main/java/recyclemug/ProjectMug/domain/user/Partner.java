@@ -27,14 +27,14 @@ public class Partner extends User{
 
     // 생성 메서드 //
     public static Partner createPartner(String email, String password, String phoneNumber,
-                                        String zipcode, String detailAddress, String businessName) {
+                                        String zipcode, String detailAddress) {
         Partner partner = new Partner();
         partner.setEmail(email);
         partner.setPassword(password);
         partner.setPhoneNumber(phoneNumber);
         partner.setZipcode(zipcode);
         partner.setDetailAddress(detailAddress);
-        partner.setBusinessName(businessName);
+        partner.setPoint(0);
 
         return partner;
     }
