@@ -8,10 +8,9 @@ import lombok.Data;
 @Data
 public class CreatePartnerRequest {
     private String email;
-    private String password;
-    private String phoneNumber;
-    private String zipcode;
+    private String pw;
+    private String tel;
+    private String address_num;
     private String address;
-    private String addressDetail;
-    private String businessName;
+    private String address_detail;
 }
