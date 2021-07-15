@@ -1,7 +1,9 @@
 package recyclemug.ProjectMug.data;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 
 import java.util.List;
