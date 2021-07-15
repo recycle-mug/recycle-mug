@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import recyclemug.ProjectMug.data.HeaderJwtDTO;
+import recyclemug.ProjectMug.data.ResponseProfileDTO;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.domain.user.User;
@@ -81,51 +83,23 @@ public class AuthController {
         ObjectMapper mapper = new ObjectMapper();
         HeaderJwtDTO headerDTO = mapper.readValue(payload, HeaderJwtDTO.class);
 
-        if (headerDTO.role.equals("ROLE_CUSTOMER")) {
-            List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.email);
+        if (headerDTO.getRole().equals("ROLE_CUSTOMER")) {
+            List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
                 return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
             }
-        } else if (headerDTO.role.equals("ROLE_PARTNER")) {
-            List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.email);
+        } else if (headerDTO.getRole().equals("ROLE_PARTNER")) {
+            List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
                 return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
             }
         } else {
-            User user = adminRepository.findByEmail(headerDTO.email);
+            User user = adminRepository.findByEmail(headerDTO.getEmail());
             return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
         }
 
         return null;
-    }
-
-    @Data
-    static class HeaderJwtDTO {
-        @JsonProperty("sub")
-        private String email;
-        @JsonProperty("auth")
-        private String role;
-        @JsonProperty("exp")
-        private String expiredTime;
-    }
-
-    @Data
-    @Setter
-    static class ResponseProfileDTO {
-        private Long id;
-        private String email;
-        private String nickname;
-        private String profilePicture;
-        private String role;
-
-        public ResponseProfileDTO(Long id, String email, String nickname, String profilePicture, String role) {
-            this.id = id;
-            this.email = email;
-            this.nickname = nickname;
-            this.profilePicture = profilePicture;
-            this.role = role;
-        }
     }
 }

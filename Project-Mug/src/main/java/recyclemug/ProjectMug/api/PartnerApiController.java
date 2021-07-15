@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import recyclemug.ProjectMug.data.CreatePartnerRequest;
+import recyclemug.ProjectMug.data.CreatePartnerResponse;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.domain.user.User;
 import recyclemug.ProjectMug.service.CustomerService;
@@ -34,23 +36,5 @@ public class PartnerApiController {
         }
 
         return new CreatePartnerResponse("success", "회원가입에 성공했습니다.");
-    }
-
-    @Data
-    static class CreatePartnerRequest {
-        private String email;
-        private String password;
-        private String phoneNumber;
-        private String zipcode;
-        private String address;
-        private String addressDetail;
-        private String businessName;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class CreatePartnerResponse {
-        private String result;
-        private String message;
     }
 }
