@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * Partner 반환 클래스
+ * Partner Join 성공/실패 반환 클래스
  */
 @Data
 @AllArgsConstructor
