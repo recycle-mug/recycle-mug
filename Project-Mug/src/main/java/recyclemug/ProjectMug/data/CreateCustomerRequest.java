@@ -7,8 +7,7 @@ import lombok.Data;
  */
 @Data
 public class CreateCustomerRequest {
-    private String role; // "customer" or "partner"
-    private String id; 	// String (email)
-    private String pw;		// String
-    private String tel;		// String
+    private String email; 	// String (email)
+    private String password;		// String
+    private String phoneNumber;		// String
 }

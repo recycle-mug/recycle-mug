@@ -7,10 +7,10 @@ import lombok.Data;
  */
 @Data
 public class CreatePartnerRequest {
-    private String id;
-    private String pw;
-    private String tel;
-    private String address_num;
+    private String email;
+    private String password;
+    private String phoneNumber;
+    private String zipcode;
     private String address;
-    private String address_detail;
+    private String detailAddress;
 }
