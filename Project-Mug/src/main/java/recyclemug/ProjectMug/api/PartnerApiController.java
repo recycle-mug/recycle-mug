@@ -1,28 +1,22 @@
 package recyclemug.ProjectMug.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import recyclemug.ProjectMug.data.CreateJoinResponse;
 import recyclemug.ProjectMug.data.CreatePartnerRequest;
-import recyclemug.ProjectMug.data.CreatePartnerJoinResponse;
 import recyclemug.ProjectMug.data.CreatePartnerResponse;
-import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.service.PartnerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.Null;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,24 +26,26 @@ public class PartnerApiController {
     private final PartnerService partnerService;
 
     @PostMapping("/join/partner")
-    public CreatePartnerJoinResponse savePartner(@RequestBody @Valid CreatePartnerRequest request, HttpServletRequest httpServletRequest) {
+    @ResponseBody
+    public ResponseEntity<CreateJoinResponse> savePartner(@RequestBody @Valid CreatePartnerRequest request, HttpServletRequest httpServletRequest) {
         String pictureAddress = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
 
         try {
-            Partner partner = Partner.createPartner(request.getEmail(), request.getPw(), request.getTel(),
+            Partner partner = Partner.createPartner(request.getId(), request.getPw(), request.getTel(),
                     request.getAddress_num(), request.getAddress() + request.getAddress_detail());
             partner.setProfilePictureAddress(pictureAddress);
             partnerService.join(partner);
-            return new CreatePartnerJoinResponse("success", "회원가입에 성공했습니다.");
+            return ResponseEntity.ok(new CreateJoinResponse("success", "회원가입에 성공했습니다."));
         } catch (IllegalStateException e) {
             log.error("FAIL TO JOIN PARTNER");
+        } catch (Exception e) {
+            log.error("FAIL");
         }
         return null;
     }
 
     @GetMapping("/partner/{partnerId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PARTNER')")
-    @ResponseBody
     public CreatePartnerResponse getPartner(@PathVariable Long partnerId) {
         try {
             Partner partner = partnerService.findById(partnerId);
