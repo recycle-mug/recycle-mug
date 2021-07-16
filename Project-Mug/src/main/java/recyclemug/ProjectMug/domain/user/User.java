@@ -24,9 +24,12 @@ public abstract class User {
     private String phoneNumber;
 
     // Customer -> 개인사진, Partner -> 매장사진
+    @Column(length = 200)
     private String profilePictureAddress;
 
+    @Column(length = 9)
     private int point;
+    @Column(length = 10)
     private String nickname;
 
     private boolean activated;
