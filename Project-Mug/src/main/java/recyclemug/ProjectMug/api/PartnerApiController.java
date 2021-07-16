@@ -31,8 +31,8 @@ public class PartnerApiController {
         String pictureAddress = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
 
         try {
-            Partner partner = Partner.createPartner(request.getId(), request.getPw(), request.getTel(),
-                    request.getAddress_num(), request.getAddress() + request.getAddress_detail());
+            Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
+                    request.getZipcode(), request.getAddress() + request.getDetailAddress());
             partner.setProfilePictureAddress(pictureAddress);
             partnerService.join(partner);
             return ResponseEntity.ok(new CreateJoinResponse("success", "회원가입에 성공했습니다."));
@@ -46,26 +46,31 @@ public class PartnerApiController {
 
     @GetMapping("/partner/{partnerId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PARTNER')")
+    @ResponseBody
     public CreatePartnerResponse getPartner(@PathVariable Long partnerId) {
         try {
             Partner partner = partnerService.findById(partnerId);
             log.info("get Partner success");
             return createPartnerResponse(partner);
         } catch (NullPointerException e) {
-            log.error("DB에 없는 ID Partner 조회 에러");
+            log.error("DB에 없는 Partner id 조회");
         } catch (FileNotFoundException e) {
-            log.error("이미지가 없습니다.");
+            log.error("No image for partner id: " + partnerId);
         } catch (IOException e) {
-            log.error("Image to byte Exception: image bytes 생성 실패");
+            log.error("IOException");
         }
         return null;
     }
 
     public CreatePartnerResponse createPartnerResponse(Partner partner) throws IOException {
         CreatePartnerResponse response = CreatePartnerResponse.builder()
-                .id(partner.getId()).email(partner.getEmail())
-                .point(partner.getPoint()).nickname(partner.getNickname())
-                .businessName(partner.getBusinessName()).zipcode(partner.getZipcode())
+                .id(partner.getId())
+                .email(partner.getEmail())
+                .phoneNumber(partner.getPhoneNumber())
+                .point(partner.getPoint())
+                .nickname(partner.getNickname())
+                .businessName(partner.getBusinessName())
+                .zipcode(partner.getZipcode())
                 .detailAddress(partner.getDetailAddress())
                 .detailAddress(partner.getDetailAddress())
                 .partnerCups(partner.getPartnerCups())
