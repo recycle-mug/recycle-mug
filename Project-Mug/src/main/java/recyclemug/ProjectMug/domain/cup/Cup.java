@@ -15,16 +15,19 @@ public class Cup {
     @Column(name = "cup_id")
     private Long id;
 
+    @Column(name = "name", length = 10)
     private String name;
 
+    @Column(name = "price", length = 10)
     private int price;
 
+    @Column(name = "stock_quantity", length = 20)
     private int stockQuantity;
 
+    @Column(name = "profile_picture_address", length = 150)
     private String profilePictureAddress;
 
     protected Cup() {
-
     }
 
     public static Cup createCup(String name, int price, int stockQuantity, String profilePictureAddress) {

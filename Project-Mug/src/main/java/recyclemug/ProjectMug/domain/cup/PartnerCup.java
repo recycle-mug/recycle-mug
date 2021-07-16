@@ -30,9 +30,10 @@ public class PartnerCup {
 
 
     // 비즈니스 로직
-    /*
-        컵을 요청하여 더 받아오는 메서드
-        partner 가 가지고 있는 Cup count 가 줄어드는 메서드
+
+    /**
+     * 컵을 요청하여 더 받아오는 메서드
+     * partner 가 가지고 있는 Cup count 가 줄어드는 메서드
      */
     public void addStock(int quantity){
         this.stockQuantity += quantity;

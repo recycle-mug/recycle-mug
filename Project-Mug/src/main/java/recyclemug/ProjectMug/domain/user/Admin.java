@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Getter @Setter
 public class Admin extends User{
 
+    @Column(name = "admin_name", length = 15)
     private String adminName;
 
 }
