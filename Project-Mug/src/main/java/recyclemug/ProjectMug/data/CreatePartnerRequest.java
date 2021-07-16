@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public class CreatePartnerRequest {
-    private String email;
+    private String id;
     private String pw;
     private String tel;
     private String address_num;
