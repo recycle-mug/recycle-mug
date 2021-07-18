@@ -38,7 +38,7 @@
             </th>
 
             <th role="columnheader" scope="col" tabindex="0" aria-colindex="2" class="role">
-              <div style="text-align:center;">role</div>
+              <div style="text-align:center;">ID</div>
             </th>
 
             <th role="columnheader" scope="col" tabindex="0" aria-colindex="3" class="username">
@@ -76,7 +76,7 @@
               v-if="entryList[(currentPage - 1) * perPage + index - 1]"
               style="text-align:center;"
             >
-              {{ entryList[(currentPage - 1) * perPage + index - 1].role }}
+              {{ entryList[(currentPage - 1) * perPage + index - 1].email }}
             </td>
             <td
               aria-colindex="3"
@@ -86,15 +86,15 @@
             >
               <div class="profile-pic-wrapper">
                 <img
-                  :src="entryList[(currentPage - 1) * perPage + index - 1].profilePic"
+                  :src="entryList[(currentPage - 1) * perPage + index - 1].profilePictureAddress"
                   alt=""
                   class="profile-pic"
                 />
               </div>
-              {{ entryList[(currentPage - 1) * perPage + index - 1].username }}
+              {{ entryList[(currentPage - 1) * perPage + index - 1].nickname }}
 
               <div class="user-detail">
-                <h1>{{ entryList[(currentPage - 1) * perPage + index - 1].username }}</h1>
+                <h1>{{ entryList[(currentPage - 1) * perPage + index - 1].nickname }}</h1>
               </div>
             </td>
             <td
@@ -280,168 +280,7 @@ export default {
       perPage: 10,
       maxPage: 1,
       currentPage: 1,
-      entryList: [
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-      ],
+      entryList: [],
       writingMode: false,
       userStyle: {
         backgroundColor: "#5d9b5e",
@@ -493,7 +332,7 @@ export default {
       findUsers
         .get(path)
         .then((res) => {
-          console.log("res :>> ", res);
+          this.entryList = res.data;
         })
         .catch((err) => {
           console.log("err :>> ", err);
@@ -686,10 +525,10 @@ export default {
               width: 10%;
             }
             &.role {
-              width: 15%;
+              width: 25%;
             }
             &.username {
-              width: 35%;
+              width: 25%;
             }
             &.last-login {
               width: 20%;
