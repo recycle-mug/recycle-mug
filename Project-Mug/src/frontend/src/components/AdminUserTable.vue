@@ -14,7 +14,7 @@
         </div>
         <div class="content-right">
           <input type="text" placeholder="Search..." class="content-form" />
-          <button @click="onWriting">
+          <button :style="{ backgroundColor: userStyle }" @click="onWriting">
             <span>
               <font-awesome-icon :icon="['fas', 'search']"></font-awesome-icon> 유저 검색</span
             >
@@ -61,7 +61,6 @@
             v-for="index in parseInt(perPage)"
             :key="index"
             @click="activeUserTable((currentPage - 1) * perPage + index - 1)"
-            :class="{ active: entryList[(currentPage - 1) * perPage + index - 1].active }"
           >
             <td
               aria-colindex="1"
@@ -151,6 +150,11 @@
                   active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 1,
                   'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 1 == maxPage,
                 }"
+                :style="[
+                  currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 1
+                    ? { backgroundColor: userStyle }
+                    : {},
+                ]"
                 @click="selectPage"
                 v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 1 <= maxPage"
               >
@@ -167,6 +171,11 @@
                   active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 2,
                   'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 2 == maxPage,
                 }"
+                :style="[
+                  currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 2
+                    ? { backgroundColor: userStyle }
+                    : {},
+                ]"
                 @click="selectPage"
                 v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 2 <= maxPage"
               >
@@ -183,6 +192,11 @@
                   active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 3,
                   'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 3 == maxPage,
                 }"
+                :style="[
+                  currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 3
+                    ? { backgroundColor: userStyle }
+                    : {},
+                ]"
                 @click="selectPage"
                 v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 3 <= maxPage"
               >
@@ -199,6 +213,11 @@
                   active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4,
                   'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 4 == maxPage,
                 }"
+                :style="[
+                  currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4
+                    ? { backgroundColor: userStyle }
+                    : {},
+                ]"
                 @click="selectPage"
                 v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 4 <= maxPage"
               >
@@ -215,6 +234,11 @@
                   active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 5,
                   'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 5 == maxPage,
                 }"
+                :style="[
+                  currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 5
+                    ? { backgroundColor: userStyle }
+                    : {},
+                ]"
                 @click="selectPage"
                 v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 5 <= maxPage"
               >
@@ -245,6 +269,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faAngleLeft, faAngleRight, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
+import axios from "axios";
 
 faLibrary.add(faAngleLeft, faAngleRight, faSearch);
 
@@ -416,466 +441,14 @@ export default {
           signUpDate: "2021-06-29",
           active: false,
         },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
-        {
-          role: "customer",
-          profilePic: "https://i.pinimg.com/474x/9a/a0/c4/9aa0c4d51c6be64845bacbe26a738544.jpg",
-          username: "tester",
-          lastLogin: "2021-06-29",
-          signUpDate: "2021-06-29",
-          active: false,
-        },
       ],
       writingMode: false,
+      userStyle: {
+        backgroundColor: "#5d9b5e",
+      },
     };
   },
+  props: ["role"],
   components: {
     FontAwesomeIcon,
   },
@@ -905,10 +478,40 @@ export default {
       }
       this.entryList[index].active = !this.entryList[index].active;
     },
+    findAllUsers() {
+      let roleName = "";
+
+      if (this.role === "partner") {
+        roleName = "Partners";
+      } else if (this.role === "customer") {
+        roleName = "Customers";
+      }
+
+      const path = `/backend/user/findAll${roleName}`;
+      let findUsers = axios.create();
+
+      findUsers
+        .get(path)
+        .then((res) => {
+          console.log("res :>> ", res);
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
+    },
+    setUserStyle() {
+      if (this.role === "partner") {
+        this.userStyle = "#d49e3e";
+      } else if (this.role === "customer") {
+        this.userStyle = "#5d9b5e";
+      }
+    },
   },
   mounted: function() {
+    this.findAllUsers();
     this.total = this.entryList.length;
     this.maxPage = Math.ceil(this.total / this.perPage);
+    this.setUserStyle();
   },
 };
 </script>
@@ -1100,24 +703,6 @@ export default {
               font-size: 0.857rem;
               letter-spacing: 0.5px;
               text-transform: uppercase;
-            }
-          }
-
-          tbody tr.active {
-            background-color: map-get($map: $theme, $key: "table");
-
-            td .user-detail {
-              position: absolute;
-              background-color: map-get($map: $theme, $key: "table");
-              width: 50%;
-              height: calc(100% - 40px);
-              top: 40px;
-              left: 50%;
-              padding: 2rem;
-              box-sizing: border-box;
-              z-index: 99;
-              cursor: default;
-              display: block;
             }
           }
 
