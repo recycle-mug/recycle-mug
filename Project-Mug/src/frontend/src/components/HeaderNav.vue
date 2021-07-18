@@ -20,7 +20,7 @@
         </router-link>
 
         <div class="content-right">
-          <router-link :to="{ name: 'profile' }" tag="div" class="profile-btn" v-if="isLogin">
+          <div class="profile-btn" v-if="isLogin">
             <span @click="logout">{{ username }}님 안녕하세요</span>
             <div class="icon-wrapper">
               <font-awesome-icon
@@ -28,7 +28,12 @@
                 style="width:100%; cursor:pointer;"
               ></font-awesome-icon>
             </div>
-          </router-link>
+
+            <ul class="sub-menu">
+              <li class="menu-item">마이페이지</li>
+              <li class="menu-item">로그아웃</li>
+            </ul>
+          </div>
 
           <router-link
             :to="{ name: 'login', query: { role: 'customer' } }"
@@ -301,6 +306,20 @@ export default {
               &:hover::after {
                 font-weight: bolder;
                 width: 100%;
+              }
+            }
+
+            ul {
+              list-style: none;
+              position: absolute;
+              bottom: 0;
+
+              &:first-child {
+                width: 100%;
+              }
+
+              &-item {
+                display: flex;
               }
             }
           }

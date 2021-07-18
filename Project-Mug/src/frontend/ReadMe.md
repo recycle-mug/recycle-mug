@@ -1,24 +1,15 @@
-# frontend
+# Recycle Mug
 
-## Project setup
-```
-npm install
-```
+start at May 23 2021
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 📌 Defendency
 
-### Compiles and minifies for production
-```
-npm run build
-```
+1. node.js @ 14.17.3
+2. npm @ 7.19.1
 
-### Lints and fixes files
-```
-npm run lint
-```
+## 🏃‍♀️ Wanna run this project?
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```
+npm i
+npm run dev
+```

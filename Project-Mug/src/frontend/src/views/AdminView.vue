@@ -10,7 +10,10 @@
         <admin-carousel></admin-carousel>
       </div>
       <div class="row">
-        <admin-user-table></admin-user-table>
+        <admin-user-table role="customer"></admin-user-table>
+      </div>
+      <div class="row">
+        <admin-user-table role="partner"></admin-user-table>
       </div>
       <footer-nav></footer-nav>
     </div>

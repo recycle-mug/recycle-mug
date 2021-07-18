@@ -126,7 +126,7 @@ export default new Router({
       path: "/admin",
       component: AdminView,
       name: "admin",
-      beforeEnter: checkAdmin(),
+      // beforeEnter: checkAdmin(),
     },
     {
       path: "/adminLogin",

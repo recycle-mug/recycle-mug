@@ -442,10 +442,9 @@ export default {
       ) {
         // path
         const path = "/backend/join/" + this.formData.role;
-
         const payload = {
-          id: this.formData.joinId,
-          pw: this.formData.joinPw,
+          email: this.formData.joinId,
+          password: this.formData.joinPw,
           tel:
             this.formData.joinTel.first +
             this.formData.joinTel.second +
@@ -454,12 +453,9 @@ export default {
           address_num: this.formData.joinAddress.addressNum,
           address_detail: this.formData.joinAddress.addressDetail,
         };
-
         let sendJoinForm = axios.create();
-
         sendJoinForm.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
         sendJoinForm.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
-
         console.log("payload :>> ", payload);
         await sendJoinForm
           .post(path, payload)
