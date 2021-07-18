@@ -443,8 +443,8 @@ export default {
         // path
         const path = "/backend/join/" + this.formData.role;
         const payload = {
-          id: this.formData.joinId,
-          pw: this.formData.joinPw,
+          email: this.formData.joinId,
+          password: this.formData.joinPw,
           tel:
             this.formData.joinTel.first +
             this.formData.joinTel.second +
