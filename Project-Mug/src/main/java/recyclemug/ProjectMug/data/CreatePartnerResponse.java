@@ -23,6 +23,4 @@ public class CreatePartnerResponse {
     private String zipcode;
     private String detailAddress;
     private String registrationNumber;
-
-    private List<PartnerCup> partnerCups;
 }
