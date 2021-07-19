@@ -75,7 +75,6 @@ public class PartnerApiController {
                 .zipcode(partner.getZipcode())
                 .detailAddress(partner.getDetailAddress())
                 .detailAddress(partner.getDetailAddress())
-                .partnerCups(partner.getPartnerCups())
                 .build();
 
         FileInputStream imageStream = new FileInputStream(partner.getProfilePictureAddress());
