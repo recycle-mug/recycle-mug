@@ -14,6 +14,18 @@ export default {
       location: null,
       gettingLocation: false,
       locationErr: null,
+      partnerLocations: [
+        {
+          name: "현지",
+          lat: 36.61938880589755,
+          lng: 127.44334824252485,
+        },
+        {
+          name: "재서",
+          lat: 36.612523961538564,
+          lng: 127.5172328005922,
+        },
+      ],
     };
   },
   methods: {
@@ -36,6 +48,8 @@ export default {
       }
 
       const map = new kakao.maps.Map(container, options);
+
+      this.addMarker(map);
     },
     onAddScript() {
       const script = document.createElement("script");
@@ -44,28 +58,64 @@ export default {
         "https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=6e95b4c59c1a9d01927e2946ff3a4c88";
       document.head.appendChild(script);
     },
+    addMarker(map) {
+      this.partnerLocations.forEach((partnerLocation, index) => {
+        const lat = partnerLocation.lat;
+        const lng = partnerLocation.lng;
+
+        let markerPosition = new kakao.maps.LatLng(lat, lng);
+        const marker = new kakao.maps.Marker({
+          position: markerPosition,
+          clickable: true,
+          title: partnerLocation.name,
+        });
+
+        marker.setMap(map);
+
+        this.onHoverMarker(map, marker);
+      });
+    },
+    onHoverMarker(map, marker) {
+      console.log("marker :>> ", marker);
+      var iwContent = '<div style="padding:1rem;user-select:none">' + marker.Fb + "</div>";
+
+      var infowindow = new kakao.maps.InfoWindow({
+        content: iwContent,
+      });
+
+      kakao.maps.event.addListener(marker, "mouseover", function() {
+        infowindow.open(map, marker);
+      });
+
+      kakao.maps.event.addListener(marker, "mouseout", function() {
+        infowindow.close();
+      });
+    },
+    getCurrentLocation() {
+      if (!("geolocation" in navigator)) {
+        this.locationErr = "위치 정보 권한이 없습니다";
+        return;
+      }
+
+      this.gettingLocation = true;
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          this.gettingLocation = false;
+          this.location = pos;
+          this.onLoadMap();
+        },
+        (err) => {
+          this.gettingLocation = false;
+          this.locationErr = err.message;
+        },
+      );
+    },
   },
   mounted() {
     window.kakao && window.kakao.maps ? this.onLoadMap() : this.onAddScript();
   },
   created() {
-    if (!("geolocation" in navigator)) {
-      this.locationErr = "위치 정보 권한이 없습니다";
-      return;
-    }
-
-    this.gettingLocation = true;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        this.gettingLocation = false;
-        this.location = pos;
-        this.onLoadMap();
-      },
-      (err) => {
-        this.gettingLocation = false;
-        this.locationErr = err.message;
-      },
-    );
+    this.getCurrentLocation();
   },
 };
 </script>

@@ -22,6 +22,7 @@
         <div class="content-right">
           <div v-if="isLogin">
             <div class="profile-btn" @click="activateDropdown()">
+              <img :src="'data:image/jpeg;base64,' + profileImg" alt="" />
               <span>{{ username }}님 안녕하세요</span>
               <div class="icon-wrapper">
                 <font-awesome-icon
@@ -75,6 +76,7 @@ export default {
       username: "",
       isLogin: false,
       dropDown: false,
+      profileImg: "",
     };
   },
   components: {
@@ -121,6 +123,7 @@ export default {
             } else {
               this.isLogin = true;
               this.username = res.data.id;
+              this.profileImg = res.data.profilePicture;
             }
           })
           .catch((error) => {
@@ -297,6 +300,15 @@ export default {
             color: map-get($map: $theme, $key: "text-light");
             display: flex;
             align-items: center;
+
+            img {
+              width: 35px;
+              height: 35px;
+              border-radius: 40%;
+              border: 1px solid map-get($map: $theme, $key: "border");
+              margin-right: 10px;
+              overflow: hidden;
+            }
 
             span {
               font-weight: bold;
