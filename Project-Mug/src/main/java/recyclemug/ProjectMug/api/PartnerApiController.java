@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateJoinResponse;
 import recyclemug.ProjectMug.data.CreatePartnerRequest;
 import recyclemug.ProjectMug.data.CreatePartnerResponse;
+import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Partner;
+import recyclemug.ProjectMug.repository.PartnerCupRepository;
 import recyclemug.ProjectMug.service.PartnerService;
 
 import javax.servlet.http.HttpServletRequest;

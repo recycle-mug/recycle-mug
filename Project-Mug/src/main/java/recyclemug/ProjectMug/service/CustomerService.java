@@ -4,9 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.domain.cup.CustomerCup;
+import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Authority;
 import recyclemug.ProjectMug.domain.user.Customer;
+import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.domain.user.User;
+import recyclemug.ProjectMug.exception.NotEnoughPointException;
+import recyclemug.ProjectMug.exception.NotEnoughStockException;
+import recyclemug.ProjectMug.repository.CustomerCupRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.UserRepositoryInterface;
 import recyclemug.ProjectMug.util.SecurityUtil;
@@ -25,6 +31,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final UserRepositoryInterface userRepositoryInterface;
     private final PasswordEncoder passwordEncoder;
+    private final CustomerCupRepository customerCupRepository;
 
     @Transactional
     public Long join(Customer customer) {
@@ -41,12 +48,18 @@ public class CustomerService {
         return customer.getId();
     }
 
-    public Optional<User> getCustomerWithAuthorities(String email) {
-        return userRepositoryInterface.findOneWithAuthoritiesByEmail(email);
-    }
-
-    public Optional<User> getMyCustomerWithAuthorities() {
-        return SecurityUtil.getCurrentEmail().flatMap(userRepositoryInterface::findOneWithAuthoritiesByEmail);
+    @Transactional
+    public void cupOrderOfCustomer(Customer customer, PartnerCup partnerCup) throws NotEnoughPointException, NotEnoughStockException{
+        if (partnerCup.getCup().getPrice() > customer.getPoint()) {
+            throw new NotEnoughPointException();
+        } else if (partnerCup.getStockQuantity() < 1) {
+            throw new NotEnoughStockException();
+        } else {
+            CustomerCup customerCup = new CustomerCup(customer, partnerCup.getPartner(), partnerCup.getCup());
+            partnerCup.setStockQuantity(partnerCup.getStockQuantity() - 1);
+            customer.setPoint(customer.getPoint() - partnerCup.getCup().getPrice());
+            customerCupRepository.saveCup(customerCup);
+        }
     }
 
     // 중복되는 이메일을 가지는 회원이 있는지를 판별

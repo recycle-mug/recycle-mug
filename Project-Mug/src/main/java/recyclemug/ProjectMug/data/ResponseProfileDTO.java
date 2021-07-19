@@ -10,10 +10,10 @@ public class ResponseProfileDTO {
     private Long id;
     private String email;
     private String nickname;
-    private String profilePicture;
+    private byte[] profilePicture;
     private String role;
 
-    public ResponseProfileDTO(Long id, String email, String nickname, String profilePicture, String role) {
+    public ResponseProfileDTO(Long id, String email, String nickname, byte[] profilePicture, String role) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;

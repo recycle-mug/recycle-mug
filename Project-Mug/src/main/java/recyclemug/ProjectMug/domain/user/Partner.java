@@ -34,7 +34,7 @@ public class Partner extends User{
         partner.setPhoneNumber(phoneNumber);
         partner.setZipcode(zipcode);
         partner.setDetailAddress(detailAddress);
-        partner.setPoint(0);
+        partner.setPoint(10000000);
 
         return partner;
     }
@@ -43,5 +43,4 @@ public class Partner extends User{
         partnerCups.add(partnerCup);
         partnerCup.setPartner(this);
     }
-
 }

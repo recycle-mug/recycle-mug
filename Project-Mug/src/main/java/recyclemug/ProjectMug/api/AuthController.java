@@ -28,6 +28,9 @@ import recyclemug.ProjectMug.repository.AdminRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 
@@ -74,7 +77,7 @@ public class AuthController {
 
     @GetMapping("/profile")
     @PreAuthorize("hasAnyRole('CUSTOMER', 'PARTNER', 'ADMIN')")
-    public ResponseProfileDTO checkUserProfile(@RequestHeader(name = "Authorization") String token) throws JsonProcessingException {
+    public ResponseProfileDTO checkUserProfile(@RequestHeader(name = "Authorization") String token) throws IOException {
         String jwt = token.substring(7);
         String[] jwtSplit = jwt.split("\\.");
         String payload = new String(decoder.decode(jwtSplit[1]));
@@ -87,19 +90,25 @@ public class AuthController {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole());
             }
         } else if (headerDTO.getRole().equals("ROLE_PARTNER")) {
             List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole());
             }
         } else {
             User user = adminRepository.findByEmail(headerDTO.getEmail());
-            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), user.getProfilePictureAddress(), headerDTO.getRole());
+            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole());
         }
-
         return null;
+    }
+
+    public byte[] findPicture(String profilePictureAddress) throws IOException {
+        FileInputStream imageStream = new FileInputStream(profilePictureAddress);
+        byte[] image = imageStream.readAllBytes();
+        imageStream.close();
+        return image;
     }
 }
