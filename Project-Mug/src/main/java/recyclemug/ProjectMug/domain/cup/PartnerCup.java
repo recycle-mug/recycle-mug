@@ -20,7 +20,7 @@ public class PartnerCup {
     @JoinColumn(name = "user_id")
     private Partner partner;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cup_id")
     private Cup cup;
 
@@ -30,6 +30,13 @@ public class PartnerCup {
 
 
     // 비즈니스 로직
+
+
+    public PartnerCup(Partner partner, Cup cup, int stockQuantity) {
+        this.partner = partner;
+        this.cup = cup;
+        this.stockQuantity = stockQuantity;
+    }
 
     /**
      * 컵을 요청하여 더 받아오는 메서드
