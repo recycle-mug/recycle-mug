@@ -445,13 +445,13 @@ export default {
         const payload = {
           email: this.formData.joinId,
           password: this.formData.joinPw,
-          tel:
+          phoneNumber:
             this.formData.joinTel.first +
             this.formData.joinTel.second +
             this.formData.joinTel.third,
           address: this.formData.joinAddress.address,
-          address_num: this.formData.joinAddress.addressNum,
-          address_detail: this.formData.joinAddress.addressDetail,
+          zipcode: this.formData.joinAddress.addressNum,
+          detailAddress: this.formData.joinAddress.addressDetail,
         };
         let sendJoinForm = axios.create();
         sendJoinForm.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
