@@ -28,15 +28,14 @@ public class PartnerCup {
 
     private LocalDateTime lastModifiedTime;
 
-
-    // 비즈니스 로직
-
-
     public PartnerCup(Partner partner, Cup cup, int stockQuantity) {
         this.partner = partner;
         this.cup = cup;
         this.stockQuantity = stockQuantity;
+        this.lastModifiedTime = LocalDateTime.now();
     }
+
+    // 비즈니스 로직
 
     /**
      * 컵을 요청하여 더 받아오는 메서드

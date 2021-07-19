@@ -29,10 +29,11 @@ public class PartnerCupApiController {
         Cup cup = cupRepository.findByCupId(cupId);
         try {
             partnerService.cupOrderOfPartner(cup, partner, orderQuantity);
+            return "ok";
         } catch (Exception e) {
             log.info(e.toString());
         }
 
-        return "ok";
+        return "err";
     }
 }
