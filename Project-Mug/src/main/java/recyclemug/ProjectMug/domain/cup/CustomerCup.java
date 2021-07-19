@@ -21,10 +21,6 @@ public class CustomerCup {
     private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Partner partner;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cup_id")
     private Cup cup;
 
@@ -33,9 +29,8 @@ public class CustomerCup {
     private LocalDateTime returnDateTime;
     private LocalDateTime returnedDateTime;
 
-    public CustomerCup(Customer customer, Partner partner, Cup cup) {
+    public CustomerCup(Customer customer, Cup cup) {
         this.customer = customer;
-        this.partner = partner;
         this.cup = cup;
         this.rentDateTime = LocalDateTime.now();
         this.rentDateTime = LocalDateTime.now().plusWeeks(1);

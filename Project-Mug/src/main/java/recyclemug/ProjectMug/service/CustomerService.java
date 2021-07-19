@@ -55,7 +55,7 @@ public class CustomerService {
         } else if (partnerCup.getStockQuantity() < 1) {
             throw new NotEnoughStockException();
         } else {
-            CustomerCup customerCup = new CustomerCup(customer, partnerCup.getPartner(), partnerCup.getCup());
+            CustomerCup customerCup = new CustomerCup(customer, partnerCup.getCup());
             partnerCup.setStockQuantity(partnerCup.getStockQuantity() - 1);
             customer.setPoint(customer.getPoint() - partnerCup.getCup().getPrice());
             customerCupRepository.saveCup(customerCup);
