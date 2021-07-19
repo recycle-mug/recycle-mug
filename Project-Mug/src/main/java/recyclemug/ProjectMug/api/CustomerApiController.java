@@ -44,7 +44,7 @@ public class CustomerApiController {
     }
 
     @GetMapping("/customer/{customerId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PARTNER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @ResponseBody
     public CreateCustomerResponse getCustomer(@PathVariable Long customerId) {
         try {
