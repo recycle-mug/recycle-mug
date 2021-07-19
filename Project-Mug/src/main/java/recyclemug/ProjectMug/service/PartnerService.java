@@ -44,26 +44,7 @@ public class PartnerService {
         return partner.getId();
     }
 
-    /**
-     * 파트너가 컵을 주문하는 메서드
-     *
-     * @param cup
-     * @param partner
-     * @param orderQuantity
-     */
-    @Transactional
-    public void cupOrderOfPartner(Cup cup, Partner partner, int orderQuantity) throws NotEnoughPointException, NotEnoughStockException {
-        if (cup.getStockQuantity() < orderQuantity) {
-            throw new NotEnoughStockException();
-        } else if (cup.getPrice() * orderQuantity > partner.getPoint()) {
-            throw new NotEnoughPointException();
-        } else {
-            PartnerCup partnerCup = new PartnerCup(partner, cup, orderQuantity);
-            partner.setPoint(partner.getPoint() - cup.getPrice() * orderQuantity);
-            cup.setStockQuantity(cup.getStockQuantity() - orderQuantity);
-            partnerCupRepository.saveCup(partnerCup);
-        }
-    }
+
 
     public Partner findById(Long id) {
         return partnerRepository.findOne(id);
