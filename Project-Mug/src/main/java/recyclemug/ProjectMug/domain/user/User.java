@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -33,6 +34,9 @@ public abstract class User {
     private String nickname;
 
     private boolean activated;
+
+    private LocalDateTime lastLoginDateTIme;
+    private LocalDateTime signupDateTIme;
 
     @ManyToMany
     @JoinTable(name = "user_authority",
