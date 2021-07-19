@@ -28,6 +28,9 @@ public class PartnerCup {
 
     private LocalDateTime lastModifiedTime;
 
+    protected PartnerCup() {
+    }
+
     public PartnerCup(Partner partner, Cup cup, int stockQuantity) {
         this.partner = partner;
         this.cup = cup;
