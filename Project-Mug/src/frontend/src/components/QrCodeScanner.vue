@@ -26,15 +26,12 @@
       </div>
       <div class="loader-wrapper" v-if="loading">
         <div class="loader">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+          <span class="dot"></span>
+          <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </div>
     </qrcode-stream>
@@ -169,93 +166,54 @@ export default {
     align-items: center;
 
     .loader {
-      width: 150px;
-      height: 150px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-gap: 8px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 142px;
+      height: 40px;
+      margin: -20px 0 0 -71px;
+      background: white;
+      filter: contrast(20);
 
-      div {
-        width: 30px;
-        height: 30px;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: $main-color;
+      .dot {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 12px;
+        left: 15px;
+        filter: blur(4px);
+        background: #000;
         border-radius: 50%;
+        transform: translateX(0);
+        animation: dot 2.8s infinite;
+      }
 
-        &::before,
-        &::after {
-          content: "";
-          width: 30px;
-          height: 30px;
-          position: absolute;
+      .dots {
+        transform: translateX(0);
+        margin-top: 12px;
+        margin-left: 31px;
+        animation: dots 2.8s infinite;
+
+        span {
+          display: block;
+          float: left;
+          width: 16px;
+          height: 16px;
+          margin-left: 10px;
+          filter: blur(4px);
+          background: #000;
           border-radius: 50%;
         }
+      }
 
-        &::before {
-          background-color: $sub-color;
-          animation: scale-1 2400ms linear infinite;
+      @keyframes dot {
+        50% {
+          transform: translateX(96px);
         }
-
-        &::after {
-          background-color: $main-color;
-          animation: scale-2 2400ms linear infinite;
-        }
-
-        &:nth-child(2)::before,
-        &:nth-child(2)::after {
-          animation-delay: 300ms;
-        }
-        &:nth-child(3)::before,
-        &:nth-child(3)::after {
-          animation-delay: 600ms;
-        }
-        &:nth-child(4)::before,
-        &:nth-child(4)::after {
-          animation-delay: 900ms;
-        }
-        &:nth-child(5)::before,
-        &:nth-child(5)::after {
-          animation-delay: 1200ms;
-        }
-        &:nth-child(6)::before,
-        &:nth-child(6)::after {
-          animation-delay: 1500ms;
-        }
-        &:nth-child(7)::before,
-        &:nth-child(7)::after {
-          animation-delay: 1800ms;
-        }
-        &:nth-child(8)::before,
-        &:nth-child(8)::after {
-          animation-delay: 2100ms;
-        }
-        &:nth-child(9)::before,
-        &:nth-child(9)::after {
-          animation-delay: 2400ms;
-        }
-
-        @keyframes scale-1 {
-          0% {
-            transform: scale(0);
-            z-index: 2;
-          }
-          50%,
-          100% {
-            transform: scale(1);
-          }
-        }
-
-        @keyframes scale-2 {
-          0%,
-          50% {
-            transform: scale(0);
-          }
-          100% {
-            transform: scale(1);
-          }
+      }
+      @keyframes dots {
+        50% {
+          transform: translateX(-31px);
         }
       }
     }
