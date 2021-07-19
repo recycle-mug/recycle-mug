@@ -4,8 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.domain.cup.Cup;
+import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Authority;
 import recyclemug.ProjectMug.domain.user.Partner;
+import recyclemug.ProjectMug.exception.NotEnoughPointException;
+import recyclemug.ProjectMug.exception.NotEnoughStockException;
+import recyclemug.ProjectMug.repository.PartnerCupRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.repository.UserRepositoryInterface;
 
@@ -22,6 +27,7 @@ public class PartnerService {
     private final PartnerRepository partnerRepository;
     private final UserRepositoryInterface userRepositoryInterface;
     private final PasswordEncoder passwordEncoder;
+    private final PartnerCupRepository partnerCupRepository;
 
     @Transactional
     public Long join(Partner partner) {
@@ -36,6 +42,39 @@ public class PartnerService {
 
         partnerRepository.save(partner);
         return partner.getId();
+    }
+
+    /**
+     * 파트너가 컵을 주문하는 메서드
+     *
+     * @param cup
+     * @param partner
+     * @param orderQuantity
+     */
+    @Transactional
+    public void cupOrderOfPartner(Cup cup, Partner partner, int orderQuantity) throws NotEnoughPointException, NotEnoughStockException {
+        if (cup.getStockQuantity() < orderQuantity) {
+            throw new NotEnoughStockException();
+        } else if (cup.getPrice() * orderQuantity > partner.getPoint()) {
+            throw new NotEnoughPointException();
+        } else {
+            PartnerCup partnerCup = new PartnerCup(partner, cup, orderQuantity);
+            partner.setPoint(partner.getPoint() - cup.getPrice() * orderQuantity);
+            cup.setStockQuantity(cup.getStockQuantity() - orderQuantity);
+            partnerCupRepository.saveCup(partnerCup);
+        }
+    }
+
+    public Partner findById(Long id) {
+        return partnerRepository.findOne(id);
+    }
+
+    public List<Partner> findPartners() {
+        return partnerRepository.findAll();
+    }
+
+    public List<Partner> findByEmail(String email) {
+        return partnerRepository.findByEmail(email);
     }
 
     // 중복되는 이메일을 가지는 회원이 있는지를 판별
@@ -56,17 +95,5 @@ public class PartnerService {
         if(!match.find()) {
             throw new IllegalStateException("비밀번호를 양식에 맞게 작성해야 합니다");
         }
-    }
-
-    public Partner findById(Long id) {
-        return partnerRepository.findOne(id);
-    }
-
-    public List<Partner> findPartners() {
-        return partnerRepository.findAll();
-    }
-
-    public List<Partner> findByEmail(String email) {
-        return partnerRepository.findByEmail(email);
     }
 }
