@@ -1,31 +1,67 @@
 <template>
   <div>
-    <div class="row">
-      <div class="value">{{ userRole }}</div>
-    </div>
+    <div class="form-wrapper" v-if="writingMode">
+      <div class="row">
+        <div>닉네임 :</div>
+        <div class="value">{{ userInfo.nickname }}</div>
+        <input
+          type="text"
+          :value="userInfo.nickname"
+          @input="editForm.nickname = $event.target.value"
+        />
+      </div>
 
-    <div class="row">
-      <div>아이디(이메일) :</div>
-      <div class="value">{{ userInfo.email }}</div>
-    </div>
+      <div class="row">
+        <div>tel :</div>
+        <div class="value">{{ userInfo.phoneNumber }}</div>
+        <input
+          type="text"
+          :value="userInfo.phoneNumber.replace(/\D/g, '')"
+          @input="editForm.phoneNumber = $event.target.value"
+        />
+      </div>
 
-    <div class="row">
-      <div>닉네임 :</div>
-      <div class="value">{{ userInfo.nickname }}</div>
+      <div class="row">
+        <button @click="activateWritingMode()">수정완료</button>
+      </div>
     </div>
+    <div class="wrapper" v-else>
+      <div class="row">
+        <div class="value">{{ userRole }}</div>
+      </div>
 
-    <div class="row">
-      <div>tel :</div>
-      <div class="value">{{ userInfo.phoneNumber }}</div>
-    </div>
+      <div class="row">
+        <img :src="'data:image/jpeg;base64,' + this.userInfo.profilePicture" alt="" />
+      </div>
 
-    <div class="row">
-      <div>포인트 :</div>
-      <div class="value">{{ userInfo.point }}</div>
-    </div>
+      <div class="row">
+        <div>아이디(이메일) :</div>
+        <div class="value">{{ userInfo.email }}</div>
+      </div>
 
-    <div class="row">
-      <img :src="'data:image/jpeg;base64,' + this.userInfo.profilePicture" alt="" />
+      <div class="row">
+        <div>닉네임 :</div>
+        <div class="value">{{ userInfo.nickname }}</div>
+      </div>
+
+      <div class="row">
+        <div>tel :</div>
+        <div class="value">{{ userInfo.phoneNumber }}</div>
+      </div>
+
+      <div class="row">
+        <div>포인트 :</div>
+        <div class="value">{{ userInfo.point }}</div>
+      </div>
+
+      <div class="row" v-if="userInfo.detailAddress">
+        <div>주소 :</div>
+        <div class="value">{{ userInfo.detailAddress }}</div>
+      </div>
+
+      <div class="row">
+        <button @click="activateWritingMode()">수정하기</button>
+      </div>
     </div>
   </div>
 </template>
@@ -44,6 +80,11 @@ export default {
         phoneNumber: "",
         point: 0,
       },
+      editForm: {
+        nickname: "",
+        phoneNumber: "",
+      },
+      writingMode: false,
     };
   },
   props: ["userRole", "userId"],
@@ -91,6 +132,9 @@ export default {
       } else {
         return str;
       }
+    },
+    activateWritingMode() {
+      this.writingMode = !this.writingMode;
     },
   },
   mounted() {
