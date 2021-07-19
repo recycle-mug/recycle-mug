@@ -20,18 +20,22 @@
         </router-link>
 
         <div class="content-right">
-          <div class="profile-btn" v-if="isLogin">
-            <span @click="logout">{{ username }}님 안녕하세요</span>
-            <div class="icon-wrapper">
-              <font-awesome-icon
-                :icon="['fas', 'user']"
-                style="width:100%; cursor:pointer;"
-              ></font-awesome-icon>
+          <div v-if="isLogin">
+            <div class="profile-btn" @click="activateDropdown()">
+              <span>{{ username }}님 안녕하세요</span>
+              <div class="icon-wrapper">
+                <font-awesome-icon
+                  :icon="['fas', 'user']"
+                  style="width:100%; cursor:pointer;"
+                ></font-awesome-icon>
+              </div>
             </div>
 
-            <ul class="sub-menu">
-              <li class="menu-item">마이페이지</li>
-              <li class="menu-item">로그아웃</li>
+            <ul class="sub-menu" v-if="dropDown">
+              <router-link :to="{ name: 'profile' }" tag="li" class="menu-item">
+                마이페이지
+              </router-link>
+              <li class="menu-item" @click="logout">로그아웃</li>
             </ul>
           </div>
 
@@ -70,6 +74,7 @@ export default {
       isActive: "",
       username: "",
       isLogin: false,
+      dropDown: false,
     };
   },
   components: {
@@ -124,6 +129,9 @@ export default {
             localStorage.removeItem("accessToken");
           });
       }
+    },
+    activateDropdown() {
+      this.dropDown = !this.dropDown;
     },
   },
   computed: {
@@ -308,18 +316,31 @@ export default {
                 width: 100%;
               }
             }
+          }
 
-            ul {
-              list-style: none;
-              position: absolute;
-              bottom: 0;
+          ul {
+            list-style: none;
+            position: absolute;
+            bottom: -80px;
 
-              &:first-child {
-                width: 100%;
-              }
+            &:first-child {
+              width: 100%;
+            }
 
-              &-item {
-                display: flex;
+            &-item {
+              display: flex;
+            }
+
+            li {
+              padding: 1rem;
+              cursor: pointer;
+              background-color: map-get($map: $theme, $key: "content-background");
+              border: 1px solid map-get($map: $theme, $key: "border");
+              transition: all 0.2s ease;
+
+              &:hover {
+                font-weight: bold;
+                background-color: map-get($map: $theme, $key: "background");
               }
             }
           }
