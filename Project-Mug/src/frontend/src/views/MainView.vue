@@ -2,6 +2,7 @@
   <div :class="getTheme">
     <header-nav></header-nav>
     <div class="content-body">
+      <qr-code-scanner></qr-code-scanner>
       <get-kakao-map></get-kakao-map>
     </div>
     <footer-nav></footer-nav>
@@ -12,9 +13,10 @@
 import HeaderNav from "../components/HeaderNav";
 import FooterNav from "../components/FooterNav";
 import GetKakaoMap from "../components/GetKakaoMap";
+import QrCodeScanner from "../components/QrCodeScanner.vue";
 
 export default {
-  components: { HeaderNav, FooterNav, GetKakaoMap },
+  components: { HeaderNav, FooterNav, GetKakaoMap, QrCodeScanner },
   computed: {
     getTheme() {
       return this.$store.state.theme;
