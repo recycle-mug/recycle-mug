@@ -4,12 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.data.CustomerModifyDTO;
 import recyclemug.ProjectMug.domain.cup.CustomerCup;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
-import recyclemug.ProjectMug.domain.user.Authority;
-import recyclemug.ProjectMug.domain.user.Customer;
-import recyclemug.ProjectMug.domain.user.Partner;
-import recyclemug.ProjectMug.domain.user.User;
+import recyclemug.ProjectMug.domain.user.*;
+import recyclemug.ProjectMug.exception.CustomerStateNotAllowedException;
 import recyclemug.ProjectMug.exception.NotEnoughPointException;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.CustomerCupRepository;
@@ -33,6 +32,11 @@ public class CustomerService {
     private final PasswordEncoder passwordEncoder;
     private final CustomerCupRepository customerCupRepository;
 
+    /**
+     * Customer 회원가입 메서드
+     * @param customer
+     * @return
+     */
     @Transactional
     public Long join(Customer customer) {
         validateDuplicate(customer); // 중복 회원 체크
@@ -48,18 +52,13 @@ public class CustomerService {
         return customer.getId();
     }
 
+
+
     @Transactional
-    public void cupOrderOfCustomer(Customer customer, PartnerCup partnerCup) throws NotEnoughPointException, NotEnoughStockException{
-        if (partnerCup.getCup().getPrice() > customer.getPoint()) {
-            throw new NotEnoughPointException();
-        } else if (partnerCup.getStockQuantity() < 1) {
-            throw new NotEnoughStockException();
-        } else {
-            CustomerCup customerCup = new CustomerCup(customer, partnerCup.getCup());
-            partnerCup.setStockQuantity(partnerCup.getStockQuantity() - 1);
-            customer.setPoint(customer.getPoint() - partnerCup.getCup().getPrice());
-            customerCupRepository.saveCup(customerCup);
-        }
+    public void modifyCustomerInfo(Customer customer, CustomerModifyDTO customerDTO) {
+        customer.setPassword("{noop}" + customerDTO.getPassword());
+        customer.setPhoneNumber(customerDTO.getPhoneNumber());
+        customer.setNickname(customerDTO.getNickname());
     }
 
     // 중복되는 이메일을 가지는 회원이 있는지를 판별

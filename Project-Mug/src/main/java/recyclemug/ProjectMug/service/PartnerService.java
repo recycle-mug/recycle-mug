@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.data.PartnerModifyDTO;
 import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Authority;
@@ -29,6 +30,11 @@ public class PartnerService {
     private final PasswordEncoder passwordEncoder;
     private final PartnerCupRepository partnerCupRepository;
 
+    /**
+     * partner 회원가입 메서드
+     * @param partner
+     * @return
+     */
     @Transactional
     public Long join(Partner partner) {
         validateDuplicate(partner); // 중복 회원 체크
@@ -44,7 +50,21 @@ public class PartnerService {
         return partner.getId();
     }
 
-
+    /**
+     * partner 수정 메서드 : Partner 객체에 PartnerDTO 의 정보를 변경감지로 적용
+     * @param partner
+     * @param partnerDTO
+     */
+    @Transactional
+    public void modifyPartnerInfo(Partner partner, PartnerModifyDTO partnerDTO) {
+        partner.setPassword("{noop}" + partnerDTO.getPassword());
+        partner.setPhoneNumber(partnerDTO.getPhoneNumber());
+        partner.setNickname(partnerDTO.getNickname());
+        partner.setZipcode(partnerDTO.getZipcode());
+        partner.setDetailAddress(partnerDTO.getDetailAddress());
+        partner.setRegistrationNumber(partnerDTO.getRegistrationNumber());
+        partner.setBusinessName(partnerDTO.getBusinessName());
+    }
 
     public Partner findById(Long id) {
         return partnerRepository.findOne(id);

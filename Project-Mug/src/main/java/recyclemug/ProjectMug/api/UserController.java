@@ -67,6 +67,8 @@ public class UserController {
                 .zipcode(partner.getZipcode())
                 .detailAddress(partner.getDetailAddress())
                 .detailAddress(partner.getDetailAddress())
+                .signupDateTIme(partner.getSignupDateTIme())
+                .lastLoginDateTime(partner.getLastLoginDateTIme())
                 .build();
 
         FileInputStream imageStream = new FileInputStream(partner.getProfilePictureAddress());
@@ -84,6 +86,8 @@ public class UserController {
                 .nickname(customer.getNickname())
                 .phoneNumber(customer.getPhoneNumber())
                 .customerState(customer.getCustomerState())
+                .lastLoginDateTime(customer.getLastLoginDateTIme())
+                .signupDateTIme(customer.getSignupDateTIme())
                 .build();
 
         FileInputStream imageStream = new FileInputStream(customer.getProfilePictureAddress());

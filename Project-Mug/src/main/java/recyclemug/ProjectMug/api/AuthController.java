@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -89,17 +90,19 @@ public class AuthController {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole());
+                user.setLastLoginDateTIme(LocalDateTime.now());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole(), user.getSignupDateTIme());
             }
         } else if (headerDTO.getRole().equals("ROLE_PARTNER")) {
             List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole());
+                user.setLastLoginDateTIme(LocalDateTime.now());
+                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole(), user.getSignupDateTIme());
             }
         } else {
             User user = adminRepository.findByEmail(headerDTO.getEmail());
-            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(picturePath), headerDTO.getRole());
+            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(picturePath), headerDTO.getRole(), null);
         }
         return null;
     }

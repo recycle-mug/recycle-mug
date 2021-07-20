@@ -6,6 +6,7 @@ import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.CustomerCup;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +32,7 @@ public class Customer extends User{
         customer.setPoint(10000000);
         customer.setProfilePictureAddress(profilePictureAddress);
         customer.setCustomerState(CustomerState.NONE);
+        customer.setSignupDateTIme(LocalDateTime.now());
 
         return customer;
     }
