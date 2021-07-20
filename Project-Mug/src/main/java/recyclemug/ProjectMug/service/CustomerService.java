@@ -5,20 +5,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import recyclemug.ProjectMug.data.CustomerModifyDTO;
-import recyclemug.ProjectMug.domain.cup.CustomerCup;
-import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.*;
-import recyclemug.ProjectMug.exception.CustomerStateNotAllowedException;
-import recyclemug.ProjectMug.exception.NotEnoughPointException;
-import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.CustomerCupRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.UserRepositoryInterface;
-import recyclemug.ProjectMug.util.SecurityUtil;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
