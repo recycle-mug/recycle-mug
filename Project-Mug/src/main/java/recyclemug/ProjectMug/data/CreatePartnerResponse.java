@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -17,6 +18,8 @@ public class CreatePartnerResponse {
     private byte[] profilePicture;
     private int point;
     private String nickname;
+    private LocalDateTime lastLoginDateTime;
+    private LocalDateTime signupDateTIme;
 
     // Partner only val
     private String businessName;

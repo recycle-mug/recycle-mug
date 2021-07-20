@@ -15,4 +15,8 @@ public class CustomerCupRepository {
     public void saveCup(CustomerCup customerCup) {
         em.persist(customerCup);
     }
+
+    public CustomerCup findById(Long id) {
+        return em.find(CustomerCup.class, id);
+    }
 }

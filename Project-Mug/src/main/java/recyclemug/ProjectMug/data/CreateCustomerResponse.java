@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import recyclemug.ProjectMug.domain.user.CustomerState;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class CreateCustomerResponse {
@@ -14,4 +16,6 @@ public class CreateCustomerResponse {
     private int point;
     private String nickname;
     private CustomerState customerState;
+    private LocalDateTime lastLoginDateTime;
+    private LocalDateTime signupDateTIme;
 }

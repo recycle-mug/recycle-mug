@@ -2,9 +2,11 @@ package recyclemug.ProjectMug.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.tomcat.jni.Local;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,6 +21,9 @@ public class Partner extends User{
     private String detailAddress;
     // 사업자 등록번호
     private String registrationNumber;
+
+    private float latitude;
+    private float altitude;
 
     @OneToMany(mappedBy = "partner")
     private List<PartnerCup> partnerCups;
@@ -35,6 +40,7 @@ public class Partner extends User{
         partner.setZipcode(zipcode);
         partner.setDetailAddress(detailAddress);
         partner.setPoint(10000000);
+        partner.setSignupDateTIme(LocalDateTime.now());
 
         return partner;
     }

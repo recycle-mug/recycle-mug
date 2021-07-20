@@ -35,6 +35,7 @@ public abstract class User {
 
     private boolean activated;
 
+    // 생성자 처리 해줘야함
     private LocalDateTime lastLoginDateTIme;
     private LocalDateTime signupDateTIme;
 
