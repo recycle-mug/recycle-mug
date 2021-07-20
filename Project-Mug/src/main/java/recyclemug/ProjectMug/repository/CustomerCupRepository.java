@@ -2,7 +2,7 @@ package recyclemug.ProjectMug.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import recyclemug.ProjectMug.domain.cup.CustomerCup;
+import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 
 import javax.persistence.EntityManager;
 
@@ -12,11 +12,11 @@ public class CustomerCupRepository {
 
     private final EntityManager em;
 
-    public void saveCup(CustomerCup customerCup) {
-        em.persist(customerCup);
+    public void saveCup(CustomerOrder customerOrder) {
+        em.persist(customerOrder);
     }
 
-    public CustomerCup findById(Long id) {
-        return em.find(CustomerCup.class, id);
+    public CustomerOrder findById(Long id) {
+        return em.find(CustomerOrder.class, id);
     }
 }

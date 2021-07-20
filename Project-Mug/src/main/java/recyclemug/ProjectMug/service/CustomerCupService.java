@@ -1,14 +1,13 @@
 package recyclemug.ProjectMug.service;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import recyclemug.ProjectMug.domain.cup.CustomerCup;
+import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.CustomerState;
+import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.exception.CustomerStateNotAllowedException;
 import recyclemug.ProjectMug.exception.NoCupsForReturnException;
 import recyclemug.ProjectMug.exception.NotEnoughPointException;
@@ -40,27 +39,31 @@ public class CustomerCupService {
         } else if (!customer.getCustomerState().equals(CustomerState.NONE)) {
             throw new CustomerStateNotAllowedException();
         } else {
-            CustomerCup customerCup = new CustomerCup(customer, partnerCup.getCup());
+            CustomerOrder customerOrder = new CustomerOrder(customer, partnerCup.getCup());
             partnerCup.setStockQuantity(partnerCup.getStockQuantity() - 1);
             customer.setPoint(customer.getPoint() - partnerCup.getCup().getPrice());
             customer.setCustomerState(CustomerState.USE);
-            customerCupRepository.saveCup(customerCup);
+            customerCupRepository.saveCup(customerOrder);
         }
     }
 
+    /**
+     * Customer 가 컵 반납하는 메서드
+     * @param customer
+     */
     @Transactional
-    public void cupReturnOfCustomer(Customer customer) {
-        List<CustomerCup> customerCups = customer.getCustomerCups();
-        if (customerCups.isEmpty()) {
+    public void cupReturnOfCustomer(Customer customer, Partner partner) {
+        List<CustomerOrder> customerOrders = customer.getCustomerOrders();
+        if (customerOrders.isEmpty()) {
             throw new NoCupsForReturnException();
         } else {
-            Long customerCupId = customerCups.get(customerCups.size() - 1).getId();
-            CustomerCup customerCup = customerCupRepository.findById(customerCupId);
+            Long customerCupId = customerOrders.get(customerOrders.size() - 1).getId();
+            CustomerOrder customerOrder = customerCupRepository.findById(customerCupId);
 
-            if (LocalDateTime.now().isBefore(customerCup.getReturnDateTime())) {
-                customerCup.setReturnedDateTime(LocalDateTime.now());
+            if (LocalDateTime.now().isBefore(customerOrder.getReturnDateTime())) {
+                customerOrder.setReturnedDateTime(LocalDateTime.now());
             } else {
-                customerCup.setReturnedDateTime(LocalDateTime.now());
+                customerOrder.setReturnedDateTime(LocalDateTime.now());
                 customer.setCustomerState(CustomerState.OVERDUE);
             }
         }

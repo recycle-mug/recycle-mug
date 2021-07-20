@@ -2,13 +2,11 @@ package recyclemug.ProjectMug.domain.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import recyclemug.ProjectMug.domain.cup.Cup;
-import recyclemug.ProjectMug.domain.cup.CustomerCup;
+import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -19,7 +17,7 @@ public class Customer extends User{
     private CustomerState customerState;
 
     @OneToMany(mappedBy = "customer",orphanRemoval = true)
-    private List<CustomerCup> customerCups;
+    private List<CustomerOrder> customerOrders;
 
     protected Customer() { }
 

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public class CustomerCup {
+public class CustomerOrder {
 
     @Id @GeneratedValue
     private Long id;
@@ -29,7 +29,7 @@ public class CustomerCup {
     private LocalDateTime returnDateTime;
     private LocalDateTime returnedDateTime;
 
-    public CustomerCup(Customer customer, Cup cup) {
+    public CustomerOrder(Customer customer, Cup cup) {
         this.customer = customer;
         this.cup = cup;
         this.rentDateTime = LocalDateTime.now();
