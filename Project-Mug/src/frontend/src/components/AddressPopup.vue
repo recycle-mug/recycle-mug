@@ -4,7 +4,7 @@
       <form id="form">
         <div class="input-form">
           <input type="text" v-model="query" ref="input" />
-          <button @click.prevent="queryCheck">주소 검색</button>
+          <button @click.prevent="searchApi">주소 검색</button>
         </div>
         <div class="input-form-error">{{ queryError }}</div>
         <div
@@ -14,7 +14,7 @@
           @click="setData(searchResult)"
         >
           <div class="card-container">
-            <div class="card-content">
+            <!-- <div class="card-content">
               <div class="address-name">
                 <div class="new-address" v-if="searchResult.road_address">
                   {{ searchResult.road_address.address_name }}
@@ -25,6 +25,19 @@
               </div>
               <div class="address-num" v-if="searchResult.road_address">
                 {{ searchResult.road_address.zone_no }}
+              </div>
+            </div> -->
+            <div class="card-content">
+              <div class="address-name">
+                <div class="new-address" v-if="searchResult.place_name">
+                  {{ searchResult.place_name }}
+                </div>
+                <div class="old-address" v-if="searchResult.road_address_name">
+                  {{ searchResult.road_address_name }}
+                </div>
+                <div class="old-address" v-if="searchResult.address_name">
+                  {{ searchResult.address_name }}
+                </div>
               </div>
             </div>
           </div>
@@ -51,47 +64,37 @@ export default {
     async searchApi() {
       const apiKey = "210e6ee868e2837c5e6d0805cc037348";
       // const url = "https://dapi.kakao.com/v2/local/search/address.json";
-      const url = "https://dapi.kakao.com/v2/local/search/address.json";
+      const url = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
-      const params = new URLSearchParams();
-      params.append("query", this.query);
-
-      const config = {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Accept: "application/json",
-          Authorization: `KakaoAK ${apiKey}`,
-        },
-      };
-
-      let kakaoApi = axios.create({
-        baseURL: url,
-      });
+      let kakaoApi = axios.create();
 
       kakaoApi.defaults.headers.common["Authorization"] = `KakaoAK ${apiKey}`;
       kakaoApi.defaults.headers.common["Content-Type"] = "application/x-www-form-urlencoded";
-      kakaoApi.defaults.params = { page: 5, size: 30, query: this.query };
+      kakaoApi.defaults.params = { query: this.query, category_group_code: "CE7" };
 
       await kakaoApi
-        .get(url, params, config)
+        .get(url)
         .then((res) => {
           this.searchData = res.data.documents;
           console.log("this.searchData :>> ", this.searchData);
+          // searchData[0]: {
+          // address_name:"충북 청주시 흥덕구 가경동 1416-2"
+          // category_group_code:"CE7"
+          // category_group_name:"카페"
+          // category_name:"음식점 > 카페 > 커피전문점 > 스타벅스"
+          // distance : ""
+          // id:"17127076"
+          // phone: "1522-3232"
+          // place_name:"스타벅스 청주터미널점"
+          // place_url:"http://place.map.kakao.com/17127076"
+          // road_address_name:"충북 청주시 흥덕구 풍산로 15"
+          // x:"127.432432911263"
+          // y:"36.6263666883092"
+          // }
         })
         .catch((apierr) => {
           console.log("apierr :>> ", apierr);
         });
-    },
-    queryCheck() {
-      const queryPattern = /^(([가-힣a-zA-Z0-9 ]+)\s{0,}([0-9-]+))$/;
-
-      if (queryPattern.test(this.query)) {
-        this.queryError = "";
-        this.searchApi();
-      } else {
-        this.queryError = "OO동/OO로/OO길+(공백)+숫자로 입력해주세요";
-        this.searchData = [];
-      }
     },
     setData(e) {
       console.log("e :>> ", e);

@@ -77,9 +77,9 @@ export default {
     },
     onHoverMarker(map, marker) {
       console.log("marker :>> ", marker);
-      var iwContent = '<div style="padding:1rem;user-select:none">' + marker.Fb + "</div>";
+      const iwContent = '<div style="padding:1rem;user-select:none">' + marker.Fb + "</div>";
 
-      var infowindow = new kakao.maps.InfoWindow({
+      const infowindow = new kakao.maps.InfoWindow({
         content: iwContent,
       });
 
