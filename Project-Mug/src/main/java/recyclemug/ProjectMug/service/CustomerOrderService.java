@@ -12,16 +12,16 @@ import recyclemug.ProjectMug.exception.CustomerStateNotAllowedException;
 import recyclemug.ProjectMug.exception.NoCupsForReturnException;
 import recyclemug.ProjectMug.exception.NotEnoughPointException;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
-import recyclemug.ProjectMug.repository.CustomerCupRepository;
+import recyclemug.ProjectMug.repository.CustomerOrderRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerCupService {
+public class CustomerOrderService {
 
-    private final CustomerCupRepository customerCupRepository;
+    private final CustomerOrderRepository customerOrderRepository;
 
     /**
      * Customer 의 Partner 에게 컵 주문시 메서드
@@ -29,6 +29,7 @@ public class CustomerCupService {
      * @param partnerCup
      * @throws NotEnoughPointException
      * @throws NotEnoughStockException
+     * @throws CustomerStateNotAllowedException
      */
     @Transactional
     public void cupOrderOfCustomer(Customer customer, PartnerCup partnerCup) throws NotEnoughPointException, NotEnoughStockException, CustomerStateNotAllowedException {
@@ -43,22 +44,25 @@ public class CustomerCupService {
             partnerCup.setStockQuantity(partnerCup.getStockQuantity() - 1);
             customer.setPoint(customer.getPoint() - partnerCup.getCup().getPrice());
             customer.setCustomerState(CustomerState.USE);
-            customerCupRepository.saveCup(customerOrder);
+            customerOrderRepository.saveCup(customerOrder);
         }
     }
 
     /**
      * Customer 가 컵 반납하는 메서드
+     * returnedCupStatus 가 true 면 정상 반납, false 면 분실, 파손 반납
      * @param customer
      */
     @Transactional
-    public void cupReturnOfCustomer(Customer customer, Partner partner) {
+    public void cupReturnOfCustomer(Customer customer, Partner partner, Boolean returnedCupStatus) {
+        if (!returnedCupStatus) return;
+
         List<CustomerOrder> customerOrders = customer.getCustomerOrders();
         if (customerOrders.isEmpty()) {
             throw new NoCupsForReturnException();
         } else {
             Long customerCupId = customerOrders.get(customerOrders.size() - 1).getId();
-            CustomerOrder customerOrder = customerCupRepository.findById(customerCupId);
+            CustomerOrder customerOrder = customerOrderRepository.findById(customerCupId);
 
             if (LocalDateTime.now().isBefore(customerOrder.getReturnDateTime())) {
                 customerOrder.setReturnedDateTime(LocalDateTime.now());
@@ -66,6 +70,7 @@ public class CustomerCupService {
                 customerOrder.setReturnedDateTime(LocalDateTime.now());
                 customer.setCustomerState(CustomerState.OVERDUE);
             }
+            customer.setPoint(customer.getPoint() + customerOrder.getCup().getPrice());
         }
     }
 }

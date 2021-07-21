@@ -34,7 +34,7 @@ public class PartnerApiController {
 
         try {
             Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
-                    request.getZipcode(), request.getAddress() + request.getDetailAddress());
+                    request.getZipcode(), request.getAddress() + request.getDetailAddress(), request.getLatitude(), request.getAltitude());
             partner.setProfilePictureAddress(pictureAddress);
             partnerService.join(partner);
             return ResponseEntity.ok(new CreateJoinResponse("success", "회원가입에 성공했습니다."));

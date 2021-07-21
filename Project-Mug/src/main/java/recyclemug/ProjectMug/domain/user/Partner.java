@@ -22,8 +22,8 @@ public class Partner extends User{
     // 사업자 등록번호
     private String registrationNumber;
 
-    private float latitude;
-    private float altitude;
+    private double latitude;
+    private double altitude;
 
     @OneToMany(mappedBy = "partner")
     private List<PartnerCup> partnerCups;
@@ -32,7 +32,7 @@ public class Partner extends User{
 
     // 생성 메서드 //
     public static Partner createPartner(String email, String password, String phoneNumber,
-                                        String zipcode, String detailAddress) {
+                                        String zipcode, String detailAddress, double latitude, double altitude) {
         Partner partner = new Partner();
         partner.setEmail(email);
         partner.setPassword(password);
@@ -41,6 +41,8 @@ public class Partner extends User{
         partner.setDetailAddress(detailAddress);
         partner.setPoint(10000000);
         partner.setSignupDateTIme(LocalDateTime.now());
+        partner.setLatitude(latitude);
+        partner.setAltitude(altitude);
 
         return partner;
     }
