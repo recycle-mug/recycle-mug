@@ -13,4 +13,6 @@ public class CreatePartnerRequest {
     private String zipcode;
     private String address;
     private String detailAddress;
+    private double altitude;
+    private double latitude;
 }

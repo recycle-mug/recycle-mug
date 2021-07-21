@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import recyclemug.ProjectMug.data.CustomerModifyDTO;
 import recyclemug.ProjectMug.domain.user.*;
-import recyclemug.ProjectMug.repository.CustomerCupRepository;
+import recyclemug.ProjectMug.repository.CustomerOrderRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.UserRepositoryInterface;
 
@@ -23,7 +23,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final UserRepositoryInterface userRepositoryInterface;
     private final PasswordEncoder passwordEncoder;
-    private final CustomerCupRepository customerCupRepository;
+    private final CustomerOrderRepository customerOrderRepository;
 
     /**
      * Customer 회원가입 메서드

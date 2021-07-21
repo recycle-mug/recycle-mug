@@ -66,7 +66,6 @@ public class UserController {
                 .businessName(partner.getBusinessName())
                 .zipcode(partner.getZipcode())
                 .detailAddress(partner.getDetailAddress())
-                .detailAddress(partner.getDetailAddress())
                 .signupDateTIme(partner.getSignupDateTIme())
                 .lastLoginDateTime(partner.getLastLoginDateTIme())
                 .build();

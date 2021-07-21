@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 
 @Repository
 @RequiredArgsConstructor
-public class CustomerCupRepository {
+public class CustomerOrderRepository {
 
     private final EntityManager em;
 
@@ -19,4 +19,5 @@ public class CustomerCupRepository {
     public CustomerOrder findById(Long id) {
         return em.find(CustomerOrder.class, id);
     }
+
 }
