@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateOrderResponse {
     private String result;
-
+    private String message;
 }

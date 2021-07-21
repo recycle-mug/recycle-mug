@@ -13,6 +13,7 @@ import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.dto.OrderDto;
+import recyclemug.ProjectMug.exception.NotEnoughPointException;
 import recyclemug.ProjectMug.repository.CupRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.service.PartnerOrderService;
@@ -33,6 +34,7 @@ public class PartnerOrderApiController {
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    @ResponseBody
     public List<OrderDto> partnerOrderList(){
         List<Cup> Cups = cupRepository.findAllCups();
         List<OrderDto> orderDtoList = new ArrayList<OrderDto>();
@@ -41,7 +43,7 @@ public class PartnerOrderApiController {
             orderDtoList.add(dto);
         }
         return orderDtoList;
-    } //
+    }
 
     @RequestMapping (method = RequestMethod.POST)
     @PreAuthorize("hasAnyRole('ADMIN', 'PARTNER')")
@@ -52,9 +54,12 @@ public class PartnerOrderApiController {
             Partner partner = partnerRepository.findOne(request.getPartnerId());
             partnerOrderService.cupOrderOfPartner(cup,partner,request.getStockQuantity());
             return new ResponseEntity<>(HttpStatus.OK);
-        }catch (Exception e){
+        }catch (NotEnoughPointException e){
+            log.error("Not Enough point Exception");
+            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Not Enough point Exception"), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
             log.error("Invalid data : Partner's Order");
+            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Invalid data : Partner's Order"), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
