@@ -3,6 +3,7 @@ package recyclemug.ProjectMug.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
+import recyclemug.ProjectMug.domain.order.OrderState;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -26,7 +27,7 @@ public class PartnerOrderRepository {
      * @return
      */
     public List<PartnerOrder> findAllPartnerOrder() {
-        return em.createQuery("select o from PartnerOrder", PartnerOrder.class).getResultList();
+        return em.createQuery("select o from PartnerOrder o", PartnerOrder.class).getResultList();
     }
 
     /**
@@ -34,7 +35,9 @@ public class PartnerOrderRepository {
      * @return
      */
     public List<PartnerOrder> findWaitPartnerOrder() {
-        return em.createQuery("select o from PartnerOrder o where o.order_state=CANCEL", PartnerOrder.class).getResultList();
+        return em.createQuery("select o from PartnerOrder o where o.orderState=:state", PartnerOrder.class)
+                .setParameter("state", OrderState.DELIVERY_WAITING)
+                .getResultList();
     }
 
     /**
@@ -42,7 +45,9 @@ public class PartnerOrderRepository {
      * @return
      */
     public List<PartnerOrder> findCompletePartnerOrder() {
-        return em.createQuery("select o from PartnerOrder o where o.order_state=COMPLETE", PartnerOrder.class).getResultList();
+        return em.createQuery("select o from PartnerOrder o where o.orderState=:state", PartnerOrder.class)
+                .setParameter("state", OrderState.COMPLETE)
+                .getResultList();
     }
 
     /**
@@ -50,6 +55,8 @@ public class PartnerOrderRepository {
      * @return
      */
     public List<PartnerOrder> findCanceledPartnerOrder() {
-        return em.createQuery("select o from PartnerOrder o where o.order_state=CANCEL", PartnerOrder.class).getResultList();
+        return em.createQuery("select o from PartnerOrder o where o.orderState=:state", PartnerOrder.class)
+                .setParameter("state", OrderState.CANCEL)
+                .getResultList();
     }
 }
