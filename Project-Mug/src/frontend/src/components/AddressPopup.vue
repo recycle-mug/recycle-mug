@@ -98,8 +98,8 @@ export default {
     },
     setData(e) {
       console.log("e :>> ", e);
-      this.addressRoad = e.road_address.address_name;
-      this.addressNum = e.road_address.zone_no;
+      this.addressRoad = e.road_address_name;
+      this.addressNum = e.phone;
 
       let location = window.opener.document.getElementById("location");
       location.value = this.addressRoad;
