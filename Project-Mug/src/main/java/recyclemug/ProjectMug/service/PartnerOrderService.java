@@ -14,6 +14,7 @@ import recyclemug.ProjectMug.repository.PartnerCupRepository;
 import recyclemug.ProjectMug.repository.PartnerOrderRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,11 +54,14 @@ public class PartnerOrderService {
         if (cup.getStockQuantity() < partnerOrder.getOrderQuantity()) {
             throw new NotEnoughStockException();
         } else {
-            PartnerCup findPartnerCup = partnerCupRepository.findByPartnerIdAndCupId(partner.getId(), cup.getId());
-            if (findPartnerCup == null) {
+            List<PartnerCup> partnerCups = partnerCupRepository.findByPartnerIdAndCupId(partner.getId(), cup.getId());
+
+            // partnerCup 이 없을때
+            if (partnerCups.isEmpty()) {
                 PartnerCup partnerCup = new PartnerCup(partner, cup, partnerOrder.getOrderQuantity());
                 partnerCupRepository.saveCup(partnerCup);
             } else {
+                PartnerCup findPartnerCup = partnerCups.get(0);
                 findPartnerCup.setStockQuantity(findPartnerCup.getStockQuantity() + partnerOrder.getOrderQuantity());
             }
             cup.setStockQuantity(cup.getStockQuantity() - partnerOrder.getOrderQuantity());
