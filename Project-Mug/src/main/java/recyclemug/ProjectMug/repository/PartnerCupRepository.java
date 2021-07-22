@@ -6,6 +6,7 @@ import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,10 +22,10 @@ public class PartnerCupRepository {
         return em.find(PartnerCup.class, id);
     }
 
-    public PartnerCup findByPartnerIdAndCupId(Long partnerId, Long cupId) {
-        return em.createQuery("select p from PartnerCup p where p.partner_id=:partnerId and p.cupId=:cupId", PartnerCup.class)
+    public List<PartnerCup> findByPartnerIdAndCupId(Long partnerId, Long cupId) {
+        return em.createQuery("select p from PartnerCup p where p.user_id=:partnerId and p.cup_id=:cupId", PartnerCup.class)
                 .setParameter("partnerId", partnerId)
-                .setParameter("cupId", cupId).getSingleResult();
+                .setParameter("cupId", cupId).getResultList();
     }
 
 }
