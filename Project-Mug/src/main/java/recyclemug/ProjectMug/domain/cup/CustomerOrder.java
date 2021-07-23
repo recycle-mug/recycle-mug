@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class CustomerOrder {
 
     @Id @GeneratedValue
+    @Column(name = "customer_order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
