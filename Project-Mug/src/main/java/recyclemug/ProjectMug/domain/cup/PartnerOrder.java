@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class PartnerOrder {
 
     @Id @GeneratedValue
+    @Column(name = "partner_order_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,5 +41,6 @@ public class PartnerOrder {
         this.cup = cup;
         this.orderQuantity = orderQuantity;
         this.orderDateTime = LocalDateTime.now();
+        this.orderState = OrderState.DELIVERY_WAITING;
     }
 }
