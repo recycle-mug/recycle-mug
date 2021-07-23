@@ -31,7 +31,7 @@ public class PartnerOrderRepository {
     }
 
     /**
-     * 모든 파트너들의 주문 리스트 중 배달 대기중인 항목들
+     * 모든 파트너들의 주문 리스트 중 배달 대기중인 항목들 (삭제 예정)
      * @return
      */
     public List<PartnerOrder> findWaitPartnerOrder() {
@@ -41,7 +41,7 @@ public class PartnerOrderRepository {
     }
 
     /**
-     * 모든 파트너들의 주문 리스트 중 배달 완료된 항목들
+     * 모든 파트너들의 주문 리스트 중 배달 완료된 항목들 (삭제 예정)
      * @return
      */
     public List<PartnerOrder> findCompletePartnerOrder() {
@@ -51,12 +51,23 @@ public class PartnerOrderRepository {
     }
 
     /**
-     * 모든 파트너들의 주문 리스트 중 배달 취소된 항목들
+     * 모든 파트너들의 주문 리스트 중 배달 취소된 항목들 (삭제 예정)
      * @return
      */
     public List<PartnerOrder> findCanceledPartnerOrder() {
         return em.createQuery("select o from PartnerOrder o where o.orderState=:state", PartnerOrder.class)
                 .setParameter("state", OrderState.CANCEL)
+                .getResultList();
+    }
+
+    /**
+     * 파트너 주문 리스트를 state 를 기준으로 반환
+     * @param state
+     * @return
+     */
+    public List<PartnerOrder> findPartnerOrder(OrderState state) {
+        return em.createQuery("select o from PartnerOrder o where o.orderState=:state", PartnerOrder.class)
+                .setParameter("state", state)
                 .getResultList();
     }
 }
