@@ -45,8 +45,11 @@ public class CustomerService {
         return customer.getId();
     }
 
-
-
+    /**
+     * Customer 정보 수정 메서드 parameter 중 password, phoneNumber, nickname 변경
+     * @param customer
+     * @param customerDTO
+     */
     @Transactional
     public void modifyCustomerInfo(Customer customer, CustomerModifyDTO customerDTO) {
         customer.setPassword("{noop}" + customerDTO.getPassword());
