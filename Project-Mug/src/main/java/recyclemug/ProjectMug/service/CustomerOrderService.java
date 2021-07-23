@@ -41,15 +41,14 @@ public class CustomerOrderService {
             throw new CustomerStateNotAllowedException();
         } else {
             CustomerOrder customerOrder = new CustomerOrder(customer, partnerCup.getCup());
-            partnerCup.setStockQuantity(partnerCup.getStockQuantity() - 1);
-            customer.setPoint(customer.getPoint() - partnerCup.getCup().getPrice());
-            customer.setCustomerState(CustomerState.USE);
+            partnerCup.customerOrderComplete(1);
+            customer.completeOrderCup(partnerCup.getCup().getPrice());
             customerOrderRepository.saveCup(customerOrder);
         }
     }
 
     /**
-     * Customer 가 컵 반납하는 메서드
+     * Customer 가 컵 반납하는 메서드 (미완성)
      * returnedCupStatus 가 true 면 정상 반납, false 면 분실, 파손 반납
      * @param customer
      */
@@ -57,20 +56,20 @@ public class CustomerOrderService {
     public void cupReturnOfCustomer(Customer customer, Partner partner, Boolean returnedCupStatus) {
         if (!returnedCupStatus) return;
 
-        List<CustomerOrder> customerOrders = customer.getCustomerOrders();
+        List<CustomerOrder> customerOrders = customerOrderRepository.findListOfCustomer(customer.getId());
         if (customerOrders.isEmpty()) {
             throw new NoCupsForReturnException();
         } else {
-            Long customerCupId = customerOrders.get(customerOrders.size() - 1).getId();
+            Long customerCupId = customerOrders.get(0).getId();
             CustomerOrder customerOrder = customerOrderRepository.findById(customerCupId);
+            int cupPrice = customerOrder.getCup().getPrice();
 
             if (LocalDateTime.now().isBefore(customerOrder.getReturnDateTime())) {
-                customerOrder.setReturnedDateTime(LocalDateTime.now());
+                customer.completeReturnCup(cupPrice, CustomerState.NONE);
             } else {
-                customerOrder.setReturnedDateTime(LocalDateTime.now());
-                customer.setCustomerState(CustomerState.OVERDUE);
+                customer.completeReturnCup(cupPrice, CustomerState.OVERDUE);
             }
-            customer.setPoint(customer.getPoint() + customerOrder.getCup().getPrice());
+            customerOrder.setReturnedDateTime(LocalDateTime.now());
         }
     }
 }

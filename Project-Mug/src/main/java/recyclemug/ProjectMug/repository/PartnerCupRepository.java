@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
+import recyclemug.ProjectMug.domain.user.Partner;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -22,10 +23,25 @@ public class PartnerCupRepository {
         return em.find(PartnerCup.class, id);
     }
 
+    /**
+     * Partner 가 가지고있는 Cup list 반환
+     * @return
+     */
+    public List<PartnerCup> findCupOfPartner(Partner partner) {
+        return em.createQuery("select p.partnerCups from Partner p where p.id=:partnerId", PartnerCup.class)
+                .setParameter("partnerId", partner.getId())
+                .getResultList();
+    }
+
+    /**
+     * partner 가 가지고있는 partnerCup 를 partnerId 와 cupId 로 찾는다.
+     * @param partnerId
+     * @param cupId
+     * @return
+     */
     public List<PartnerCup> findByPartnerIdAndCupId(Long partnerId, Long cupId) {
-        return em.createQuery("select p from PartnerCup p where p.user_id=:partnerId and p.cup_id=:cupId", PartnerCup.class)
+        return em.createQuery("select p from PartnerCup p inner join p.cup c where c.id =:cupId and p.id=:partnerId", PartnerCup.class)
                 .setParameter("partnerId", partnerId)
                 .setParameter("cupId", cupId).getResultList();
     }
-
 }

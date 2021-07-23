@@ -41,17 +41,10 @@ public class PartnerCup {
     // 비즈니스 로직
 
     /**
-     * 컵을 요청하여 더 받아오는 메서드
-     * partner 가 가지고 있는 Cup count 가 줄어드는 메서드
+     * customer 가 성공적으로 PartnerCup 주문에 성공했을때 재고 수량을 줄어들게 하는 비즈니스 로직.
+     * 참고: 현재 로직에선 1개씩밖에 주문하지 못하지만 언젠가 몇잔씩 주문 가능하게 될 경우를 가정해 orderQuantity 부여.
      */
-    public void addStock(int quantity){
-        this.stockQuantity += quantity;
-    }
-
-    public void removeStock(int quantity) {
-        int restStock = this.stockQuantity - quantity;
-        if (restStock < 0){
-            throw new NotEnoughStockException("컵이 충분하지 않습니다.");
-        }
+    public void customerOrderComplete(int orderQuantity) {
+        stockQuantity = stockQuantity - orderQuantity;
     }
 }

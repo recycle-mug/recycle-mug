@@ -34,4 +34,16 @@ public class Customer extends User{
 
         return customer;
     }
+
+    // 비즈니스 로직
+    public void completeOrderCup(int partnerCupPrice) {
+        customerState = CustomerState.USE;
+        this.setPoint(this.getPoint() - partnerCupPrice);
+    }
+
+    public void completeReturnCup(int partnerCupPrice, CustomerState customerState) {
+        this.setPoint(this.getPoint() + partnerCupPrice);
+        this.customerState = customerState;
+
+    }
 }
