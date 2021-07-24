@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
+import recyclemug.ProjectMug.data.CreateRentRequest;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.dto.CustomerOrderDto;
@@ -15,6 +16,8 @@ import recyclemug.ProjectMug.exception.CustomerStateNotAllowedException;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.*;
 import recyclemug.ProjectMug.service.CustomerOrderService;
+
+import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,7 +31,7 @@ public class CustomerOrderApiController {
     @GetMapping("/customer/rentCup")
     @PreAuthorize("hasAnyRole('PARTNER','ADMIN')") // partner가 customerQR코드에 접속
     @ResponseBody
-    public CustomerOrderDto rentPartnerCupDTO(@RequestParam("customerId") Long customerId, @RequestParam("partnerId") Long partnerId, @RequestParam("cupId") Long cupId){
+    public CustomerOrderDto rentPartnerCupDTO(@RequestParam Long customerId, @RequestParam Long partnerId, @RequestParam Long cupId){
         String customerName = customerRepository.findOne(customerId).getNickname();
         String partnerBusinessName = partnerRepository.findOne(partnerId).getBusinessName();
         String partnerCup = partnerCupRepository.findById(cupId).getCup().getName();
@@ -37,11 +40,11 @@ public class CustomerOrderApiController {
     }
 
     @PostMapping("/customer/rentCup")
-    @PreAuthorize("hasAnyRole('PARTNER','ADMIN')")
+    @PreAuthorize("hasAnyRole('PARTNER','ADMIN')") // partner가 승인버튼을 눌렀을 때
     @ResponseBody
-    public ResponseEntity<CreateOrderResponse> rentPartnerCup(@RequestBody Long customerId,@RequestBody Long partnerCupId){
-        Customer customer = customerRepository.findOne(customerId);
-        PartnerCup partnerCup = partnerCupRepository.findById(partnerCupId);
+    public ResponseEntity<CreateOrderResponse> rentPartnerCup(@RequestBody @Valid CreateRentRequest request){ // data에 Request,Response 추가해서 수정
+        Customer customer = customerRepository.findOne(request.getCustomerId());
+        PartnerCup partnerCup = partnerCupRepository.findById(request.getPartnerCupId());
         try {
             customerOrderService.cupOrderOfCustomer(customer, partnerCup);
             return new ResponseEntity<>(HttpStatus.OK);

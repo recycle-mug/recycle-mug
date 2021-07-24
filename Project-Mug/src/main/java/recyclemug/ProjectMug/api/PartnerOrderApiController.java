@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderRequest;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.domain.cup.Cup;
+import recyclemug.ProjectMug.domain.cup.PartnerOrder;
+import recyclemug.ProjectMug.domain.order.OrderState;
 import recyclemug.ProjectMug.domain.user.Partner;
+import recyclemug.ProjectMug.dto.CupResponseDto;
 import recyclemug.ProjectMug.dto.OrderDto;
 import recyclemug.ProjectMug.exception.NotEnoughPointException;
 import recyclemug.ProjectMug.repository.CupRepository;
+import recyclemug.ProjectMug.repository.PartnerOrderRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.service.PartnerOrderService;
 
@@ -31,21 +35,81 @@ public class PartnerOrderApiController {
     private final PartnerOrderService partnerOrderService;
     private final PartnerRepository partnerRepository;
     private final CupRepository cupRepository;
+    private final PartnerOrderRepository partnerOrderRepository;
 
-    @RequestMapping(method = RequestMethod.GET)
-    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    /**
+     * Partner가 admin에게 주문한 컵,컵 개수, 주문 날짜 들을 state에 상관없이 모두 반환
+     * @return
+     */
+    @GetMapping("/partner/orders")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseBody
-    public List<OrderDto> partnerOrderList(){
-        List<Cup> Cups = cupRepository.findAllCups();
-        List<OrderDto> orderDtoList = new ArrayList<OrderDto>();
-        for(Cup cup : Cups){
-            OrderDto dto = new OrderDto(cup.getId(),cup.getName(),cup.getPrice());
-            orderDtoList.add(dto);
+    public List<CupResponseDto> getPartnerOrdersAll(){
+        List<PartnerOrder> allOrder = partnerOrderRepository.findAllPartnerOrder();
+        List<CupResponseDto> orderListForAdmin = new ArrayList<>();
+        for(PartnerOrder partnerOrder : allOrder){
+            CupResponseDto dto = new CupResponseDto(partnerOrder.getId(),
+                    partnerOrder.getPartner().getBusinessName(),
+                    partnerOrder.getCup().getName(),
+                    partnerOrder.getOrderQuantity(),
+                    partnerOrder.getOrderDateTime(),
+                    partnerOrder.getOrderState());
+            orderListForAdmin.add(dto);
         }
-        return orderDtoList;
+        return orderListForAdmin;
     }
 
-    @RequestMapping (method = RequestMethod.POST)
+    /**
+     * Partner가 admin에게 주문한 컵,컵 개수, 주문 날짜들을 1개 반환
+     * @param orderId
+     * @return
+     */
+    @GetMapping("/partner/order/{orderId}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ResponseBody
+    public CupResponseDto getPartnerOrder(@PathVariable Long orderId) {
+        PartnerOrder partnerOrder = partnerOrderRepository.findById(orderId);
+        return new CupResponseDto(partnerOrder.getId(),
+                partnerOrder.getPartner().getBusinessName(),
+                partnerOrder.getCup().getName(),
+                partnerOrder.getOrderQuantity(),
+                partnerOrder.getOrderDateTime(),
+                partnerOrder.getOrderState());
+    }
+
+    /**
+     * Partner가 admin에게 주문한 컵,컵 개수, 주문 날짜들을 state별로 반환
+     * @param state : "wait"(승인 대기 중),"cancel"(거부),"complete"(승인)
+     * @return
+     */
+    @GetMapping("/partner/order/filter")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ResponseBody
+    public List<CupResponseDto> getPartnerOrdersByState(@RequestParam("state") String state){
+        List<PartnerOrder> partnerOrder;
+        List<CupResponseDto> stateDto = new ArrayList<>();
+        if (state.equals("wait")){
+            partnerOrder = partnerOrderRepository.findPartnerOrder(OrderState.DELIVERY_WAITING);
+        }else if (state.equals("cancel")){
+            partnerOrder = partnerOrderRepository.findPartnerOrder(OrderState.CANCEL);
+        }else if (state.equals("complete")){
+            partnerOrder = partnerOrderRepository.findPartnerOrder(OrderState.COMPLETE);
+        }else{
+            partnerOrder = partnerOrderRepository.findAllPartnerOrder();
+        }
+        for (PartnerOrder order : partnerOrder){
+            CupResponseDto dto = new CupResponseDto(order.getId(),
+                    order.getPartner().getBusinessName(),
+                    order.getCup().getName(),
+                    order.getOrderQuantity(),
+                    order.getOrderDateTime(),
+                    order.getOrderState());
+            stateDto.add(dto);
+        }
+        return stateDto;
+    }
+
+    @PostMapping("/partner/cup/order")
     @PreAuthorize("hasAnyRole('ADMIN', 'PARTNER')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> partnerCupOrder(@RequestBody @Valid CreateOrderRequest request){
