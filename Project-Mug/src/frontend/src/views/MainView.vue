@@ -3,7 +3,8 @@
     <header-nav></header-nav>
     <div class="content-body">
       <qr-code-scanner></qr-code-scanner>
-      <get-kakao-map v-if="role == 'partner'"></get-kakao-map>
+      <get-kakao-map v-if="role === 'customer'"></get-kakao-map>
+      <partner-cup-manage v-if="role === 'partner'"></partner-cup-manage>
     </div>
     <footer-nav></footer-nav>
   </div>
@@ -14,6 +15,7 @@ import HeaderNav from "../components/HeaderNav";
 import FooterNav from "../components/FooterNav";
 import GetKakaoMap from "../components/GetKakaoMap";
 import QrCodeScanner from "../components/QrCodeScanner.vue";
+import PartnerCupManage from "../components/PartnerCupManage.vue";
 
 import axios from "axios";
 
@@ -23,7 +25,7 @@ export default {
       role: "",
     };
   },
-  components: { HeaderNav, FooterNav, GetKakaoMap, QrCodeScanner },
+  components: { HeaderNav, FooterNav, GetKakaoMap, QrCodeScanner, PartnerCupManage },
   methods: {
     getProfile() {
       const path = "/backend/profile";
