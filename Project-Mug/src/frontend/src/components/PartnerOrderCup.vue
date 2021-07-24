@@ -185,6 +185,7 @@ export default {
               left: 0;
               width: 100%;
               border-radius: 6px;
+              border: 1px solid map-get($map: $theme, $key: "border");
               overflow: overlay;
               max-height: 200px;
               color: map-get($map: $theme, $key: "text-light");
