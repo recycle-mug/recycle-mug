@@ -22,7 +22,7 @@
               <thead class="table-header">
                 <tr>
                   <th class="selection-column">
-                    <input type="checkbox" name="" id="" />
+                    <input type="checkbox" name="" id="" @input="checkAll" v-model="allSelected" />
                   </th>
                   <th class="id">Id</th>
                   <th class="customer">Customer</th>
@@ -34,71 +34,169 @@
               </thead>
 
               <tbody class="table-body">
-                <tr>
-                  <td class="selection-column"><input type="checkbox" name="" id="" /></td>
-                  <td class="id"><span>1</span></td>
-                  <td class="customer"><span>1호점</span></td>
-                  <td class="status"><span class="status success">승인완료</span></td>
-                  <td class="amount"><span>20000원</span></td>
-                  <td class="date"><span>2021 07 26</span></td>
-                  <td class="action"><span>삭제하기</span></td>
-                </tr>
-                <tr>
-                  <td class="selection-column"><input type="checkbox" name="" id="" /></td>
-                  <td class="id"><span>1</span></td>
-                  <td class="customer"><span>1호점</span></td>
-                  <td class="status"><span class="status success">승인완료</span></td>
-                  <td class="amount"><span>20000원</span></td>
-                  <td class="date"><span>2021 07 26</span></td>
-                  <td class="action"><span>삭제하기</span></td>
-                </tr>
-                <tr>
-                  <td class="selection-column"><input type="checkbox" name="" id="" /></td>
-                  <td class="id"><span>1</span></td>
-                  <td class="customer"><span>1호점</span></td>
-                  <td class="status"><span class="status success">승인완료</span></td>
-                  <td class="amount"><span>20000원</span></td>
-                  <td class="date"><span>2021 07 26</span></td>
-                  <td class="action"><span>삭제하기</span></td>
-                </tr>
-                <tr>
-                  <td class="selection-column"><input type="checkbox" name="" id="" /></td>
-                  <td class="id"><span>1</span></td>
-                  <td class="customer"><span>1호점</span></td>
-                  <td class="status"><span class="status success">승인완료</span></td>
-                  <td class="amount"><span>20000원</span></td>
-                  <td class="date"><span>2021 07 26</span></td>
-                  <td class="action"><span>삭제하기</span></td>
-                </tr>
-                <tr>
-                  <td class="selection-column"><input type="checkbox" name="" id="" /></td>
-                  <td class="id"><span>1</span></td>
-                  <td class="customer"><span>1호점</span></td>
-                  <td class="status"><span class="status success">승인완료</span></td>
-                  <td class="amount"><span>20000원</span></td>
-                  <td class="date"><span>2021 07 26</span></td>
-                  <td class="action"><span>삭제하기</span></td>
-                </tr>
-                <tr>
-                  <td class="selection-column"><input type="checkbox" name="" id="" /></td>
-                  <td class="id"><span>1</span></td>
-                  <td class="customer"><span>1호점</span></td>
-                  <td class="status"><span class="status success">승인완료</span></td>
-                  <td class="amount"><span>20000원</span></td>
-                  <td class="date"><span>2021 07 26</span></td>
-                  <td class="action"><span>삭제하기</span></td>
+                <tr v-for="index in parseInt(perPage)" :key="index">
+                  <td
+                    v-if="entryList[(currentPage - 1) * perPage + index - 1]"
+                    class="selection-column"
+                  >
+                    <input
+                      type="checkbox"
+                      name=""
+                      id=""
+                      :value="(currentPage - 1) * perPage + index - 1"
+                      v-model="orderIds"
+                      @click="checkOne"
+                    />
+                  </td>
+                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="id">
+                    <span>1</span>
+                  </td>
+                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="customer">
+                    <span>{{
+                      entryList[(currentPage - 1) * perPage + index - 1].businessName
+                    }}</span>
+                  </td>
+                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="status">
+                    <span class="status success">{{
+                      entryList[(currentPage - 1) * perPage + index - 1].state
+                    }}</span>
+                  </td>
+                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="amount">
+                    <span>{{
+                      entryList[(currentPage - 1) * perPage + index - 1].stockQuantity
+                    }}</span>
+                  </td>
+                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="date">
+                    <span>{{
+                      entryList[(currentPage - 1) * perPage + index - 1].orderDateTime.slice(0, 19)
+                    }}</span>
+                  </td>
+                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="action">
+                    <span>삭제하기</span>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="orderlist-footer"></div>
+          <div class="orderlist-footer">
+            <div class="footer-nav">
+              <ul role="menubar" aria-label="Pagination">
+                <li role="presentation">
+                  <button
+                    role="menuitem"
+                    type="button"
+                    tabindex="-1"
+                    class="page-item prev-item"
+                    @click="prevPage"
+                    v-if="currentPage > 5"
+                  >
+                    <font-awesome-icon :icon="['fas', 'angle-left']"></font-awesome-icon>
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    role="menuitem"
+                    type="button"
+                    tabindex="-1"
+                    class="page-item "
+                    :class="{
+                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 1,
+                    }"
+                    @click="selectPage"
+                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 1 <= maxPage"
+                  >
+                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 1 }}
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    role="menuitem"
+                    type="button"
+                    tabindex="-1"
+                    class="page-item"
+                    :class="{
+                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 2,
+                    }"
+                    @click="selectPage"
+                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 2 <= maxPage"
+                  >
+                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 2 }}
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    role="menuitem"
+                    type="button"
+                    tabindex="-1"
+                    class="page-item"
+                    :class="{
+                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 3,
+                    }"
+                    @click="selectPage"
+                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 3 <= maxPage"
+                  >
+                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 3 }}
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    role="menuitem"
+                    type="button"
+                    tabindex="-1"
+                    class="page-item"
+                    :class="{
+                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4,
+                      'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 4 == maxPage,
+                    }"
+                    :style="[
+                      currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4
+                        ? { backgroundColor: userStyle }
+                        : {},
+                    ]"
+                    @click="selectPage"
+                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 4 <= maxPage"
+                  >
+                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 4 }}
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    role="menuitem"
+                    type="button"
+                    tabindex="-1"
+                    class="page-item"
+                    :class="{
+                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 5,
+                      'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 5 == maxPage,
+                    }"
+                    @click="selectPage"
+                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 5 <= maxPage"
+                  >
+                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 5 }}
+                  </button>
+                </li>
+                <li role="presentation">
+                  <button
+                    role="menuitem"
+                    type="button"
+                    tabindex="-1"
+                    class="page-item next-item"
+                    @click="nextPage"
+                    v-if="currentPage <= Math.floor((maxPage - 1) / 5) * 5"
+                  >
+                    <font-awesome-icon :icon="['fas', 'angle-right']"></font-awesome-icon>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
       <div class="card-right">
         <div class="order-summmary-wrapper">
           <div class="order-summmary">
             <div class="summary-card-content">
-              <h1 class="card-title">TEST</h1>
+              <h1 class="card-title">Order Summary</h1>
               <div class="card-body">
                 <div class="body-content">
                   <ul class="content-list">
@@ -130,7 +228,78 @@
 </template>
 
 <script>
-export default {};
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
+
+import axios from "axios";
+
+faLibrary.add(faAngleLeft, faAngleRight);
+
+export default {
+  data() {
+    return {
+      total: 50,
+      perPage: 10,
+      maxPage: 20,
+      currentPage: 1,
+      entryList: [],
+      orderIds: [],
+      allSelected: false,
+    };
+  },
+  components: { FontAwesomeIcon },
+  methods: {
+    nextPage() {
+      this.currentPage = Math.ceil(this.currentPage / 5) * 5 + 1;
+      this.allSelected = false;
+      this.orderIds = [];
+    },
+    prevPage() {
+      if (this.currentPage > 5) this.currentPage = Math.ceil(this.currentPage / 5) * 5 - 9;
+      this.allSelected = false;
+      this.orderIds = [];
+    },
+    selectPage() {
+      this.currentPage = parseInt(event.target.textContent);
+      this.allSelected = false;
+      this.orderIds = [];
+    },
+    getOrderList() {
+      const path = `/backend/partner/orders`;
+      let findUsers = axios.create();
+
+      findUsers
+        .get(path)
+        .then((res) => {
+          this.entryList = res.data;
+          console.log("res :>> ", res);
+          this.total = this.entryList.length;
+          this.maxPage = Math.ceil(this.total / this.perPage);
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
+    },
+    checkAll() {
+      this.orderIds = [];
+
+      if (!this.allSelected) {
+        for (let index = 1; index <= this.perPage; index++) {
+          if (this.entryList[(this.currentPage - 1) * this.perPage + index - 1]) {
+            this.orderIds.push((this.currentPage - 1) * this.perPage + index - 1);
+          }
+        }
+      }
+    },
+    checkOne() {
+      this.allSelected = false;
+    },
+  },
+  mounted() {
+    this.getOrderList();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -212,7 +381,6 @@ export default {};
               background-color: map-get($map: $theme, $key: "background");
               width: 100%;
               height: 100%;
-              border-radius: 0 0 6px 6px;
 
               .orderlist-table {
                 width: 100%;
@@ -223,6 +391,7 @@ export default {};
                 }
 
                 .selection-column {
+                  cursor: pointer;
                 }
 
                 .table-header {
@@ -275,7 +444,7 @@ export default {};
                   font-size: 0.85rem;
 
                   tr:hover {
-                    background-color: darken($color: map-get($theme, "background"), $amount: 5%);
+                    background-color: darken($color: map-get($theme, "background"), $amount: 3%);
                   }
 
                   tr td {
@@ -291,7 +460,7 @@ export default {};
                     }
 
                     &:hover {
-                      background-color: darken($color: map-get($theme, "background"), $amount: 10%);
+                      background-color: darken($color: map-get($theme, "background"), $amount: 6%);
                     }
 
                     &.selection-column {
@@ -321,6 +490,62 @@ export default {};
             }
 
             .orderlist-footer {
+              padding: 0 1rem 1rem 1rem;
+              background-color: map-get($map: $theme, $key: "background");
+              width: 100%;
+              border-radius: 0 0 6px 6px;
+
+              .footer-nav {
+                border-top: 1px solid map-get($map: $theme, $key: "border");
+
+                ul {
+                  display: flex;
+                  list-style: none;
+                  box-sizing: border-box;
+                  align-items: center;
+                  padding: 1rem 1rem 0 1rem;
+
+                  .prev-item {
+                    margin-right: 0.35rem;
+                    border-radius: 50%;
+                  }
+                  .next-item {
+                    margin-left: 0.35rem;
+                    border-radius: 50%;
+                  }
+
+                  .page-item {
+                    width: 25px;
+                    height: 25px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: none;
+                    transition: all 0.2s ease-out;
+                    cursor: pointer;
+                    font-size: 0.9rem;
+                    background-color: map-get($map: $theme, $key: "content-background");
+                    position: relative;
+                    color: map-get($map: $theme, $key: "text-light");
+                    outline: none;
+                    border-radius: 50%;
+                    margin: 0 5px;
+                    box-shadow: $shadow-light;
+                    transition: all 0.3s ease-in-out;
+
+                    &:hover {
+                      background-color: rgba($main-color, 0.6);
+                      color: $white;
+                      box-shadow: $shadow;
+                    }
+
+                    &.active {
+                      background-color: $main-color;
+                      color: $white;
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -349,9 +574,10 @@ export default {};
 
                 .card-title {
                   font-size: 1rem;
-                  font-weight: 500;
+                  font-weight: bolder;
                   color: map-get($map: $theme, $key: "text");
                   margin-bottom: 25px;
+                  padding: 1rem 1rem 0 1rem;
                 }
 
                 .card-body {
