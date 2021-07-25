@@ -120,10 +120,10 @@ public class PartnerOrderApiController {
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (NotEnoughPointException e){
             log.error("Not Enough point Exception");
-            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Not Enough point Exception"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail","Not Enough point Exception"), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             log.error("Invalid data : Partner's Order");
-            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Invalid data : Partner's Order"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid data : Partner's Order"), HttpStatus.BAD_REQUEST);
         }
     }
 }
