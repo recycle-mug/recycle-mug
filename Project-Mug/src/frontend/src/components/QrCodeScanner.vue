@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { QrcodeStream } from "vue-qrcode-reader";
 import Loader from "./Loader.vue";
 
@@ -63,12 +64,17 @@ export default {
 
       // pretend it's taking really long
       await this.timeout(3000);
-      this.isValid = content.startsWith("http");
+      // this.isValid = content.startsWith("http://localhost");
+      this.isValid = true;
 
       // some more delay, so users have time to read the message
       await this.timeout(2000);
 
-      this.turnCameraOn();
+      if (this.isValid) {
+        this.readUrl(this.scanValue);
+      } else {
+        this.turnCameraOn();
+      }
     },
 
     async onInit(promise) {
@@ -96,6 +102,21 @@ export default {
       return new Promise((resolve) => {
         window.setTimeout(resolve, ms);
       });
+    },
+
+    readUrl(url) {
+      console.log("url :>> ", url);
+
+      let getCupInfo = axios.create();
+
+      getCupInfo
+        .get(url)
+        .then((res) => {
+          console.log("res :>> ", res);
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
     },
   },
   computed: {

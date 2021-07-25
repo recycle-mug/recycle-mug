@@ -130,10 +130,12 @@ export default {
     orderCup(cupId, partnerId, stockQuantity) {
       const path = "/backend/partner/cup/order";
       const payload = {
-        cupId: cupId,
+        cupId: parseInt(cupId),
         partnerId: partnerId,
-        stockQuantity: stockQuantity,
+        stockQuantity: parseInt(stockQuantity),
       };
+
+      console.log("payload :>> ", payload);
       const { accessToken } = localStorage;
 
       let orderCup = axios.create();
