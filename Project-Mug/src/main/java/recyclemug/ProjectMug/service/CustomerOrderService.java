@@ -3,8 +3,10 @@ package recyclemug.ProjectMug.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
+import recyclemug.ProjectMug.domain.cup.PartnerReturn;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.CustomerState;
 import recyclemug.ProjectMug.domain.user.Partner;
@@ -13,6 +15,7 @@ import recyclemug.ProjectMug.exception.NoCupsForReturnException;
 import recyclemug.ProjectMug.exception.NotEnoughPointException;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.CustomerOrderRepository;
+import recyclemug.ProjectMug.repository.PartnerReturnRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.List;
 public class CustomerOrderService {
 
     private final CustomerOrderRepository customerOrderRepository;
+    private final PartnerReturnRepository partnerReturnRepository;
 
     /**
      * Customer 의 Partner 에게 컵 주문시 메서드
@@ -48,21 +52,19 @@ public class CustomerOrderService {
     }
 
     /**
-     * Customer 가 컵 반납하는 메서드 (미완성)
-     * returnedCupStatus 가 true 면 정상 반납, false 면 분실, 파손 반납
+     * Customer 가 컵을 Partner 에게 반납하는 메서드 (미완성)
      * @param customer
      */
     @Transactional
-    public void cupReturnOfCustomer(Customer customer, Partner partner, Boolean returnedCupStatus) {
-        if (!returnedCupStatus) return;
-
+    public void cupReturnOfCustomer(Customer customer, Partner partner) throws NoCupsForReturnException{
         List<CustomerOrder> customerOrders = customerOrderRepository.findListOfCustomer(customer.getId());
         if (customerOrders.isEmpty()) {
             throw new NoCupsForReturnException();
         } else {
             Long customerCupId = customerOrders.get(0).getId();
             CustomerOrder customerOrder = customerOrderRepository.findById(customerCupId);
-            int cupPrice = customerOrder.getCup().getPrice();
+            Cup cup = customerOrder.getCup();
+            int cupPrice = cup.getPrice();
 
             if (LocalDateTime.now().isBefore(customerOrder.getReturnDateTime())) {
                 customer.completeReturnCup(cupPrice, CustomerState.NONE);
@@ -70,6 +72,27 @@ public class CustomerOrderService {
                 customer.completeReturnCup(cupPrice, CustomerState.OVERDUE);
             }
             customerOrder.setReturnedDateTime(LocalDateTime.now());
+
+            List<PartnerReturn> partnerReturns = partnerReturnRepository.findByPartnerIdAndCupId(partner.getId(), cup.getId());
+
+            if (partnerReturns.isEmpty()) {
+                PartnerReturn partnerReturn = new PartnerReturn(partner, cup, 1);
+                partnerReturnRepository.save(partnerReturn);
+            } else {
+                PartnerReturn partnerReturn = partnerReturns.get(0);
+                partnerReturn.setReturnQuantity(partnerReturn.getReturnQuantity() + 1);
+            }
         }
+    }
+
+    /**
+     * Customer 가 컵을 파손, 분실하여 컵이 삭제되는 메서드
+     * @param customerOrder
+     */
+    @Transactional
+    public void cupRemoveOfCustomer(CustomerOrder customerOrder) {
+        Customer customer = customerOrder.getCustomer();
+        customer.setCustomerState(CustomerState.NONE);
+        customerOrder.setReturnedDateTime(LocalDateTime.now());
     }
 }
