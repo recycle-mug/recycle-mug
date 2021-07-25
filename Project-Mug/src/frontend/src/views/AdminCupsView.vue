@@ -19,8 +19,6 @@
 <script>
 import AdminHeader from "../components/AdminHeader.vue";
 import AdminCarousel from "../components/AdminCarousel.vue";
-import AdminChart from "../components/AdminChart.vue";
-import AdminUserTable from "../components/AdminUserTable.vue";
 import FooterNav from "../components/FooterNav.vue";
 import AdminSidebar from "../components/AdminSidebar.vue";
 import AdminOrderConfirmTable from "../components/AdminOrderConfirmTable.vue";
@@ -29,9 +27,7 @@ export default {
   components: {
     AdminHeader,
     AdminCarousel,
-    AdminUserTable,
     FooterNav,
-    AdminChart,
     AdminSidebar,
     AdminOrderConfirmTable,
   },
