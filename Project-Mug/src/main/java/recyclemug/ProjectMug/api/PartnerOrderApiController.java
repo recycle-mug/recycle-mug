@@ -21,6 +21,7 @@ import recyclemug.ProjectMug.repository.CupRepository;
 import recyclemug.ProjectMug.repository.PartnerOrderRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.service.PartnerOrderService;
+import recyclemug.ProjectMug.service.PartnerService;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -29,11 +30,10 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping(value="/partner/cup/order")
 public class PartnerOrderApiController {
 
     private final PartnerOrderService partnerOrderService;
-    private final PartnerRepository partnerRepository;
+    private final PartnerService partnerService;
     private final CupRepository cupRepository;
     private final PartnerOrderRepository partnerOrderRepository;
 
@@ -115,7 +115,7 @@ public class PartnerOrderApiController {
     public ResponseEntity<CreateOrderResponse> partnerCupOrder(@RequestBody @Valid CreateOrderRequest request){
         try{
             Cup cup = cupRepository.findByCupId(request.getCupId());
-            Partner partner = partnerRepository.findOne(request.getPartnerId());
+            Partner partner = partnerService.findById(request.getPartnerId());
             partnerOrderService.cupOrderOfPartner(cup,partner,request.getStockQuantity());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (NotEnoughPointException e){

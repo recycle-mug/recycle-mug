@@ -31,12 +31,15 @@ public class CustomerOrderApiController {
     @GetMapping("/customer/rentCup")
     @PreAuthorize("hasAnyRole('PARTNER','ADMIN')") // partner가 customerQR코드에 접속
     @ResponseBody
-    public CustomerOrderDto rentPartnerCupDTO(@RequestParam Long customerId, @RequestParam Long partnerId, @RequestParam Long cupId){
+    public CustomerOrderDto rentPartnerCupDTO(@RequestParam Long customerId, @RequestParam Long partnerCupId){
         String customerName = customerRepository.findOne(customerId).getNickname();
-        String partnerBusinessName = partnerRepository.findOne(partnerId).getBusinessName();
-        String partnerCup = partnerCupRepository.findById(cupId).getCup().getName();
-        String partnerCupImage = partnerCupRepository.findById(cupId).getCup().getProfilePictureAddress();
-        return new CustomerOrderDto(customerId,customerName,partnerId,partnerBusinessName,cupId,partnerCup,partnerCupImage);
+        PartnerCup partnerCup = partnerCupRepository.findById(partnerCupId);
+        Long partnerId = partnerCup.getPartner().getId();
+        String partnerBusinessName = partnerCup.getPartner().getBusinessName();
+        Long cupId = partnerCupId;
+        String partnerCupName = partnerCup.getCup().getName();
+        String partnerCupImage = partnerCup.getCup().getProfilePictureAddress();
+        return new CustomerOrderDto(customerId,customerName,partnerId,partnerBusinessName,cupId,partnerCupName,partnerCupImage);
     }
 
     @PostMapping("/customer/rentCup")
