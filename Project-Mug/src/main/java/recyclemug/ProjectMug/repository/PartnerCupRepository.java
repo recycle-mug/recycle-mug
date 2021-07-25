@@ -34,13 +34,14 @@ public class PartnerCupRepository {
     }
 
     /**
-     * partner 가 가지고있는 partnerCup 를 partnerId 와 cupId 로 찾는다.
+     * partner 가 가지고있는 partnerCup 를 partnerId 와 cupId 로 찾는다. (오류가능성 있음)
      * @param partnerId
      * @param cupId
      * @return
      */
     public List<PartnerCup> findByPartnerIdAndCupId(Long partnerId, Long cupId) {
-        return em.createQuery("select p from PartnerCup p inner join p.cup c where c.id =:cupId and p.id=:partnerId", PartnerCup.class)
+        String query = "SELECT pc FROM PartnerCup pc JOIN pc.cup c JOIN pc.partner p WHERE c.id=:cupId and p.id=:partnerId";
+        return em.createQuery(query, PartnerCup.class)
                 .setParameter("partnerId", partnerId)
                 .setParameter("cupId", cupId).getResultList();
     }
