@@ -14,7 +14,7 @@
           </div>
           <admin-sidebar v-if="isActive"></admin-sidebar>
           <span>admin / </span>
-          <h1>Dashboard</h1>
+          <h1>{{ routeName }}</h1>
         </div>
 
         <div class="content-center"></div>
@@ -74,6 +74,7 @@ export default {
       windowWidth: window.innerWidth,
       isScrollDown: true,
       lastScroll: 0,
+      routeName: "Dashboard",
     };
   },
   components: {
@@ -115,6 +116,15 @@ export default {
       window.addEventListener("resize", this.onResize);
       document.querySelector(".page").addEventListener("scroll", this.onScroll);
     });
+
+    const currentRouteName = this.getCurrentRouteName.slice(6);
+    if (currentRouteName === "") {
+      this.routeName = "Dashboard";
+    } else if (currentRouteName === "cups") {
+      this.routeName = "Cups";
+    } else if (currentRouteName === "users") {
+      this.routeName = "Users";
+    }
   },
 };
 </script>
