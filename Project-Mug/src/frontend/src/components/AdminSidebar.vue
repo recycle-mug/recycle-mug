@@ -7,24 +7,28 @@
         </div>
         <span>Recycle Mug</span>
       </li>
-      <li>
+
+      <router-link :to="{ name: 'admin' }" tag="li">
         <div class="icon-wrapper">
           <font-awesome-icon :icon="['fas', 'clipboard-list']"></font-awesome-icon>
         </div>
         <span>Dashboard</span>
-      </li>
-      <li>
+      </router-link>
+
+      <router-link :to="{ name: 'admin-cups' }" tag="li">
         <div class="icon-wrapper">
           <font-awesome-icon :icon="['fas', 'coffee']"></font-awesome-icon>
         </div>
         <span>Cups</span>
-      </li>
-      <li>
+      </router-link>
+
+      <router-link :to="{ name: 'admin-users' }" tag="li">
         <div class="icon-wrapper">
           <font-awesome-icon :icon="['fas', 'users']"></font-awesome-icon>
         </div>
         <span>Users</span>
-      </li>
+      </router-link>
+
       <li>
         <div class="icon-wrapper">
           <font-awesome-icon :icon="['fas', 'chart-line']"></font-awesome-icon>

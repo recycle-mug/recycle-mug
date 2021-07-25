@@ -8,7 +8,9 @@ import MainView from "../views/MainView";
 import JoinView from "../views/JoinView";
 import LoginView from "../views/LoginView";
 import ProfileView from "../views/ProfileView";
-import AdminView from "../views/AdminView";
+import AdminDashboardView from "../views/AdminDashboardView";
+import AdminCupsView from "../views/AdminCupsView";
+import AdminUsersView from "../views/AdminUsersView";
 import AdminLoginView from "../views/AdminLoginView";
 
 import AddressPopup from "../components/AddressPopup";
@@ -124,14 +126,26 @@ export default new Router({
     },
     {
       path: "/admin",
-      component: AdminView,
+      component: AdminDashboardView,
       name: "admin",
-      // beforeEnter: checkAdmin(),
+      beforeEnter: checkAdmin(),
     },
     {
-      path: "/adminLogin",
-      name: "adminLogin",
+      path: "/admin/login",
+      name: "admin-login",
       component: AdminLoginView,
+      alias: "/admin",
+    },
+    {
+      path: "/admin/users",
+      name: "admin-users",
+      component: AdminUsersView,
+      alias: "/admin",
+    },
+    {
+      path: "/admin/cups",
+      name: "admin-cups",
+      component: AdminCupsView,
       alias: "/admin",
     },
   ],

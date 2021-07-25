@@ -86,7 +86,10 @@
             >
               <div class="profile-pic-wrapper">
                 <img
-                  :src="entryList[(currentPage - 1) * perPage + index - 1].profilePictureAddress"
+                  :src="
+                    'data:image/jpeg;base64,' +
+                      entryList[(currentPage - 1) * perPage + index - 1].profilePicture
+                  "
                   alt=""
                   class="profile-pic"
                 />
@@ -103,7 +106,7 @@
               v-if="entryList[(currentPage - 1) * perPage + index - 1]"
               style="text-align:center;"
             >
-              {{ entryList[(currentPage - 1) * perPage + index - 1].lastLogin }}
+              {{ entryList[(currentPage - 1) * perPage + index - 1].lastLoginDateTime }}
             </td>
             <td
               aria-colindex="5"
@@ -111,7 +114,7 @@
               v-if="entryList[(currentPage - 1) * perPage + index - 1]"
               style="text-align:center;"
             >
-              {{ entryList[(currentPage - 1) * perPage + index - 1].signUpDate }}
+              {{ entryList[(currentPage - 1) * perPage + index - 1].signupDateTIme }}
             </td>
           </tr>
         </tbody>
@@ -318,21 +321,14 @@ export default {
       this.entryList[index].active = !this.entryList[index].active;
     },
     findAllUsers() {
-      let roleName = "";
-
-      if (this.role === "partner") {
-        roleName = "Partners";
-      } else if (this.role === "customer") {
-        roleName = "Customers";
-      }
-
-      const path = `/backend/user/findAll${roleName}`;
+      const path = `/backend/user/find-all-${this.role}s`;
       let findUsers = axios.create();
 
       findUsers
         .get(path)
         .then((res) => {
           this.entryList = res.data;
+          console.log("res :>> ", res);
         })
         .catch((err) => {
           console.log("err :>> ", err);

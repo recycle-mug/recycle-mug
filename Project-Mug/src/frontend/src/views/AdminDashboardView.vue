@@ -10,6 +10,9 @@
         <admin-carousel></admin-carousel>
       </div>
       <div class="row">
+        <admin-order-confirm-table></admin-order-confirm-table>
+      </div>
+      <div class="row">
         <admin-user-table role="customer"></admin-user-table>
       </div>
       <div class="row">
@@ -27,9 +30,18 @@ import AdminChart from "../components/AdminChart.vue";
 import AdminUserTable from "../components/AdminUserTable.vue";
 import FooterNav from "../components/FooterNav.vue";
 import AdminSidebar from "../components/AdminSidebar.vue";
+import AdminOrderConfirmTable from "../components/AdminOrderConfirmTable.vue";
 
 export default {
-  components: { AdminHeader, AdminCarousel, AdminUserTable, FooterNav, AdminChart, AdminSidebar },
+  components: {
+    AdminHeader,
+    AdminCarousel,
+    AdminUserTable,
+    FooterNav,
+    AdminChart,
+    AdminSidebar,
+    AdminOrderConfirmTable,
+  },
   data() {
     return {
       windowWidth: window.innerWidth,
