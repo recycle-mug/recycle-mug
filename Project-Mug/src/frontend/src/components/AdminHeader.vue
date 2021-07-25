@@ -13,7 +13,7 @@
             </div>
           </div>
           <admin-sidebar v-if="isActive"></admin-sidebar>
-          <span>admin / </span>
+          <router-link :to="{ name: 'admin' }" tag="span">admin / </router-link>
           <h1>{{ routeName }}</h1>
         </div>
 
