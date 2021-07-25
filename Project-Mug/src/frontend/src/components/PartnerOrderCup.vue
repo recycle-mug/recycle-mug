@@ -12,38 +12,31 @@
               checked
               @click="selectCup"
             />
-            <input type="radio" name="cup" id="cup1" title="cup 1" @click="selectCup" />
-            <input type="radio" name="cup" id="cup2" title="cup 2" @click="selectCup" />
-            <input type="radio" name="cup" id="cup3" title="cup 3" @click="selectCup" />
-            <input type="radio" name="cup" id="cup4" title="cup 4" @click="selectCup" />
-            <input type="radio" name="cup" id="cup5" title="cup 5" @click="selectCup" />
+            <input
+              type="radio"
+              name="cup"
+              :id="cup.id"
+              :title="cup.name"
+              v-for="(cup, index) in cups"
+              :key="index"
+              @click="selectCup"
+            />
           </summary>
           <ul class="list">
-            <li>
-              <label for="cup1">cup 1</label>
-            </li>
-            <li>
-              <label for="cup2">cup 2</label>
-            </li>
-            <li>
-              <label for="cup3">cup 3</label>
-            </li>
-            <li>
-              <label for="cup4">cup 4</label>
-            </li>
-            <li>
-              <label for="cup5">cup 5</label>
+            <li v-for="(cup, index) in cups" :key="index">
+              <label :for="cup.id">{{ cup.name }}</label>
             </li>
           </ul>
         </details>
 
         <div class="cup-quantity-box">
           <input
-            type="text"
+            type="number"
             name="cup_quantity"
             id="cup_quantity"
             placeholder="수량"
             class="cup-quantity"
+            v-model="quantity"
             required
           />
           <label for="cup_quantity" class="cup-quantity-label">수량</label>
@@ -51,25 +44,136 @@
         </div>
       </div>
 
+      <div class="submit-error-msg">
+        <span>{{ errorMsg }}</span>
+      </div>
+
       <div class="submit-btn-wrapper">
-        <button type="submit">발주 신청</button>
+        <button type="submit" @click.prevent="validate">발주 신청</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   data() {
     return {
       selectedCup: "",
-      quantity: 0,
+      quantity: null,
+      partnerId: null,
+      cups: [],
+      errorMsg: "",
     };
   },
   methods: {
     selectCup(e) {
       this.selectedCup = e.target.id;
     },
+    getAllCups() {
+      const { accessToken } = localStorage;
+
+      if (accessToken) {
+        const path = "/backend/get-all-cups";
+
+        let cupList = axios.create();
+
+        cupList.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+        cupList.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        cupList.defaults.headers.common["Access-Control-Allow-Methods"] =
+          "GET,POST,PUT,DELETE,OPTIONS";
+        cupList.defaults.headers.common["Content-Type"] =
+          "application/x-www-form-urlencoded;charset=utf-8";
+
+        cupList
+          .get(path)
+          .then((res) => {
+            this.cups = res.data;
+          })
+          .catch((err) => {
+            console.log("err :>> ", err);
+          });
+      }
+    },
+    getPartnerId() {
+      const path = "/backend/profile";
+
+      const { accessToken } = localStorage;
+      if (accessToken) {
+        const authUser = axios.create({ baseUrl: path });
+        authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+        authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
+          "GET,POST,PUT,DELETE,OPTIONS";
+
+        authUser.defaults.headers.common["Content-Type"] =
+          "application/x-www-form-urlencoded;charset=utf-8";
+
+        authUser
+          .get(path)
+          .then((res) => {
+            if (res.data.error) {
+              throw res.data.error;
+            } else {
+              this.partnerId = res.data.id;
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert(error);
+            localStorage.removeItem("accessToken");
+          });
+      }
+    },
+    orderCup(cupId, partnerId, stockQuantity) {
+      const path = "/backend/partner/cup/order";
+      const payload = {
+        cupId: parseInt(cupId),
+        partnerId: partnerId,
+        stockQuantity: parseInt(stockQuantity),
+      };
+
+      console.log("payload :>> ", payload);
+      const { accessToken } = localStorage;
+
+      let orderCup = axios.create();
+
+      orderCup.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+      orderCup.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      orderCup.defaults.headers.common["Access-Control-Allow-Methods"] =
+        "GET,POST,PUT,DELETE,OPTIONS";
+      orderCup.defaults.headers.common["Content-Type"] =
+        "application/x-www-form-urlencoded;charset=utf-8";
+
+      orderCup
+        .post(path, payload)
+        .then((res) => {
+          console.log("res :>> ", res);
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
+    },
+    validate() {
+      if (this.selectedCup === "") {
+        this.errorMsg = "발주할 컵을 선택해주세요";
+      } else if (this.quantity === null) {
+        this.errorMsg = "수량을 적어주세요";
+      } else if (this.partnerId === null) {
+        this.errorMsg = "다시 로그인해주세요";
+      } else {
+        this.errorMsg = "";
+        this.orderCup(this.selectedCup, this.partnerId, this.quantity);
+      }
+    },
+  },
+  mounted() {
+    if (localStorage.getItem("accessToken")) {
+      this.getAllCups();
+      this.getPartnerId();
+    }
   },
 };
 </script>
@@ -287,6 +391,13 @@ export default {
           }
         }
 
+        .submit-error-msg {
+          color: $error-msg;
+          text-align: right;
+          width: 100%;
+          font-size: 0.85rem;
+        }
+
         .submit-btn-wrapper {
           button {
             padding: 0.5rem 1rem;
@@ -295,6 +406,8 @@ export default {
             border-radius: 6px;
             border: none;
             cursor: pointer;
+            width: 100px;
+            margin-left: 10px;
           }
         }
       }
