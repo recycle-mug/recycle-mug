@@ -29,7 +29,7 @@ public class PartnerCupController {
     private final PartnerOrderService partnerOrderService;
     private final PartnerOrderRepository partnerOrderRepository;
 
-    @PostMapping("/partnerCup/add") // partner의 cup 대여 신청을 admin이 승인했을 시 partnerCup 등록
+    @PostMapping("/partner-cup/add") // partner의 cup 대여 신청을 admin이 승인했을 시 partnerCup 등록
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> addPartnerCup(@RequestBody @Valid CreatePartnerCupRequest request){
@@ -45,7 +45,7 @@ public class PartnerCupController {
         }
     }
 
-    @PostMapping("/partnerCup/reject") // partner의 cup 대여 신청을 admin이 거부했을 시 partnerOrder 거부처리
+    @PostMapping("/partner-cup/reject") // partner의 cup 대여 신청을 admin이 거부했을 시 partnerOrder 거부처리
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> rejectPartnerCup(@RequestBody @Valid CreatePartnerCupRequest request){

@@ -28,13 +28,13 @@ public class UserController {
     private final PartnerService partnerService;
     private final UserRepository userRepository;
 
-    @GetMapping("/user/findAllUsers")
+    @GetMapping("/user/find-all-users")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public List<User> getAllUsers() {
         return userRepository.findAllUsers();
     }
 
-    @GetMapping("/user/findAllCustomers")
+    @GetMapping("/user/find-all-customers")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public List<CreateCustomerResponse> getAllCustomers() throws IOException {
         List<Customer> customers = customerService.findCustomers();
@@ -45,7 +45,7 @@ public class UserController {
         return customerResponses;
     }
 
-    @GetMapping("/user/findAllPartners")
+    @GetMapping("/user/find-all-partners")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public List<CreatePartnerResponse> getAllPartners() throws IOException {
         List<Partner> partners = partnerService.findPartners();
