@@ -1,6 +1,7 @@
 <template>
   <div :class="getTheme">
     <admin-sidebar v-if="windowWidth >= 1020"></admin-sidebar>
+
     <div class="page">
       <admin-header></admin-header>
       <div class="row">
