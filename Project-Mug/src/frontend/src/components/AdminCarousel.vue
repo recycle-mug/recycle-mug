@@ -89,7 +89,12 @@
     <div v-if="opened" style="position:absolute;top:0;left:0;" @click="closeModal()">
       <div class="modal-wrapper">
         <div class="modal" @click.stop>
-          <admin-modal :cupId="clickedCupId" v-on:closeModal="closeModal"></admin-modal>
+          <admin-modal
+            :cupId="clickedCupId"
+            v-on:closeModal="closeModal"
+            @refreshPage="getCups"
+            @makeToast="makeToast"
+          ></admin-modal>
         </div>
       </div>
     </div>

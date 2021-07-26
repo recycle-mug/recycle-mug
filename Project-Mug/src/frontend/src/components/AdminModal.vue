@@ -76,6 +76,7 @@ export default {
     },
     closeThisModal() {
       this.$emit("closeModal");
+      this.$emit("makeToast", { status: "success", msg: "컵을 삭제했습니다." });
     },
     deleteThis() {
       if (confirm("정말 이 컵을 삭제하시겠습니까?")) {
@@ -86,7 +87,7 @@ export default {
 
         deleteRequest.delete(path).then((res) => {
           this.closeThisModal();
-          window.location.reload();
+          this.$emit("refreshPage");
         });
       }
     },
