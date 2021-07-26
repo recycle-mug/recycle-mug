@@ -71,6 +71,16 @@ public class PartnerOrderService {
     }
 
     /**
+     * PartnerOrder 삭제
+     * @param partnerId
+     */
+    @Transactional
+    public void removeOrder(Long partnerId) {
+        PartnerOrder partnerOrder = partnerOrderRepository.findById(partnerId);
+        partnerOrderRepository.remove(partnerOrder);
+    }
+
+    /**
      * 배송이 취소되었을때 (아니오 클릭시 발생하는 메서드)
      * @param partnerOrder
      */
