@@ -57,9 +57,10 @@
                     }}</span>
                   </td>
                   <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="status">
-                    <span class="status success">{{
-                      entryList[(currentPage - 1) * perPage + index - 1].state
-                    }}</span>
+                    <span
+                      :class="['status', entryList[(currentPage - 1) * perPage + index - 1].state]"
+                      >{{ entryList[(currentPage - 1) * perPage + index - 1].state }}</span
+                    >
                   </td>
                   <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="amount">
                     <span>{{
@@ -72,7 +73,18 @@
                     }}</span>
                   </td>
                   <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="action">
-                    <span>삭제하기</span>
+                    <span
+                      class="icon-wrapper submit"
+                      @click="submitOrder((currentPage - 1) * perPage + index - 1)"
+                    >
+                      <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
+                    </span>
+                    <span
+                      class="icon-wrapper reject"
+                      @click="rejectOrder((currentPage - 1) * perPage + index - 1)"
+                    >
+                      <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
+                    </span>
                   </td>
                 </tr>
               </tbody>
@@ -229,12 +241,12 @@
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight, faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
 import axios from "axios";
 
-faLibrary.add(faAngleLeft, faAngleRight);
+faLibrary.add(faAngleLeft, faAngleRight, faCheck, faTimes);
 
 export default {
   data() {
@@ -273,7 +285,7 @@ export default {
         .get(path)
         .then((res) => {
           this.entryList = res.data;
-          console.log("res :>> ", res);
+          this.setStatus();
           this.total = this.entryList.length;
           this.maxPage = Math.ceil(this.total / this.perPage);
         })
@@ -294,6 +306,57 @@ export default {
     },
     checkOne() {
       this.allSelected = false;
+    },
+    setStatus() {
+      for (let entry in this.entryList) {
+        if (this.entryList[entry].state === "DELIVERY_WAITING") {
+          this.entryList[entry].state = "waiting";
+        }
+
+        if (this.entryList[entry].state === "COMPLETE") {
+          this.entryList[entry].state = "complete";
+        }
+
+        if (this.entryList[entry].state === "CANCEL") {
+          this.entryList[entry].state = "canceled";
+        }
+      }
+    },
+    submitOrder(index) {
+      if (confirm("이 주문을 승인하시겠습니까?")) {
+        const orderId = this.entryList[index].id;
+        const path = `/backend/partner-cup/add`;
+
+        let addOrder = axios.create();
+
+        addOrder
+          .post(path, { partnerOrderId: orderId })
+          .then((res) => {
+            this.$emit("makeToast", { status: "success", msg: "주문을 승인했습니다." });
+            this.getOrderList();
+          })
+          .catch((err) => {
+            console.log("err :>> ", err);
+          });
+      }
+    },
+    rejectOrder(index) {
+      if (confirm("이 주문을 거절하시겠습니까?")) {
+        const orderId = this.entryList[index].id;
+        const path = `/backend/partner-cup/reject`;
+
+        let rejectOrder = axios.create();
+
+        rejectOrder
+          .post(path, { partnerOrderId: orderId })
+          .then((res) => {
+            this.$emit("makeToast", { status: "success", msg: "주문을 거절했습니다." });
+            this.getOrderList();
+          })
+          .catch((err) => {
+            console.log("err :>> ", err);
+          });
+      }
     },
   },
   mounted() {
@@ -463,6 +526,19 @@ export default {
                       background-color: darken($color: map-get($theme, "background"), $amount: 6%);
                     }
 
+                    .icon-wrapper {
+                      margin: 5px;
+                      font-size: 1rem;
+
+                      &.submit {
+                        color: $main-color;
+                      }
+
+                      &.reject {
+                        color: $error-msg;
+                      }
+                    }
+
                     &.selection-column {
                       width: 5%;
                     }
@@ -475,14 +551,40 @@ export default {
                     &.status {
                       width: 15%;
                     }
-                    &.amount {
-                      width: 15%;
+                  }
+                  &.amount {
+                    width: 15%;
+                  }
+                  &.date {
+                    width: 20%;
+                  }
+                  &.action {
+                    width: 20%;
+                  }
+
+                  span {
+                    &.complete {
+                      border-radius: 10px;
+                      border: 1px solid rgba($white, 0.1);
+                      padding: 2px 5px;
+                      background-color: rgba(#20c997, 0.1);
+                      color: #20c997;
                     }
-                    &.date {
-                      width: 20%;
+
+                    &.waiting {
+                      border-radius: 10px;
+                      border: 1px solid rgba($white, 0.1);
+                      padding: 2px 5px;
+                      background-color: rgba(#fa8b0c, 0.1);
+                      color: #fa8b0c;
                     }
-                    &.action {
-                      width: 20%;
+
+                    &.canceled {
+                      border-radius: 10px;
+                      border: 1px solid rgba($white, 0.1);
+                      padding: 2px 5px;
+                      background-color: rgba(#ff4d4f, 0.1);
+                      color: #ff4d4f;
                     }
                   }
                 }

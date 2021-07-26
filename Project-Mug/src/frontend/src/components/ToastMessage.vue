@@ -178,7 +178,7 @@ export default {
       color: #fff;
       text-align: center;
       border-radius: 2px;
-
+      user-select: none;
       position: fixed;
       z-index: 1;
       left: 0;
@@ -227,12 +227,14 @@ export default {
         padding-top: 16px;
         padding-bottom: 16px;
         box-sizing: border-box;
+        user-select: none;
       }
 
       .message {
         padding: 16px;
         overflow: hidden;
         white-space: nowrap;
+        user-select: none;
       }
     }
   }
