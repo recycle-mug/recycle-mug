@@ -50,8 +50,9 @@ public class PartnerOrderService {
     public void completeOrder(PartnerOrder partnerOrder) {
         Cup cup = partnerOrder.getCup();
         Partner partner = partnerOrder.getPartner();
-
-        if (cup.getStockQuantity() < partnerOrder.getOrderQuantity()) {
+        if (!partnerOrder.getOrderState().equals(OrderState.DELIVERY_WAITING)) {
+            throw new RuntimeException("partner order state is not DELIVERY_WAITING");
+        } else if (cup.getStockQuantity() < partnerOrder.getOrderQuantity()) {
             throw new NotEnoughStockException();
         } else {
             List<PartnerCup> partnerCups = partnerCupRepository.findByPartnerIdAndCupId(partner.getId(), cup.getId());
@@ -71,6 +72,21 @@ public class PartnerOrderService {
     }
 
     /**
+     * 배송이 취소되었을때 (아니오 클릭시 발생하는 메서드)
+     * @param partnerOrder
+     */
+    @Transactional
+    public void rejectOrder(PartnerOrder partnerOrder) {
+        if (partnerOrder.getOrderState().equals(OrderState.DELIVERY_WAITING)) {
+            Partner partner = partnerOrder.getPartner();
+            partner.setPoint(partner.getPoint() + partnerOrder.getOrderQuantity() * partnerOrder.getCup().getPrice());
+            partnerOrder.setOrderState(OrderState.CANCEL);
+        } else {
+            throw new RuntimeException("partnerOrder State is not DELIVERY_WAITING");
+        }
+    }
+
+    /**
      * PartnerOrder 삭제
      * @param partnerId
      */
@@ -80,14 +96,5 @@ public class PartnerOrderService {
         partnerOrderRepository.remove(partnerOrder);
     }
 
-    /**
-     * 배송이 취소되었을때 (아니오 클릭시 발생하는 메서드)
-     * @param partnerOrder
-     */
-    @Transactional
-    public void rejectOrder(PartnerOrder partnerOrder) {
-        Partner partner = partnerOrder.getPartner();
-        partner.setPoint(partner.getPoint() + partnerOrder.getOrderQuantity() * partnerOrder.getCup().getPrice());
-        partnerOrder.setOrderState(OrderState.CANCEL);
-    }
+
 }
