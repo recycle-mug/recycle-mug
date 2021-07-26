@@ -2,13 +2,12 @@ package recyclemug.ProjectMug.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import recyclemug.ProjectMug.data.CreateCustomerRequest;
-import recyclemug.ProjectMug.data.CreateCustomerResponse;
-import recyclemug.ProjectMug.data.CreateJoinResponse;
-import recyclemug.ProjectMug.data.CreatePartnerResponse;
+import recyclemug.ProjectMug.data.*;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.service.CustomerService;
@@ -60,6 +59,16 @@ public class CustomerApiController {
         }
         return null;
     }
+
+    @PutMapping("/customer/{customerId}") // 회원정보 수정 컨트롤러 (예외처리 수정필요)
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+    @ResponseBody
+    public ResponseEntity<UpdateCustomerResponse> updateCustomerInfo(@PathVariable Long customerId,CustomerModifyDTO customerModifyDTO){
+        Customer customer = customerService.findById(customerId);
+        customerService.modifyCustomerInfo(customer,customerModifyDTO);
+        return new ResponseEntity<>(new UpdateCustomerResponse("success","Update customer's information"), HttpStatus.OK);
+    }
+
 
     public CreateCustomerResponse createCustomerResponse(Customer customer) throws IOException {
         CreateCustomerResponse response = CreateCustomerResponse.builder()
