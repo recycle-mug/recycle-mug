@@ -31,6 +31,14 @@ public class PartnerOrderRepository {
     }
 
     /**
+     * 파트너의 오더 삭제
+     * @param partnerOrder
+     */
+    public void remove(PartnerOrder partnerOrder) {
+        em.remove(partnerOrder);
+    }
+
+    /**
      * 모든 파트너들의 주문 리스트 중 배달 대기중인 항목들 (삭제 예정)
      * @return
      */
