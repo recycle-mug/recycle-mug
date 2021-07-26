@@ -10,7 +10,7 @@
         <admin-carousel @makeToast="onToastMessage"></admin-carousel>
       </div>
       <div class="row">
-        <admin-order-confirm-table></admin-order-confirm-table>
+        <admin-order-confirm-table @makeToast="onToastMessage"></admin-order-confirm-table>
       </div>
 
       <footer-nav></footer-nav>

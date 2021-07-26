@@ -12,7 +12,7 @@
         <admin-carousel @makeToast="onToastMessage"></admin-carousel>
       </div>
       <div class="row">
-        <admin-order-confirm-table></admin-order-confirm-table>
+        <admin-order-confirm-table @makeToast="onToastMessage"></admin-order-confirm-table>
       </div>
       <div class="row">
         <admin-user-table role="customer"></admin-user-table>

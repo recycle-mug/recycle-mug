@@ -151,7 +151,7 @@ export default {
         .post(path, payload)
         .then((res) => {
           this.makeToast("success", "컵을 주문했습니다.");
-          window.location.reload();
+          this.$emit("getOrder");
         })
         .catch((err) => {
           this.makeToast("waiting", err);
