@@ -150,9 +150,11 @@ export default {
       orderCup
         .post(path, payload)
         .then((res) => {
-          console.log("res :>> ", res);
+          this.makeToast("success", "컵을 주문했습니다.");
+          window.location.reload();
         })
         .catch((err) => {
+          this.makeToast("waiting", err);
           console.log("err :>> ", err);
         });
     },
@@ -167,6 +169,9 @@ export default {
         this.errorMsg = "";
         this.orderCup(this.selectedCup, this.partnerId, this.quantity);
       }
+    },
+    makeToast(sta, message) {
+      this.$emit("makeToast", { status: sta, msg: message });
     },
   },
   mounted() {

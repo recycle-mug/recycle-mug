@@ -79,7 +79,11 @@
           <font-awesome-icon :icon="['fas', 'times']" style="width:100%;"></font-awesome-icon>
         </button>
       </div>
-      <admin-new-cup v-on:modeSwitch="TurnOffWritingMode()"></admin-new-cup>
+      <admin-new-cup
+        v-on:modeSwitch="TurnOffWritingMode()"
+        @makeToast="makeToast"
+        @refreshPage="getCups"
+      ></admin-new-cup>
     </div>
 
     <div v-if="opened" style="position:absolute;top:0;left:0;" @click="closeModal()">
@@ -153,6 +157,9 @@ export default {
       let text = str.toString().replace(/[^0-9]/g, "");
       const result = text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return result;
+    },
+    makeToast(toast) {
+      this.$emit("makeToast", toast);
     },
   },
   mounted() {

@@ -170,12 +170,16 @@ export default {
         .post(path, this.formData, config)
         .then(() => {
           this.errorMsg = "";
+          this.makeToast("success", "성공적으로 컵을 추가했습니다.");
+          this.$emit("refreshPage");
           this.$emit("modeSwitch");
-          window.location.reload();
         })
         .catch((err) => {
           this.errorMsg = err;
         });
+    },
+    makeToast(sta, message) {
+      this.$emit("makeToast", { status: sta, msg: message });
     },
   },
 };

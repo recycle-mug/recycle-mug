@@ -30,7 +30,7 @@
 
     <div class="card-wrapper" v-else-if="radioInput === 'PartnerOrderList'">
       <!-- 발주 신청하기 -->
-      <partner-order-cup></partner-order-cup>
+      <partner-order-cup @makeToast="makeToast"></partner-order-cup>
       <!-- 발주 신청 내역 -->
       <div class="card">
         <partner-order-list></partner-order-list>
@@ -51,6 +51,11 @@ export default {
     };
   },
   components: { PartnerCupList, PartnerOrderCup, PartnerOrderList },
+  methods: {
+    makeToast(toast) {
+      this.$emit("makeToast", toast);
+    },
+  },
 };
 </script>
 

@@ -1,11 +1,13 @@
 <template>
   <div :class="getTheme">
     <admin-sidebar v-if="windowWidth >= 1020"></admin-sidebar>
+    <toast-message v-if="onToast" :status="toastStatus" :msg="toastMessage"></toast-message>
+
     <div class="page">
       <admin-header></admin-header>
 
       <div class="row">
-        <admin-carousel></admin-carousel>
+        <admin-carousel @makeToast="onToastMessage"></admin-carousel>
       </div>
       <div class="row">
         <admin-order-confirm-table></admin-order-confirm-table>
@@ -22,6 +24,7 @@ import AdminCarousel from "../components/AdminCarousel.vue";
 import FooterNav from "../components/FooterNav.vue";
 import AdminSidebar from "../components/AdminSidebar.vue";
 import AdminOrderConfirmTable from "../components/AdminOrderConfirmTable.vue";
+import ToastMessage from "../components/ToastMessage.vue";
 
 export default {
   components: {
@@ -30,10 +33,14 @@ export default {
     FooterNav,
     AdminSidebar,
     AdminOrderConfirmTable,
+    ToastMessage,
   },
   data() {
     return {
       windowWidth: window.innerWidth,
+      onToast: false,
+      toastStatus: "",
+      toastMessage: "",
     };
   },
   computed: {
@@ -44,6 +51,17 @@ export default {
   methods: {
     onResize() {
       this.windowWidth = window.innerWidth;
+    },
+    onToastMessage({ status, msg }) {
+      this.toastStatus = status;
+      this.toastMessage = msg;
+      this.onToast = true;
+
+      setTimeout(() => {
+        this.onToast = false;
+        this.toastStatus = "";
+        this.toastMessage = "";
+      }, 5000);
     },
   },
   mounted() {

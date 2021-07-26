@@ -1,10 +1,14 @@
 <template>
   <div :class="getTheme">
+    <toast-message v-if="onToast" :status="toastStatus" :msg="toastMessage"></toast-message>
     <header-nav></header-nav>
     <div class="content-body">
       <qr-code-scanner></qr-code-scanner>
       <get-kakao-map v-if="role === 'customer'"></get-kakao-map>
-      <partner-cup-manage v-if="role === 'partner'"></partner-cup-manage>
+      <partner-cup-manage
+        v-if="role === 'partner'"
+        @makeToast="onToastMessage"
+      ></partner-cup-manage>
     </div>
     <footer-nav></footer-nav>
   </div>
@@ -16,6 +20,7 @@ import FooterNav from "../components/FooterNav";
 import GetKakaoMap from "../components/GetKakaoMap";
 import QrCodeScanner from "../components/QrCodeScanner.vue";
 import PartnerCupManage from "../components/PartnerCupManage.vue";
+import ToastMessage from "../components/ToastMessage.vue";
 
 import axios from "axios";
 
@@ -23,9 +28,12 @@ export default {
   data() {
     return {
       role: "",
+      onToast: false,
+      toastStatus: "",
+      toastMessage: "",
     };
   },
-  components: { HeaderNav, FooterNav, GetKakaoMap, QrCodeScanner, PartnerCupManage },
+  components: { HeaderNav, FooterNav, GetKakaoMap, QrCodeScanner, PartnerCupManage, ToastMessage },
   methods: {
     getProfile() {
       const path = "/backend/profile";
@@ -68,6 +76,17 @@ export default {
             localStorage.removeItem("accessToken");
           });
       }
+    },
+    onToastMessage({ status, msg }) {
+      this.toastStatus = status;
+      this.toastMessage = msg;
+      this.onToast = true;
+
+      setTimeout(() => {
+        this.onToast = false;
+        this.toastStatus = "";
+        this.toastMessage = "";
+      }, 5000);
     },
   },
   computed: {
