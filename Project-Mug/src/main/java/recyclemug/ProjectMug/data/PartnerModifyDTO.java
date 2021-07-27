@@ -10,9 +10,11 @@ public class PartnerModifyDTO {
     private String phoneNumber;
     private String nickname;
 
-    private String zipcode;
-    private String detailAddress;
+    private String address;
 
     private String registrationNumber;
     private String businessName;
+
+    private double latitude;
+    private double longitude;
 }

@@ -34,7 +34,7 @@ public class PartnerApiController {
 
         try {
             Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
-                    request.getZipcode(), request.getAddress() + request.getDetailAddress(), request.getLatitude(), request.getAltitude());
+                    request.getBusinessName(), request.getAddress() , request.getLatitude(), request.getAltitude());
             partner.setProfilePictureAddress(pictureAddress);
             partnerService.join(partner);
             return ResponseEntity.ok(new CreateJoinResponse("success", "회원가입에 성공했습니다."));
@@ -89,9 +89,9 @@ public class PartnerApiController {
                 .point(partner.getPoint())
                 .nickname(partner.getNickname())
                 .businessName(partner.getBusinessName())
-                .zipcode(partner.getZipcode())
-                .detailAddress(partner.getDetailAddress())
-                .detailAddress(partner.getDetailAddress())
+                .address(partner.getAddress())
+                .latitude(partner.getLatitude())
+                .longitude(partner.getLongitude())
                 .build();
 
         FileInputStream imageStream = new FileInputStream(partner.getProfilePictureAddress());
