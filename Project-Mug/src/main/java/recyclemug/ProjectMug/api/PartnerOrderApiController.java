@@ -142,5 +142,4 @@ public class PartnerOrderApiController {
          return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid data!"),HttpStatus.BAD_REQUEST);
         }
     }
-
 }
