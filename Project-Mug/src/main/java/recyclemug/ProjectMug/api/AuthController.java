@@ -1,6 +1,7 @@
 package recyclemug.ProjectMug.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ import java.util.Base64;
 import java.util.List;
 
 @RestController
+@Slf4j
 public class AuthController {
 
     private final TokenAuthenticationProvider tokenAuthenticationProvider;
@@ -69,7 +71,7 @@ public class AuthController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
+        log.info("Login User : " + loginDto.getEmail());
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
 

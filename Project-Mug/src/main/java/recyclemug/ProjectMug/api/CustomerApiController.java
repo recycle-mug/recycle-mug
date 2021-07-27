@@ -60,13 +60,13 @@ public class CustomerApiController {
         return null;
     }
 
-    @PutMapping("/customer/{customerId}") // 회원정보 수정 컨트롤러 (예외처리 수정필요)
+    @PatchMapping("/customer/{customerId}") // 회원정보 수정 컨트롤러 (예외처리 수정필요)
     @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     @ResponseBody
-    public ResponseEntity<UpdateCustomerResponse> updateCustomerInfo(@PathVariable Long customerId,CustomerModifyDTO customerModifyDTO){
+    public ResponseEntity<UpdateUserResponse> updateCustomerInfo(@PathVariable Long customerId,@RequestBody @Valid CustomerModifyDTO customerModifyDTO){
         Customer customer = customerService.findById(customerId);
         customerService.modifyCustomerInfo(customer,customerModifyDTO);
-        return new ResponseEntity<>(new UpdateCustomerResponse("success","Update customer's information"), HttpStatus.OK);
+        return new ResponseEntity<>(new UpdateUserResponse("success","Update customer's information"), HttpStatus.OK);
     }
 
 

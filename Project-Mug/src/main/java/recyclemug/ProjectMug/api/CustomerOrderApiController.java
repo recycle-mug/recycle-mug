@@ -53,6 +53,7 @@ public class CustomerOrderApiController {
         PartnerCup partnerCup = partnerCupRepository.findById(request.getPartnerCupId());
         try {
             customerOrderService.cupOrderOfCustomer(customer, partnerCup);
+            log.info("Customer(" + customer.getNickname() + ") rents cup at the " + partnerCup.getPartner().getNickname());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (NotEnoughStockException e){
             log.error("Not Enuough Point Exception");
@@ -82,6 +83,7 @@ public class CustomerOrderApiController {
             Customer customer = customerRepository.findOne(request.getCustomerId());
             Partner partner = partnerRepository.findOne(request.getPartnerId());
             customerOrderService.cupReturnOfCustomer(customer,partner);
+            log.info("Return cup normal customer : " + customer.getNickname() + " Partner : " + partner.getNickname());
             return new ResponseEntity<>(new CreateOrderResponse("success","Return Complete"),HttpStatus.OK);
         }catch(Exception e){
             log.error("Customer return cup exception");
