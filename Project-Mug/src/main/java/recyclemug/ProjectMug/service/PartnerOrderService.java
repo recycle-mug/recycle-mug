@@ -95,6 +95,4 @@ public class PartnerOrderService {
         PartnerOrder partnerOrder = partnerOrderRepository.findById(partnerId);
         partnerOrderRepository.remove(partnerOrder);
     }
-
-
 }
