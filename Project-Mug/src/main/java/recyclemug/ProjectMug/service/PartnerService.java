@@ -63,14 +63,14 @@ public class PartnerService {
             partner.setPassword("{noop}" + partnerDTO.getPassword());
             partner.setPhoneNumber(partnerDTO.getPhoneNumber());
             partner.setNickname(partnerDTO.getNickname());
-            partner.setZipcode(partnerDTO.getZipcode());
-            partner.setDetailAddress(partnerDTO.getDetailAddress());
+            partner.setAddress(partnerDTO.getAddress());
             partner.setRegistrationNumber(partnerDTO.getRegistrationNumber());
             partner.setBusinessName(partnerDTO.getBusinessName());
+            partner.setLatitude(partnerDTO.getLatitude());
+            partner.setLongitude(partnerDTO.getLongitude());
         } else {
             throw new RuntimeException("Wrong type PW");
         }
-
     }
 
     public Partner findById(Long id) {

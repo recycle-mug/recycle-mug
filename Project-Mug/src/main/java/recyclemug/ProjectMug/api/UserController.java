@@ -64,10 +64,11 @@ public class UserController {
                 .point(partner.getPoint())
                 .nickname(partner.getNickname())
                 .businessName(partner.getBusinessName())
-                .zipcode(partner.getZipcode())
-                .detailAddress(partner.getDetailAddress())
+                .address(partner.getAddress())
                 .signupDateTIme(partner.getSignupDateTIme())
                 .lastLoginDateTime(partner.getLastLoginDateTIme())
+                .longitude(partner.getLongitude())
+                .latitude(partner.getLatitude())
                 .build();
 
         FileInputStream imageStream = new FileInputStream(partner.getProfilePictureAddress());

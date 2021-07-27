@@ -23,7 +23,8 @@ public class CreatePartnerResponse {
 
     // Partner only val
     private String businessName;
-    private String zipcode;
-    private String detailAddress;
+    private String address;
     private String registrationNumber;
+    private double latitude;
+    private double longitude;
 }
