@@ -152,6 +152,7 @@ export default {
         .then((res) => {
           this.makeToast("success", "컵을 주문했습니다.");
           this.$emit("getOrder");
+          this.$emit("modeSwitch");
         })
         .catch((err) => {
           this.makeToast("waiting", err);
