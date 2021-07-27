@@ -28,7 +28,7 @@ public class PartnerCupRepository {
      * @return
      */
     public List<PartnerCup> findCupOfPartner(Partner partner) {
-        return em.createQuery("select pc from Partner p INNER JOIN p.partnerCups pc", PartnerCup.class)
+        return em.createQuery("select pc from Partner p INNER JOIN p.partnerCups pc WHERE p.id=:partnerId", PartnerCup.class)
                 .setParameter("partnerId", partner.getId())
                 .getResultList();
     }
