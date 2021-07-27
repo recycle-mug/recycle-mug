@@ -27,9 +27,9 @@ public class PartnerCupRepository {
      * Partner 가 가지고있는 Cup list 반환
      * @return
      */
-    public List<PartnerCup> findCupOfPartner(Partner partner) {
+    public List<PartnerCup> findCupOfPartner(Long partnerId) {
         return em.createQuery("select pc from Partner p INNER JOIN p.partnerCups pc WHERE p.id=:partnerId", PartnerCup.class)
-                .setParameter("partnerId", partner.getId())
+                .setParameter("partnerId", partnerId)
                 .getResultList();
     }
 

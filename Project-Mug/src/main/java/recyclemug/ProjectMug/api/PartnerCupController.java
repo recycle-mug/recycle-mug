@@ -33,10 +33,8 @@ public class PartnerCupController {
     @GetMapping("/partner-cup/{partnerId}")
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     @ResponseBody
-    public List<PartnerCup> getPartnerCup(@RequestParam Long partnerId){
-        Partner partner = partnerRepository.findOne(partnerId);
-        List<PartnerCup> partnerCups = partnerCupRepository.findCupOfPartner(partner);
-        return partnerCups;
+    public List<PartnerCup> getPartnerCup(@PathVariable Long partnerId){
+        return partnerCupRepository.findCupOfPartner(partnerId);
     }
 
     @PostMapping("/partner-cup/add") // partner의 cup 대여 신청을 admin이 승인했을 시 partnerCup 등록
