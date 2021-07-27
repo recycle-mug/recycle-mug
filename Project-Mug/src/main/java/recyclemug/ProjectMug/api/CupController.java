@@ -56,6 +56,7 @@ public class CupController {
 
         Cup cup = Cup.createCup(request.getName(), request.getPrice(), request.getStockQuantity(), picturePathName);
         cupService.addCup(cup);
+        log.info("Admin adds a new cup : " + cup.getName());
 
         if (!file.isEmpty()) {
             File dest = new File(picturePathName);

@@ -117,6 +117,7 @@ public class PartnerOrderApiController {
             Cup cup = cupRepository.findByCupId(request.getCupId());
             Partner partner = partnerService.findById(request.getPartnerId());
             partnerOrderService.cupOrderOfPartner(cup,partner,request.getStockQuantity());
+            log.info(partner.getBusinessName() + " orders cups : " + cup.getName());
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (NotEnoughPointException e){
             log.error("Not Enough point Exception");
@@ -126,4 +127,19 @@ public class PartnerOrderApiController {
             return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid data : Partner's Order"), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/partner/cup/order/delete/{orderId}")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    @ResponseBody
+    public ResponseEntity<CreateOrderResponse> partnerCupOrderDelete(@RequestParam(required = false) Long orderId){
+        try {
+            partnerOrderService.removeOrder(orderId);
+            log.info("Delete partner's order : " + orderId);
+            return new ResponseEntity<>(new CreateOrderResponse("success","Delete complete"),HttpStatus.OK);
+        }catch(Exception e){
+         log.error("Invalid partner's order");
+         return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid data!"),HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

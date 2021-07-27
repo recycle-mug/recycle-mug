@@ -36,6 +36,7 @@ public class PartnerCupController {
         PartnerOrder partnerOrder = partnerOrderRepository.findById(request.getPartnerOrderId());
         try{
             partnerOrderService.completeOrder(partnerOrder);
+            log.info("Admin accept partner's order   id : " + partnerOrder.getId());
             return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("success","complete"),HttpStatus.OK);
         }catch (NotEnoughStockException e){
             return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Not enough cup"), HttpStatus.BAD_REQUEST);
@@ -52,6 +53,7 @@ public class PartnerCupController {
         PartnerOrder partnerOrder = partnerOrderRepository.findById(request.getPartnerOrderId());
         try{
             partnerOrderService.rejectOrder(partnerOrder);
+            log.info("Admin reject partner's order   id : " + partnerOrder.getId());
             return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("success","reject"),HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);

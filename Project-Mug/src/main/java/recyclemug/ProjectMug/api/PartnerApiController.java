@@ -2,16 +2,16 @@ package recyclemug.ProjectMug.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import recyclemug.ProjectMug.data.CreateJoinResponse;
-import recyclemug.ProjectMug.data.CreatePartnerRequest;
-import recyclemug.ProjectMug.data.CreatePartnerResponse;
+import recyclemug.ProjectMug.data.*;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.repository.PartnerCupRepository;
+import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.service.PartnerService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import java.io.IOException;
 public class PartnerApiController {
 
     private final PartnerService partnerService;
-
+    private final PartnerRepository partnerRepository;
     @PostMapping("/join/partner")
     @ResponseBody
     public ResponseEntity<CreateJoinResponse> savePartner(@RequestBody @Valid CreatePartnerRequest request, HttpServletRequest httpServletRequest) {
@@ -62,6 +62,23 @@ public class PartnerApiController {
             log.error("IOException");
         }
         return null;
+    }
+    @PatchMapping("/partner/{partnerId}")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    @ResponseBody
+    public ResponseEntity<UpdateUserResponse> updatePartner(@PathVariable Long partnerId, @RequestBody @Valid PartnerModifyDTO partnerModifyDTO){
+        try {
+            Partner partner = partnerRepository.findOne(partnerId);
+            partnerService.modifyPartnerInfo(partner,partnerModifyDTO);
+            return new ResponseEntity<>(new UpdateUserResponse("success","Update Partner's info"), HttpStatus.OK);
+        }catch(RuntimeException e){
+            log.error("Partner's info fail to update (RuntimeException)");
+            return new ResponseEntity<>(new UpdateUserResponse("fail","Wrong password type"),HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            log.error("Partner's info fail to update (Invalid data)");
+            return new ResponseEntity<>(new UpdateUserResponse("fail","Invalid Data"),HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     public CreatePartnerResponse createPartnerResponse(Partner partner) throws IOException {
