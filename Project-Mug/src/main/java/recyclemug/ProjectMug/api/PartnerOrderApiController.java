@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderRequest;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
+import recyclemug.ProjectMug.data.DeletePartnerOrderRequest;
 import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
 import recyclemug.ProjectMug.domain.order.OrderState;
@@ -128,13 +129,13 @@ public class PartnerOrderApiController {
         }
     }
 
-    @DeleteMapping("/partner/cup/order/delete/{orderId}")
+    @DeleteMapping("/partner/cup/order/delete")
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     @ResponseBody
-    public ResponseEntity<CreateOrderResponse> partnerCupOrderDelete(@RequestParam(required = false) Long orderId){
+    public ResponseEntity<CreateOrderResponse> partnerCupOrderDelete(@RequestBody @Valid DeletePartnerOrderRequest request){
         try {
-            partnerOrderService.removeOrder(orderId);
-            log.info("Delete partner's order : " + orderId);
+            partnerOrderService.removeOrder(request.getOrderId());
+            log.info("Delete partner's order : " + request.getOrderId());
             return new ResponseEntity<>(new CreateOrderResponse("success","Delete complete"),HttpStatus.OK);
         }catch(Exception e){
          log.error("Invalid partner's order");

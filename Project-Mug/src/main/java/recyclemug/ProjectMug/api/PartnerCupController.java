@@ -6,28 +6,38 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.data.CreatePartnerCupRequest;
-import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
+import recyclemug.ProjectMug.repository.PartnerCupRepository;
 import recyclemug.ProjectMug.repository.PartnerOrderRepository;
+import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.service.PartnerOrderService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class PartnerCupController {
+    private final PartnerRepository partnerRepository;
     private final PartnerOrderService partnerOrderService;
+    private final PartnerCupRepository partnerCupRepository;
     private final PartnerOrderRepository partnerOrderRepository;
+
+    @GetMapping("/partner-cup/{partnerId}")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    @ResponseBody
+    public List<PartnerCup> getPartnerCup(@RequestParam Long partnerId){
+        Partner partner = partnerRepository.findOne(partnerId);
+        List<PartnerCup> partnerCups = partnerCupRepository.findCupOfPartner(partner);
+        return partnerCups;
+    }
 
     @PostMapping("/partner-cup/add") // partner의 cup 대여 신청을 admin이 승인했을 시 partnerCup 등록
     @PreAuthorize("hasAnyRole('ADMIN')")
