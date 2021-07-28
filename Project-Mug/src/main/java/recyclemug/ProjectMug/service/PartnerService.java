@@ -49,7 +49,11 @@ public class PartnerService {
         } else {
             throw new RuntimeException("You need to check ID or PW");
         }
+    }
 
+    @Transactional
+    public void modifyProfilePicture(String pictureAddress, Partner partner) {
+        partner.setProfilePictureAddress(pictureAddress);
     }
 
     /**
