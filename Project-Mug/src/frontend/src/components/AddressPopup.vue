@@ -57,7 +57,9 @@ export default {
       queryError: "",
       searchData: [],
       addressRoad: "",
-      addressNum: "",
+      addressName: "",
+      lat: "",
+      lng: "",
     };
   },
   methods: {
@@ -88,8 +90,8 @@ export default {
           // place_name:"스타벅스 청주터미널점"
           // place_url:"http://place.map.kakao.com/17127076"
           // road_address_name:"충북 청주시 흥덕구 풍산로 15"
-          // x:"127.432432911263"
-          // y:"36.6263666883092"
+          // x:"127.432432911263" lng
+          // y:"36.6263666883092" lat
           // }
         })
         .catch((apierr) => {
@@ -99,15 +101,25 @@ export default {
     setData(e) {
       console.log("e :>> ", e);
       this.addressRoad = e.road_address_name;
-      this.addressNum = e.phone;
+      this.addressName = e.place_name;
+      this.lat = e.y;
+      this.lng = e.x;
 
       let location = window.opener.document.getElementById("location");
       location.value = this.addressRoad;
       location.dispatchEvent(new Event("input"));
 
-      let location_num = window.opener.document.getElementById("location_num");
-      location_num.value = this.addressNum;
-      location_num.dispatchEvent(new Event("input"));
+      let location_name = window.opener.document.getElementById("location_name");
+      location_name.value = this.addressName;
+      location_name.dispatchEvent(new Event("input"));
+
+      let location_lat = window.opener.document.getElementById("location_lat");
+      location_lat.value = this.lat;
+      location_lat.dispatchEvent(new Event("input"));
+
+      let location_lng = window.opener.document.getElementById("location_lng");
+      location_lng.value = this.lng;
+      location_lng.dispatchEvent(new Event("input"));
 
       window.close();
     },

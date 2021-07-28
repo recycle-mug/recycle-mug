@@ -95,23 +95,27 @@
             class="address-input"
             v-model="formData.joinAddress.address"
           />
-          <button @click.prevent="goPopup" class="address-btn">주소검색</button>
+          <button @click.prevent="goPopup" class="address-btn">매장찾기</button>
         </div>
 
         <div class="address-detail-input-wrapper">
-          <input
+          <!-- <input
             type="text"
             placeholder="우편번호"
             id="location_num"
             readonly
             v-model="formData.joinAddress.addressNum"
-          />
+          /> -->
           <input
             type="text"
-            placeholder="상세 주소"
-            v-model="formData.joinAddress.addressDetail"
+            id="location_name"
+            placeholder="카페 이름"
+            v-model="formData.joinAddress.addressName"
             @keydown.enter.prevent="onSubmitForm"
           />
+
+          <input type="hidden" v-model="formData.joinAddress.addressLat" id="location_lat" />
+          <input type="hidden" v-model="formData.joinAddress.addressLng" id="location_lng" />
         </div>
         <span class="error-msg">{{ errors.joinAddress }}</span>
 
@@ -270,8 +274,9 @@ export default {
         },
         joinAddress: {
           address: "",
-          addressNum: "",
-          addressDetail: "",
+          addressName: "",
+          addressLat: "",
+          addressLng: "",
         },
       },
       errors: {
@@ -333,7 +338,11 @@ export default {
     },
     setValue() {
       this.formData.joinAddress.address = document.getElementById("location").value;
-      this.formData.joinAddress.addressNum = document.getElementById("location_num").value;
+      this.formData.joinAddress.addressName = document.getElementById("location_name").value;
+      this.formData.joinAddress.addressLat = document.getElementById("location_lat").value;
+      this.formData.joinAddress.addressLng = document.getElementById("location_lng").value;
+
+      console.log("this.formData.joinAddress :>> ", this.formData.joinAddress);
     },
     checkRequired() {
       for (const item in this.formData) {
@@ -442,6 +451,7 @@ export default {
       ) {
         // path
         const path = "/backend/join/" + this.formData.role;
+
         const payload = {
           email: this.formData.joinId,
           password: this.formData.joinPw,
@@ -450,13 +460,16 @@ export default {
             this.formData.joinTel.second +
             this.formData.joinTel.third,
           address: this.formData.joinAddress.address,
-          zipcode: this.formData.joinAddress.addressNum,
-          detailAddress: this.formData.joinAddress.addressDetail,
+          businessName: this.formData.joinAddress.addressName,
+          lat: this.formData.joinAddress.addressLat,
+          lng: this.formData.joinAddress.addressLng,
         };
+
         let sendJoinForm = axios.create();
+
         sendJoinForm.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
         sendJoinForm.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
-        console.log("payload :>> ", payload);
+
         await sendJoinForm
           .post(path, payload)
           .then((res) => {

@@ -148,13 +148,6 @@ export default {
 
         const currentCups = axios.create();
 
-        currentCups.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-        currentCups.defaults.headers.common["Access-Control-Allow-Methods"] =
-          "GET,POST,PUT,DELETE,OPTIONS";
-
-        currentCups.defaults.headers.common["Content-Type"] =
-          "application/x-www-form-urlencoded;charset=utf-8";
-
         currentCups
           .get(path)
           .then((res) => {
