@@ -46,6 +46,12 @@ public class CustomerService {
         }
     }
 
+    @Transactional
+    public void modifyProfilePicture(String pictureAddress, Customer customer) {
+        customer.setProfilePictureAddress(pictureAddress);
+    }
+
+
     /**
      * Customer 정보 수정 메서드 parameter 중 password, phoneNumber, nickname 변경
      * @param customer
