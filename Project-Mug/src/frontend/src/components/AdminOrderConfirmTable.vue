@@ -24,9 +24,10 @@
                   <th class="selection-column">
                     <input type="checkbox" name="" id="" @input="checkAll" v-model="allSelected" />
                   </th>
-                  <th class="id">Id</th>
+                  <th class="id">#</th>
                   <th class="customer">Customer</th>
                   <th class="status">Status</th>
+                  <th class="cup">Cup</th>
                   <th class="amount">Amount</th>
                   <th class="date">Date</th>
                   <th class="action">Action</th>
@@ -46,10 +47,11 @@
                       :value="(currentPage - 1) * perPage + index - 1"
                       v-model="orderIds"
                       @click="checkOne"
+                      v-if="entryList[(currentPage - 1) * perPage + index - 1].state === 'waiting'"
                     />
                   </td>
                   <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="id">
-                    <span>1</span>
+                    <span>{{ entryList.length - ((currentPage - 1) * perPage + index - 1) }}</span>
                   </td>
                   <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="customer">
                     <span>{{
@@ -61,6 +63,9 @@
                       :class="['status', entryList[(currentPage - 1) * perPage + index - 1].state]"
                       >{{ entryList[(currentPage - 1) * perPage + index - 1].state }}</span
                     >
+                  </td>
+                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="cup">
+                    <span>{{ entryList[(currentPage - 1) * perPage + index - 1].cupName }}</span>
                   </td>
                   <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="amount">
                     <span>{{
@@ -76,12 +81,14 @@
                     <span
                       class="icon-wrapper submit"
                       @click="submitOrder((currentPage - 1) * perPage + index - 1)"
+                      v-if="entryList[(currentPage - 1) * perPage + index - 1].state === 'waiting'"
                     >
                       <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
                     </span>
                     <span
                       class="icon-wrapper reject"
                       @click="rejectOrder((currentPage - 1) * perPage + index - 1)"
+                      v-if="entryList[(currentPage - 1) * perPage + index - 1].state === 'waiting'"
                     >
                       <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
                     </span>
@@ -200,6 +207,16 @@
                   </button>
                 </li>
               </ul>
+
+              <div class="footer-button-wrapper">
+                <span class="footer-button submit" @click="submitSelectedOrders()">
+                  <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
+                </span>
+
+                <span class="footer-button reject" @click="rejectSelectedOrders()">
+                  <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -298,11 +315,15 @@ export default {
 
       if (!this.allSelected) {
         for (let index = 1; index <= this.perPage; index++) {
-          if (this.entryList[(this.currentPage - 1) * this.perPage + index - 1]) {
+          if (
+            this.entryList[(this.currentPage - 1) * this.perPage + index - 1].state == "waiting"
+          ) {
             this.orderIds.push((this.currentPage - 1) * this.perPage + index - 1);
           }
         }
       }
+
+      console.log("this.orderIds :>> ", this.orderIds);
     },
     checkOne() {
       this.allSelected = false;
@@ -321,41 +342,118 @@ export default {
           this.entryList[entry].state = "canceled";
         }
       }
+
+      this.entryList.reverse();
+      console.log("this.entryList :>> ", this.entryList);
     },
     submitOrder(index) {
-      if (confirm("이 주문을 승인하시겠습니까?")) {
-        const orderId = this.entryList[index].id;
-        const path = `/backend/partner-cup/add`;
+      const cup = this.entryList[index];
 
-        let addOrder = axios.create();
+      if (cup.state === "waiting") {
+        if (confirm(`${cup.cupName} : ${cup.stockQuantity}개\n이 주문을 승인하시겠습니까?`)) {
+          const orderId = cup.id;
+          const path = `/backend/partner-cup/add`;
 
-        addOrder
-          .post(path, { partnerOrderId: orderId })
-          .then((res) => {
-            this.$emit("makeToast", { status: "success", msg: "주문을 승인했습니다." });
-            this.getOrderList();
-          })
-          .catch((err) => {
-            console.log("err :>> ", err);
-          });
+          let addOrder = axios.create();
+
+          addOrder
+            .post(path, { partnerOrderId: orderId })
+            .then(() => {
+              this.$emit("makeToast", { status: "success", msg: "주문을 승인했습니다." });
+              this.getOrderList();
+            })
+            .catch((err) => {
+              console.log("err :>> ", err);
+            });
+        }
       }
     },
     rejectOrder(index) {
-      if (confirm("이 주문을 거절하시겠습니까?")) {
-        const orderId = this.entryList[index].id;
-        const path = `/backend/partner-cup/reject`;
+      const cup = this.entryList[index];
 
-        let rejectOrder = axios.create();
+      if (cup.state === "waiting") {
+        if (confirm(`${cup.cupName} : ${cup.stockQuantity}개\n이 주문을 거절하시겠습니까?`)) {
+          const orderId = cup.id;
+          const path = `/backend/partner-cup/reject`;
 
-        rejectOrder
-          .post(path, { partnerOrderId: orderId })
-          .then((res) => {
-            this.$emit("makeToast", { status: "success", msg: "주문을 거절했습니다." });
-            this.getOrderList();
-          })
-          .catch((err) => {
-            console.log("err :>> ", err);
-          });
+          let rejectOrder = axios.create();
+
+          rejectOrder
+            .post(path, { partnerOrderId: orderId })
+            .then(() => {
+              this.$emit("makeToast", { status: "success", msg: "주문을 거절했습니다." });
+              this.getOrderList();
+            })
+            .catch((err) => {
+              console.log("err :>> ", err);
+            });
+        }
+      }
+    },
+    submitSelectedOrders() {
+      let promises = [];
+
+      if (confirm("선택한 주문을 모두 승인하시겠습니까?")) {
+        for (const orderId of this.orderIds) {
+          const cup = this.entryList[orderId];
+
+          promises.push(
+            new Promise((resolve, reject) => {
+              if (cup.state === "waiting") {
+                const path = "/backend/partner-cup/add";
+
+                let submitCups = axios.create();
+
+                submitCups
+                  .post(path, { partnerOrderId: cup.id })
+                  .then((res) => {
+                    resolve(res.data);
+                  })
+                  .catch((err) => {
+                    console.log("err :>> ", err);
+                  });
+              }
+            }),
+          );
+        }
+
+        Promise.all(promises).then(() => {
+          this.$emit("makeToast", { status: "success", msg: "주문을 모두 승인했습니다." });
+          this.getOrderList();
+        });
+      }
+    },
+    rejectSelectedOrders() {
+      let promises = [];
+
+      if (confirm("선택한 주문을 모두 거부하시겠습니까?")) {
+        for (const orderId of this.orderIds) {
+          const cup = this.entryList[orderId];
+
+          promises.push(
+            new Promise((resolve, reject) => {
+              if (cup.state === "waiting") {
+                const path = "/backend/partner-cup/reject";
+
+                let rejectCups = axios.create();
+
+                rejectCups
+                  .post(path, { partnerOrderId: cup.id })
+                  .then((res) => {
+                    resolve(res.data);
+                  })
+                  .catch((err) => {
+                    console.log("err :>> ", err);
+                  });
+              }
+            }),
+          );
+        }
+
+        Promise.all(promises).then(() => {
+          this.$emit("makeToast", { status: "success", msg: "주문을 모두 거부했습니다." });
+          this.getOrderList();
+        });
       }
     },
   },
@@ -489,14 +587,17 @@ export default {
                     &.status {
                       width: 15%;
                     }
+                    &.cup {
+                      width: 15%;
+                    }
                     &.amount {
                       width: 15%;
                     }
                     &.date {
-                      width: 20%;
+                      width: 15%;
                     }
                     &.action {
-                      width: 20%;
+                      width: 15%;
                     }
                   }
                 }
@@ -599,6 +700,8 @@ export default {
 
               .footer-nav {
                 border-top: 1px solid map-get($map: $theme, $key: "border");
+                display: flex;
+                justify-content: space-between;
 
                 ul {
                   display: flex;
@@ -644,6 +747,51 @@ export default {
                     &.active {
                       background-color: $main-color;
                       color: $white;
+                    }
+                  }
+                }
+
+                .footer-button-wrapper {
+                  display: flex;
+                  align-items: center;
+                  align-items: center;
+                  padding: 1rem 1rem 0 1rem;
+
+                  .footer-button {
+                    margin: 0 5px;
+                    width: 25px;
+                    height: 25px;
+                    border: 1px solid map-get($map: $theme, $key: "border");
+                    border-radius: 6px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    cursor: pointer;
+                    color: $white;
+                    transition: all 0.2s ease;
+
+                    &.submit {
+                      background-color: $main-color;
+
+                      &:hover,
+                      &:active {
+                        background-color: map-get($map: $theme, $key: "content-background");
+                        border: 3px solid $main-color;
+                        color: $main-color;
+                        box-shadow: $shadow;
+                      }
+                    }
+
+                    &.reject {
+                      background-color: $error-msg;
+
+                      &:hover,
+                      &:active {
+                        background-color: map-get($map: $theme, $key: "content-background");
+                        border: 3px solid $error-msg;
+                        color: $error-msg;
+                        box-shadow: $shadow;
+                      }
                     }
                   }
                 }
