@@ -11,35 +11,13 @@
       :navigationClickTargetSize="16"
       class="cup-carousel"
     >
-      <slide class="cup-carousel-item">
+      <slide class="cup-carousel-item" v-for="(cup, index) in partnerCups" :key="index">
         <div class="cup-card">
-          <img src="../assets/test-images/cup-a.png" alt="" />
+          <img :src="'data:image/jpeg;base64,' + cup.image" alt="" />
           <div class="description">
-            <p class="cup-name">Cup A</p>
-            <p>수량 : 50개</p>
-            <p>가격 : 1,000원</p>
-          </div>
-        </div>
-      </slide>
-
-      <slide class="cup-carousel-item">
-        <div class="cup-card">
-          <img src="../assets/test-images/cup-a.png" alt="" />
-          <div class="description">
-            <p class="cup-name">Cup A</p>
-            <p>수량 : 50개</p>
-            <p>가격 : 1,000원</p>
-          </div>
-        </div>
-      </slide>
-
-      <slide class="cup-carousel-item">
-        <div class="cup-card">
-          <img src="../assets/test-images/cup-a.png" alt="" />
-          <div class="description">
-            <p class="cup-name">Cup A</p>
-            <p>수량 : 50개</p>
-            <p>가격 : 1,000원</p>
+            <p class="cup-name">{{ cup.name }}</p>
+            <p>수량 : {{ addComma(cup.stockQuantity) }}개</p>
+            <p>가격 : {{ addComma(cup.price) }}원</p>
           </div>
         </div>
       </slide>
@@ -53,50 +31,14 @@
           <div class="col col-3">매장 내 컵 수량</div>
           <div class="col col-4">개당 가격</div>
         </li>
-        <li class="table-row">
-          <div class="col col-1" data-label="Index">1</div>
+        <li class="table-row" v-for="(cup, index) in partnerCups" :key="index">
+          <div class="col col-1" data-label="Index">{{ index }}</div>
           <div class="col col-2" data-label="컵이름">
             <div class="image-wrapper"><img src="" alt="" /></div>
-            <span>컵 A</span>
+            <span>{{ cup.name }}</span>
           </div>
-          <div class="col col-3" data-label="컵수량">50개</div>
-          <div class="col col-4" data-label="컵가격">1,000원</div>
-        </li>
-        <li class="table-row">
-          <div class="col col-1" data-label="Index">1</div>
-          <div class="col col-2" data-label="컵이름">
-            <div class="image-wrapper"><img src="" alt="" /></div>
-            <span>컵 A</span>
-          </div>
-          <div class="col col-3" data-label="컵수량">50개</div>
-          <div class="col col-4" data-label="컵가격">1,000원</div>
-        </li>
-        <li class="table-row">
-          <div class="col col-1" data-label="Index">1</div>
-          <div class="col col-2" data-label="컵이름">
-            <div class="image-wrapper"><img src="" alt="" /></div>
-            <span>컵 A</span>
-          </div>
-          <div class="col col-3" data-label="컵수량">50개</div>
-          <div class="col col-4" data-label="컵가격">1,000원</div>
-        </li>
-        <li class="table-row">
-          <div class="col col-1" data-label="Index">1</div>
-          <div class="col col-2" data-label="컵이름">
-            <div class="image-wrapper"><img src="" alt="" /></div>
-            <span>컵 A</span>
-          </div>
-          <div class="col col-3" data-label="컵수량">50개</div>
-          <div class="col col-4" data-label="컵가격">1,000원</div>
-        </li>
-        <li class="table-row">
-          <div class="col col-1" data-label="Index">1</div>
-          <div class="col col-2" data-label="컵이름">
-            <div class="image-wrapper"><img src="" alt="" /></div>
-            <span>컵 A</span>
-          </div>
-          <div class="col col-3" data-label="컵수량">50개</div>
-          <div class="col col-4" data-label="컵가격">1,000원</div>
+          <div class="col col-3" data-label="컵수량">{{ addComma(cup.stockQuantity) }}개</div>
+          <div class="col col-4" data-label="컵가격">{{ addComma(cup.price) }}원</div>
         </li>
       </div>
       <div class="table-footer">다음페이지</div>
@@ -118,6 +60,11 @@ export default {
     };
   },
   methods: {
+    addComma(str) {
+      let text = str.toString().replace(/[^0-9]/g, "");
+      const result = text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return result;
+    },
     getPartnerId() {
       const path = "/backend/profile";
 
@@ -151,7 +98,7 @@ export default {
         currentCups
           .get(path)
           .then((res) => {
-            console.log("res.data :>> ", res.data);
+            this.partnerCups = res.data;
           })
           .catch((err) => {
             console.log("err :>> ", err);
@@ -193,6 +140,7 @@ export default {
 
           .cup-card {
             width: 100%;
+            height: 200px;
             border: 1px solid map-get($map: $theme, $key: "border");
             border-radius: 6px;
             padding: 1rem;
@@ -200,6 +148,7 @@ export default {
 
             img {
               width: 150px;
+              object-fit: contain;
             }
 
             .description {

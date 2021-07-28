@@ -99,13 +99,6 @@
         </div>
 
         <div class="address-detail-input-wrapper">
-          <!-- <input
-            type="text"
-            placeholder="우편번호"
-            id="location_num"
-            readonly
-            v-model="formData.joinAddress.addressNum"
-          /> -->
           <input
             type="text"
             id="location_name"
@@ -461,8 +454,8 @@ export default {
             this.formData.joinTel.third,
           address: this.formData.joinAddress.address,
           businessName: this.formData.joinAddress.addressName,
-          lat: this.formData.joinAddress.addressLat,
-          lng: this.formData.joinAddress.addressLng,
+          latitude: this.formData.joinAddress.addressLat,
+          altitude: this.formData.joinAddress.addressLng,
         };
 
         let sendJoinForm = axios.create();

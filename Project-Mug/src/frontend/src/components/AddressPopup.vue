@@ -14,19 +14,6 @@
           @click="setData(searchResult)"
         >
           <div class="card-container">
-            <!-- <div class="card-content">
-              <div class="address-name">
-                <div class="new-address" v-if="searchResult.road_address">
-                  {{ searchResult.road_address.address_name }}
-                </div>
-                <div class="old-address" v-if="searchResult.address">
-                  {{ searchResult.address.address_name }}
-                </div>
-              </div>
-              <div class="address-num" v-if="searchResult.road_address">
-                {{ searchResult.road_address.zone_no }}
-              </div>
-            </div> -->
             <div class="card-content">
               <div class="address-name">
                 <div class="new-address" v-if="searchResult.place_name">
@@ -65,7 +52,6 @@ export default {
   methods: {
     async searchApi() {
       const apiKey = "210e6ee868e2837c5e6d0805cc037348";
-      // const url = "https://dapi.kakao.com/v2/local/search/address.json";
       const url = "https://dapi.kakao.com/v2/local/search/keyword.json";
 
       let kakaoApi = axios.create();
@@ -78,21 +64,6 @@ export default {
         .get(url)
         .then((res) => {
           this.searchData = res.data.documents;
-          console.log("this.searchData :>> ", this.searchData);
-          // searchData[0]: {
-          // address_name:"충북 청주시 흥덕구 가경동 1416-2"
-          // category_group_code:"CE7"
-          // category_group_name:"카페"
-          // category_name:"음식점 > 카페 > 커피전문점 > 스타벅스"
-          // distance : ""
-          // id:"17127076"
-          // phone: "1522-3232"
-          // place_name:"스타벅스 청주터미널점"
-          // place_url:"http://place.map.kakao.com/17127076"
-          // road_address_name:"충북 청주시 흥덕구 풍산로 15"
-          // x:"127.432432911263" lng
-          // y:"36.6263666883092" lat
-          // }
         })
         .catch((apierr) => {
           console.log("apierr :>> ", apierr);
