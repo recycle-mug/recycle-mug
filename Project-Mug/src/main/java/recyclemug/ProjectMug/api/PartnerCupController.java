@@ -9,9 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.data.CreatePartnerCupRequest;
+import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
 import recyclemug.ProjectMug.domain.user.Partner;
+import recyclemug.ProjectMug.dto.PartnerCupResponseDTO;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.PartnerCupRepository;
 import recyclemug.ProjectMug.repository.PartnerOrderRepository;
@@ -19,6 +21,10 @@ import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.service.PartnerOrderService;
 
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -33,8 +39,25 @@ public class PartnerCupController {
     @GetMapping("/partner-cup/{partnerId}")
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     @ResponseBody
-    public List<PartnerCup> getPartnerCup(@PathVariable Long partnerId){
-        return partnerCupRepository.findCupOfPartner(partnerId);
+    public List<PartnerCupResponseDTO> getPartnerCup(@PathVariable Long partnerId) throws IOException {
+        List<PartnerCup> cupOfPartner = partnerCupRepository.findCupOfPartner(partnerId);
+        ArrayList<PartnerCupResponseDTO> partnerCups = new ArrayList<>();
+        for (PartnerCup p : cupOfPartner) {
+            Cup cup = p.getCup();
+            FileInputStream imageStream = new FileInputStream(cup.getProfilePictureAddress());
+            byte[] image = imageStream.readAllBytes();
+            imageStream.close();
+
+            PartnerCupResponseDTO partnerCupResponseDTO = PartnerCupResponseDTO.builder()
+                    .id(p.getId())
+                    .name(cup.getName())
+                    .stockQuantity(p.getStockQuantity())
+                    .image(image)
+                    .price(cup.getPrice())
+                    .build();
+            partnerCups.add(partnerCupResponseDTO);
+        }
+        return partnerCups;
     }
 
     @PostMapping("/partner-cup/add") // partner의 cup 대여 신청을 admin이 승인했을 시 partnerCup 등록
