@@ -53,6 +53,7 @@ public class PartnerOrderApiController {
                     partnerOrder.getPartner().getBusinessName(),
                     partnerOrder.getCup().getName(),
                     partnerOrder.getOrderQuantity(),
+                    partnerOrder.getCup().getPrice(),
                     partnerOrder.getOrderDateTime(),
                     partnerOrder.getOrderState());
             orderListForAdmin.add(dto);
@@ -73,6 +74,7 @@ public class PartnerOrderApiController {
                     partnerOrder.getPartner().getBusinessName(),
                     partnerOrder.getCup().getName(),
                     partnerOrder.getOrderQuantity(),
+                    partnerOrder.getCup().getPrice(),
                     partnerOrder.getOrderDateTime(),
                     partnerOrder.getOrderState());
             orderList.add(dto);
@@ -93,6 +95,7 @@ public class PartnerOrderApiController {
                 partnerOrder.getPartner().getBusinessName(),
                 partnerOrder.getCup().getName(),
                 partnerOrder.getOrderQuantity(),
+                partnerOrder.getCup().getPrice(),
                 partnerOrder.getOrderDateTime(),
                 partnerOrder.getOrderState());
     }
@@ -122,6 +125,7 @@ public class PartnerOrderApiController {
                     order.getPartner().getBusinessName(),
                     order.getCup().getName(),
                     order.getOrderQuantity(),
+                    order.getCup().getPrice(),
                     order.getOrderDateTime(),
                     order.getOrderState());
             stateDto.add(dto);

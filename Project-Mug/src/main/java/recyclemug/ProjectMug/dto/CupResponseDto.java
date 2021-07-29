@@ -11,13 +11,15 @@ public class CupResponseDto {
     private String businessName;
     private String cupName;
     private int stockQuantity;
+    private int price;
     private LocalDateTime orderDateTime;
     private OrderState state;
-    public CupResponseDto(Long id,String businessName, String cupName, int stockQuantity, LocalDateTime orderDateTime, OrderState state){
+    public CupResponseDto(Long id,String businessName, String cupName, int stockQuantity,int price, LocalDateTime orderDateTime, OrderState state){
         this.id = id;
         this.businessName = businessName;
         this.cupName = cupName;
         this.stockQuantity = stockQuantity;
+        this.price = price;
         this.orderDateTime = orderDateTime;
         this.state = state;
     }
