@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import recyclemug.ProjectMug.data.CreateCustomerResponse;
 import recyclemug.ProjectMug.data.CreatePartnerResponse;
 import recyclemug.ProjectMug.data.UpdateProfileImageRequest;
@@ -17,10 +18,13 @@ import recyclemug.ProjectMug.repository.UserRepository;
 import recyclemug.ProjectMug.service.CustomerService;
 import recyclemug.ProjectMug.service.PartnerService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -62,11 +66,31 @@ public class UserController {
     @PatchMapping("/user/customer/profile-image")
     @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     @ResponseBody
-    public ResponseEntity<UpdateUserResponse> updateCustomerProfileImage(@RequestBody UpdateProfileImageRequest request){
+    public ResponseEntity<UpdateUserResponse> updateCustomerProfileImage(@RequestParam MultipartFile file,
+                                                    @ModelAttribute("request") UpdateProfileImageRequest request,
+                                                                         HttpServletRequest httpServletRequest){
         try {
             Customer customer = customerService.findById(request.getUserId());
-            customerService.modifyProfilePicture(request.getPictureAddress(), customer);
+            Date date = new Date();
+            StringBuilder sb = new StringBuilder();
+            String picturePathName = httpServletRequest.getServletContext().getRealPath("/images/users/");
+            if (file.isEmpty()) {
+                sb.append("none");
+            } else {
+                sb.append(date.getTime());
+                sb.append(file.getOriginalFilename());
+            }
+            picturePathName += sb.toString();
+            customerService.modifyProfilePicture(picturePathName, customer);
             log.info("ProfileImage changed. userId : " + request.getUserId());
+            if (!file.isEmpty()) {
+                File dest = new File(picturePathName);
+                try {
+                    file.transferTo(dest);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new ResponseEntity<>(new UpdateUserResponse("success","Profile-image changed!"), HttpStatus.OK);
         } catch(NullPointerException e){
             log.error("Error to change profileImage.(NullpointException) userId : " + request.getUserId());
