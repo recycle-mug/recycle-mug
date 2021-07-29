@@ -31,7 +31,6 @@ public class PartnerApiController {
     @ResponseBody
     public ResponseEntity<CreateJoinResponse> savePartner(@RequestBody @Valid CreatePartnerRequest request, HttpServletRequest httpServletRequest) {
         String pictureAddress = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
-
         try {
             Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
                     request.getBusinessName(), request.getAddress() , request.getLatitude(), request.getAltitude());
@@ -70,6 +69,7 @@ public class PartnerApiController {
         try {
             Partner partner = partnerRepository.findOne(partnerId);
             partnerService.modifyPartnerInfo(partner,partnerModifyDTO);
+            log.info("Partner's info success to update.");
             return new ResponseEntity<>(new UpdateUserResponse("success","Update Partner's info"), HttpStatus.OK);
         }catch(RuntimeException e){
             log.error("Partner's info fail to update (RuntimeException)");
@@ -78,7 +78,6 @@ public class PartnerApiController {
             log.error("Partner's info fail to update (Invalid data)");
             return new ResponseEntity<>(new UpdateUserResponse("fail","Invalid Data"),HttpStatus.BAD_REQUEST);
         }
-
     }
 
     public CreatePartnerResponse createPartnerResponse(Partner partner) throws IOException {
@@ -93,7 +92,6 @@ public class PartnerApiController {
                 .latitude(partner.getLatitude())
                 .longitude(partner.getLongitude())
                 .build();
-
         FileInputStream imageStream = new FileInputStream(partner.getProfilePictureAddress());
         byte[] image = imageStream.readAllBytes();
         imageStream.close();

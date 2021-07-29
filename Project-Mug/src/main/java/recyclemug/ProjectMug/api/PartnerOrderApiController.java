@@ -59,7 +59,26 @@ public class PartnerOrderApiController {
         }
         return orderListForAdmin;
     }
-
+    /**
+     * 특정 partner의 모든 order를 반환
+     */
+    @GetMapping("/partner/orders/{partnerId}")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    @ResponseBody
+    public List<CupResponseDto> getPartnerOrderById(@PathVariable Long partnerId){
+        List<PartnerOrder> orders = partnerOrderRepository.findByPartnerId(partnerId);
+        List<CupResponseDto> orderList = new ArrayList<>();
+        for(PartnerOrder partnerOrder : orders){
+            CupResponseDto dto = new CupResponseDto(partnerOrder.getId(),
+                    partnerOrder.getPartner().getBusinessName(),
+                    partnerOrder.getCup().getName(),
+                    partnerOrder.getOrderQuantity(),
+                    partnerOrder.getOrderDateTime(),
+                    partnerOrder.getOrderState());
+            orderList.add(dto);
+        }
+        return orderList;
+    }
     /**
      * Partner가 admin에게 주문한 컵,컵 개수, 주문 날짜들을 1개 반환
      * @param orderId
