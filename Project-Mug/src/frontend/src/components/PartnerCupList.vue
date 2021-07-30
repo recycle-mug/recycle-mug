@@ -59,55 +59,30 @@ export default {
       partnerCups: null,
     };
   },
+  props: ["partnerId"],
   methods: {
     addComma(str) {
       let text = str.toString().replace(/[^0-9]/g, "");
       const result = text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return result;
     },
-    getPartnerId() {
-      const path = "/backend/profile";
+    getCurrentCups() {
+      const path = `/backend/partner-cup/${this.partnerId}`;
 
-      const { accessToken } = localStorage;
+      const currentCups = axios.create();
 
-      if (accessToken) {
-        const partner = axios.create();
-
-        partner
-          .get(path)
-          .then((res) => {
-            if (res.data.error) {
-              throw res.data.error;
-            } else {
-              this.getCurrentCups(res.data.id);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            alert(error);
-            localStorage.removeItem("accessToken");
-          });
-      }
-    },
-    getCurrentCups(id) {
-      if (id) {
-        const path = `/backend/partner-cup/${id}`;
-
-        const currentCups = axios.create();
-
-        currentCups
-          .get(path)
-          .then((res) => {
-            this.partnerCups = res.data;
-          })
-          .catch((err) => {
-            console.log("err :>> ", err);
-          });
-      }
+      currentCups
+        .get(path)
+        .then((res) => {
+          this.partnerCups = res.data;
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
     },
   },
   mounted() {
-    this.getPartnerId();
+    this.getCurrentCups();
   },
 };
 </script>

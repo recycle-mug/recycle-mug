@@ -77,7 +77,21 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      orderList: [],
+    };
+  },
+  methods: {
+    getOrders() {
+      // const path =
+    },
+  },
+  mounted() {
+    this.getOrders();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
