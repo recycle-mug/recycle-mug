@@ -88,16 +88,7 @@ export default {
   data() {
     return {
       userInfo: {},
-      editForm: {
-        password: "",
-        phoneNumber: "",
-        nickname: "",
-        address: "",
-        registrationNumber: "",
-        businessName: "",
-        latitude: "",
-        longitude: "",
-      },
+      editForm: {},
       imgSrc: "",
       imgFile: null,
       imgErr: "",
@@ -128,6 +119,7 @@ export default {
           .get(path)
           .then((res) => {
             this.userInfo = res.data;
+            this.editForm = this.userInfo;
             this.userInfo.phoneNumber = this.formatPhoneNumber(this.userInfo.phoneNumber);
           })
           .catch((error) => {
@@ -196,7 +188,7 @@ export default {
         },
       };
 
-      imageForm.post(path, imageFormData, config).then((res) => {
+      imageForm.patch(path, imageFormData, config).then((res) => {
         this.imgChanged = false;
         console.log("res :>> ", res);
       });
@@ -206,11 +198,9 @@ export default {
       const path = `/backend/${this.userRole}/${this.userId}`;
 
       let editUser = axios.create();
-      editUser.defaults.headers.common["Access-Control-Allow-Methods"] =
-        "GET,POST,PUT,DELETE,OPTIONS,PATCH";
 
       editUser
-        .post(path, this.editForm)
+        .patch(path, this.editForm)
         .then((res) => {
           console.log("res.data :>> ", res.data);
         })
