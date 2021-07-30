@@ -18,7 +18,7 @@
 
       <div class="row">
         <div>tel :</div>
-        <div class="value">{{ userInfo.phoneNumber }}</div>
+        <div class="value">{{ formatPhoneNumber(userInfo.phoneNumber) }}</div>
         <input
           type="text"
           :value="userInfo.phoneNumber.replace(/\D/g, '')"
@@ -120,7 +120,6 @@ export default {
           .then((res) => {
             this.userInfo = res.data;
             this.editForm = this.userInfo;
-            this.userInfo.phoneNumber = this.formatPhoneNumber(this.userInfo.phoneNumber);
           })
           .catch((error) => {
             console.error(error);
@@ -196,6 +195,7 @@ export default {
     onSubmit() {
       console.log("this.editForm :>> ", this.editForm);
       const path = `/backend/${this.userRole}/${this.userId}`;
+      this.editForm.phoneNumber = this.editForm.phoneNumber.replace(/\D/g, "");
 
       let editUser = axios.create();
 
