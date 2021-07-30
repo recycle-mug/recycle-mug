@@ -103,11 +103,31 @@ public class UserController {
 
     @PatchMapping("/user/partner/profile-image")
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
-    public ResponseEntity<UpdateUserResponse> updatePartnerProfileImage(@RequestBody UpdateProfileImageRequest request){
+    public ResponseEntity<UpdateUserResponse> updatePartnerProfileImage(@RequestParam MultipartFile file,
+                                                                        @ModelAttribute("request") UpdateProfileImageRequest request,
+                                                                        HttpServletRequest httpServletRequest){
         try{
             Partner partner = partnerService.findById(request.getUserId());
-            partnerService.modifyProfilePicture(request.getPictureAddress(),partner);
+            Date date = new Date();
+            StringBuilder sb = new StringBuilder();
+            String picturePathName = httpServletRequest.getServletContext().getRealPath("/images/users/");
+            if (file.isEmpty()) {
+                sb.append("none");
+            } else {
+                sb.append(date.getTime());
+                sb.append(file.getOriginalFilename());
+            }
+            picturePathName += sb.toString();
+            partnerService.modifyProfilePicture(picturePathName,partner);
             log.info("ProfileImage changed. userId : " + request.getUserId());
+            if (!file.isEmpty()) {
+                File dest = new File(picturePathName);
+                try {
+                    file.transferTo(dest);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             return new ResponseEntity<>(new UpdateUserResponse("success","Profile-image changed!"),HttpStatus.OK);
         } catch(NullPointerException e){
             log.error("Error to change profileImage.(NullpointException) userId : " + request.getUserId());
