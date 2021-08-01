@@ -77,15 +77,27 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
       orderList: [],
     };
   },
+  props: ["partnerId"],
   methods: {
     getOrders() {
-      // const path =
+      const path = `/backend/partner/orders/${this.partnerId}`;
+      let orders = axios.create();
+
+      orders
+        .get(path)
+        .then((res) => {
+          console.log("res :>> ", res);
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
     },
   },
   mounted() {
