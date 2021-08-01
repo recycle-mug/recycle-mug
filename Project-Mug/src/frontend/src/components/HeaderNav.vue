@@ -122,8 +122,12 @@ export default {
               throw res.data.error;
             } else {
               this.isLogin = true;
-              this.username = res.data.id;
+              this.username = res.data.nickname;
               this.profileImg = res.data.profilePicture;
+
+              if (this.username === "") {
+                this.username = "익명";
+              }
             }
           })
           .catch((error) => {

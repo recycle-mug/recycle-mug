@@ -4,7 +4,7 @@
       <form id="form">
         <div class="input-form">
           <input type="text" v-model="query" ref="input" />
-          <button @click.prevent="searchApi">주소 검색</button>
+          <button @click.prevent="searchApi">매장찾기</button>
         </div>
         <div class="input-form-error">{{ queryError }}</div>
         <div
@@ -161,7 +161,7 @@ export default {
             border-radius: 20px;
             font-weight: bold;
             border: 1px solid $main-color;
-            padding: 0.5rem 1rem;
+            padding: 0;
             cursor: pointer;
             width: 20%;
             box-shadow: $shadow-lighter;
