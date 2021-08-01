@@ -63,8 +63,10 @@ public class PartnerService {
      */
     @Transactional
     public void modifyPartnerInfo(Partner partner, PartnerModifyDTO partnerDTO) {
-        if (validatePassword(partnerDTO.getPassword())) {
-            partner.setPassword("{noop}" + partnerDTO.getPassword());
+        if (validatePassword(partnerDTO.getPassword()) || partnerDTO.getPassword().equals("")) {
+            if (!partnerDTO.getPassword().equals("")) {
+                partner.setPassword("{noop}" + partnerDTO.getPassword());
+            }
             partner.setPhoneNumber(partnerDTO.getPhoneNumber());
             partner.setNickname(partnerDTO.getNickname());
             partner.setAddress(partnerDTO.getAddress());

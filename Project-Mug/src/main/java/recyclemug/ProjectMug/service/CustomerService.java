@@ -59,8 +59,10 @@ public class CustomerService {
      */
     @Transactional
     public void modifyCustomerInfo(Customer customer, CustomerModifyDTO customerDTO) throws RuntimeException{
-        if (validatePassword(customerDTO.getPassword())) {
-            customer.setPassword("{noop}" + customerDTO.getPassword());
+        if (validatePassword(customerDTO.getPassword()) || customerDTO.getPassword().equals("")) {
+            if (!customerDTO.getPassword().equals("")) {
+                customer.setPassword("{noop}" + customerDTO.getPassword());
+            }
             customer.setPhoneNumber(customerDTO.getPhoneNumber());
             customer.setNickname(customerDTO.getNickname());
         } else {

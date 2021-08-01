@@ -81,6 +81,7 @@ public class PartnerOrderRepository {
 
     public List<PartnerOrder> findByPartnerId(Long partnerId) {
         String query = "SELECT po FROM PartnerOrder po INNER JOIN po.partner p WHERE p.id=:partnerId";
-        return em.createQuery(query, PartnerOrder.class).getResultList();
+        return em.createQuery(query, PartnerOrder.class)
+                .setParameter("partnerId", partnerId).getResultList();
     }
 }
