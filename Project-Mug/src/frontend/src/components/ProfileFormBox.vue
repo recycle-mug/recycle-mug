@@ -320,32 +320,42 @@ export default {
       }
     },
     checkChanged() {
-      for (let item in this.changed) {
-        if (item === "password") {
-          if (this.editForm.password.length > 0) {
-            this.changed.password = true;
-          } else {
-            this.changed.password = false;
-          }
-        } else if (item === "passwordCheck") {
-          if (this.editForm.passwordCheck.length > 0) {
-            this.changed.passwordCheck = true;
-          } else {
-            this.changed.passwordCheck = false;
-          }
-        } else if (item === "phoneNumber") {
-          let tel = this.tel.first + this.tel.second + this.tel.third;
-          if (this.userInfo[item] !== tel) {
-            this.changed[item] = true;
-          } else {
-            this.changed[item] = false;
-          }
+      if (this.userInfo.nickname !== this.editForm.nickname) {
+        this.changed.nickname = true;
+      } else {
+        this.changed.nickname = false;
+      }
+
+      if (this.editForm.password.length > 0) {
+        this.changed.password = true;
+      } else {
+        this.changed.password = false;
+      }
+
+      if (this.editForm.passwordCheck.length > 0) {
+        this.changed.passwordCheck = true;
+      } else {
+        this.changed.passwordCheck = false;
+      }
+
+      let tel = this.tel.first + this.tel.second + this.tel.third;
+      if (this.userInfo.phoneNumber !== tel) {
+        this.changed.phoneNumber = true;
+      } else {
+        this.changed.phoneNumber = false;
+      }
+
+      if (this.userRole === "partner") {
+        if (this.userInfo.address !== this.editForm.address) {
+          this.changed.address = true;
         } else {
-          if (this.userInfo[item] !== this.editForm[item]) {
-            this.changed[item] = true;
-          } else {
-            this.changed[item] = false;
-          }
+          this.changed.address = false;
+        }
+
+        if (this.userInfo.businessName !== this.editForm.businessName) {
+          this.changed.businessName = true;
+        } else {
+          this.changed.businessName = false;
         }
       }
     },
@@ -463,7 +473,6 @@ export default {
 
       imageForm.patch(path, imageFormData, config).then((res) => {
         this.imgChanged = false;
-        console.log("res :>> ", res);
       });
     },
     onSubmit() {
