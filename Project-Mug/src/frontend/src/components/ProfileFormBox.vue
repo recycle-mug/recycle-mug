@@ -19,20 +19,21 @@
     </div>
     <div class="form-wrapper" v-if="writingMode">
       <h1>내 정보 수정하기</h1>
-      <div class="row">
+      <div class="row" :class="{ changed: changed.nickname }">
         <div class="category">닉네임</div>
         <input
           type="text"
-          v-model="userInfo.nickname"
+          v-model="editForm.nickname"
           @input="editForm.nickname = $event.target.value"
           placeholder="새 닉네임"
           maxlength="20"
           @keydown.enter.prevent="nextInput"
           @keyup="checkNickname()"
+          @change="checkChanged"
         /><span class="error-msg">{{ errors.nickname }}</span>
       </div>
 
-      <div class="row">
+      <div class="row" :class="{ changed: changed.password }">
         <div class="category">새 비밀번호</div>
         <input
           type="password"
@@ -40,10 +41,11 @@
           @keydown.enter.prevent="nextInput"
           @blur="checkPassword"
           placeholder="새 비밀번호"
+          @change="checkChanged"
         /><span class="error-msg">{{ errors.password }}</span>
       </div>
 
-      <div class="row">
+      <div class="row" :class="{ changed: changed.passwordCheck }">
         <div class="category">새 비밀번호 확인</div>
         <input
           type="password"
@@ -51,10 +53,11 @@
           @keydown.enter.prevent="telInput"
           @blur="checkPasswordCheck"
           placeholder="새 비밀번호 확인"
+          @change="checkChanged"
         /><span class="error-msg">{{ errors.passwordCheck }}</span>
       </div>
 
-      <div class="row">
+      <div class="row" :class="{ changed: changed.phoneNumber }">
         <div class="category">tel</div>
         <div class="num-input-wrapper">
           <input
@@ -65,6 +68,7 @@
             placeholder="010"
             @keydown.enter.prevent="nextTelInput()"
             @keyup="limitNumber"
+            @change="checkChanged"
           />
           <div class="num-input-connector">
             <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
@@ -77,6 +81,7 @@
             placeholder="0000"
             @keydown.enter.prevent="nextTelInput()"
             @keyup="limitNumber"
+            @change="checkChanged"
           />
           <div class="num-input-connector">
             <font-awesome-icon :icon="['fas', 'minus']"></font-awesome-icon>
@@ -87,13 +92,14 @@
             class="num-input"
             v-model="tel.third"
             placeholder="0000"
-            @keydown.enter.prevent="userRole === 'customer' ? onSubmit : nextInput"
+            @keydown.enter.prevent="userRole === 'customer' ? onSubmit() : goPopup()"
             @keyup="limitNumber"
+            @change="checkChanged"
           />
         </div>
       </div>
 
-      <div class="row" v-if="userInfo.address">
+      <div class="row" v-if="userInfo.address" :class="{ changed: changed.address }">
         <div class="category">주소</div>
         <input
           type="text"
@@ -103,10 +109,11 @@
           @click.prevent="goPopup"
           class="address-input"
           v-model="editForm.address"
+          @input="checkChanged"
         />
       </div>
 
-      <div class="row" v-if="userInfo.businessName">
+      <div class="row" v-if="userInfo.businessName" :class="{ changed: changed.businessName }">
         <div class="category">매장 명</div>
         <input
           type="text"
@@ -114,10 +121,15 @@
           placeholder="카페 이름"
           v-model="editForm.businessName"
           @keydown.enter.prevent="onSubmitForm"
+          readonly
+          @input="checkChanged"
         />
+        <input type="hidden" v-model="editForm.latitude" id="location_lat" />
+        <input type="hidden" v-model="editForm.longitude" id="location_lng" />
       </div>
 
       <div class="btn-row">
+        <button class="undo-btn" @click.prevent="routerHistoryGo">뒤로가기</button>
         <button @click.prevent="onSubmit()">수정완료</button>
       </div>
     </div>
@@ -184,6 +196,8 @@ export default {
         phoneNumber: "",
         address: "",
         businessName: "",
+        latitude: "",
+        longitude: "",
       },
       imgSrc: "",
       imgFile: null,
@@ -201,11 +215,20 @@ export default {
         passwordCheck: "",
         tel: "",
       },
+      changed: {
+        nickname: false,
+        password: false,
+        passwordCheck: false,
+        phoneNumber: false,
+        address: false,
+        businessName: false,
+      },
     };
   },
   props: ["userRole", "userId", "user"],
   components: { FontAwesomeIcon },
   methods: {
+    nextInputOrSubmit() {},
     telInput() {
       event.target.parentElement.nextElementSibling.children[1].children[0].focus();
     },
@@ -295,6 +318,44 @@ export default {
       } catch (error) {
         this.errors.passwordCheck = error;
       }
+    },
+    checkChanged() {
+      for (let item in this.changed) {
+        if (item === "password") {
+          if (this.editForm.password.length > 0) {
+            this.changed.password = true;
+          } else {
+            this.changed.password = false;
+          }
+        } else if (item === "passwordCheck") {
+          if (this.editForm.passwordCheck.length > 0) {
+            this.changed.passwordCheck = true;
+          } else {
+            this.changed.passwordCheck = false;
+          }
+        } else if (item === "phoneNumber") {
+          let tel = this.tel.first + this.tel.second + this.tel.third;
+          if (this.userInfo[item] !== tel) {
+            this.changed[item] = true;
+          } else {
+            this.changed[item] = false;
+          }
+        } else {
+          if (this.userInfo[item] !== this.editForm[item]) {
+            this.changed[item] = true;
+          } else {
+            this.changed[item] = false;
+          }
+        }
+      }
+    },
+    goPopup() {
+      const routeData = this.$router.resolve({ name: "address" });
+      this.popup = window.open(
+        routeData.href,
+        "pop",
+        "width=570, height=420,scrollbars=yes,resizable=yes",
+      );
     },
     getProfile() {
       const path = `/backend/${this.userRole}/${this.userId}`;
@@ -406,22 +467,69 @@ export default {
       });
     },
     onSubmit() {
-      const path = `/backend/${this.userRole}/${this.userId}`;
+      this.checkPasswordCheck();
+      if (
+        !this.errors.nickname &&
+        !this.errors.password &&
+        !this.errors.passwordCheck &&
+        !this.errors.phoneNumber &&
+        !this.errors.address &&
+        !this.errors.businessName
+      ) {
+        const path = `/backend/${this.userRole}/${this.userId}`;
 
-      let editUser = axios.create();
+        let editUser = axios.create();
 
-      let payload = this.editForm;
+        let payload = {};
 
-      payload.phoneNumber = this.tel.first + this.tel.second + this.tel.third;
+        if (this.changed.nickname === true) {
+          payload.nickname = this.editForm.nickname;
+        }
+        if (this.changed.password === true && this.changed.passwordCheck) {
+          payload.password = this.editForm.password;
+        }
+        if (this.changed.phoneNumber === true) {
+          payload.phoneNumber = this.tel.first + this.tel.second + this.tel.third;
+        }
+        if (this.changed.address === true) {
+          payload.address = this.editForm.address;
+          payload.businessName = this.editForm.businessName;
+          payload.latitude = this.editForm.latitude;
+          payload.longitude = this.editForm.longitude;
+        }
 
-      editUser
-        .patch(path, this.editForm)
-        .then((res) => {
-          console.log("res.data :>> ", res.data);
-        })
-        .catch((err) => {
-          console.log("err :>> ", err);
-        });
+        editUser
+          .patch(path, this.editForm)
+          .then((res) => {
+            this.writingMode = false;
+            this.getProfile();
+            this.$emit("makeToast", { status: "success", msg: "프로필 정보를 수정했습니다." });
+          })
+          .catch((err) => {
+            console.log("err :>> ", err);
+          });
+      }
+    },
+    routerHistoryGo() {
+      let isChanged = false;
+      if (this.imgChanged === true) {
+        isChanged = true;
+      } else {
+        for (let item in this.changed) {
+          if (this.changed[item] === true) {
+            isChanged = true;
+            break;
+          }
+        }
+      }
+
+      if (isChanged) {
+        if (confirm("변경사항을 저장하지 않고 나가시겠습니까?")) {
+          this.writingMode = false;
+        }
+      } else {
+        this.writingMode = false;
+      }
     },
   },
   mounted() {
@@ -572,6 +680,12 @@ export default {
       margin-bottom: 1rem;
       position: relative;
 
+      &.changed {
+        input {
+          border: 2px solid $main-color;
+        }
+      }
+
       .category {
         text-align: right;
         padding: 1rem 1rem 1rem 0;
@@ -652,6 +766,12 @@ export default {
           }
         }
       }
+
+      .address-input {
+        cursor: pointer;
+        background-color: map-get($map: $theme, $key: "content-blocked");
+        user-select: none;
+      }
     }
 
     .btn-row {
@@ -659,6 +779,13 @@ export default {
       width: 100%;
       justify-content: flex-end;
       display: flex;
+
+      .undo-btn {
+        margin-right: 1rem;
+        background-color: map-get($map: $theme, $key: "background");
+        border: 1px solid $main-color;
+        color: map-get($map: $theme, $key: "text");
+      }
     }
 
     button {

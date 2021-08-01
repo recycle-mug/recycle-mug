@@ -1,8 +1,14 @@
 <template>
   <div :class="getTheme">
     <header-nav></header-nav>
+    <toast-message v-if="onToast" :status="toastStatus" :msg="toastMessage"></toast-message>
     <div class="content-body">
-      <profile-form-box v-if="getUserInfo" :userRole="userRole" :userId="userId"></profile-form-box>
+      <profile-form-box
+        v-if="getUserInfo"
+        :userRole="userRole"
+        :userId="userId"
+        @makeToast="onToastMessage"
+      ></profile-form-box>
     </div>
   </div>
 </template>
@@ -10,6 +16,8 @@
 <script>
 import HeaderNav from "../components/HeaderNav";
 import ProfileFormBox from "../components/ProfileFormBox.vue";
+import ToastMessage from "../components/ToastMessage.vue";
+
 import axios from "axios";
 
 export default {
@@ -18,9 +26,12 @@ export default {
       userRole: "",
       userId: "",
       getUserInfo: false,
+      onToast: false,
+      toastStatus: "",
+      toastMessage: "",
     };
   },
-  components: { HeaderNav, ProfileFormBox },
+  components: { HeaderNav, ProfileFormBox, ToastMessage },
   computed: {
     getTheme() {
       return this.$store.state.theme;
@@ -68,6 +79,17 @@ export default {
             console.error(error);
           });
       }
+    },
+    onToastMessage({ status, msg }) {
+      this.toastStatus = status;
+      this.toastMessage = msg;
+      this.onToast = true;
+
+      setTimeout(() => {
+        this.onToast = false;
+        this.toastStatus = "";
+        this.toastMessage = "";
+      }, 5000);
     },
   },
   mounted() {
