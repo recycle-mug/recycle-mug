@@ -133,7 +133,7 @@ public class PartnerOrderApiController {
         return stateDto;
     }
 
-    @PostMapping("/partner/cup/order")
+    @PostMapping("/partner/cup/order") // partner가 admin한테 cup 발주 신청
     @PreAuthorize("hasAnyRole('ADMIN', 'PARTNER')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> partnerCupOrder(@RequestBody @Valid CreateOrderRequest request){
@@ -152,7 +152,7 @@ public class PartnerOrderApiController {
         }
     }
 
-    @DeleteMapping("/partner/cup/order/delete")
+    @DeleteMapping("/partner/cup/order/delete") // partnerorder 삭제
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> partnerCupOrderDelete(@RequestBody @Valid DeletePartnerOrderRequest request){
