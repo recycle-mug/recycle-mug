@@ -73,7 +73,7 @@ export default {
     return {
       theme: this.getTheme,
       isActive: "",
-      username: "",
+      username: "익명",
       isLogin: false,
       dropDown: false,
       profileImg: "",
@@ -104,7 +104,7 @@ export default {
       const { accessToken } = localStorage;
       if (!accessToken) {
         this.isLogin = false;
-        this.username = "";
+        this.username = "익명";
       } else {
         const authUser = axios.create({ baseUrl: path });
         authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
@@ -125,7 +125,7 @@ export default {
               this.username = res.data.nickname;
               this.profileImg = res.data.profilePicture;
 
-              if (this.username === "") {
+              if (this.username === null) {
                 this.username = "익명";
               }
             }
