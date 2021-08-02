@@ -27,7 +27,7 @@ public class PartnerApiController {
 
     private final PartnerService partnerService;
     private final PartnerRepository partnerRepository;
-    @PostMapping("/join/partner")
+    @PostMapping("/join/partner") // partner 회원 가입
     @ResponseBody
     public ResponseEntity<CreateJoinResponse> savePartner(@RequestBody @Valid CreatePartnerRequest request, HttpServletRequest httpServletRequest) {
         String pictureAddress = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
@@ -45,7 +45,7 @@ public class PartnerApiController {
         return null;
     }
 
-    @GetMapping("/partner/{partnerId}")
+    @GetMapping("/partner/{partnerId}") // 특정 partner 정보 호출
     @PreAuthorize("hasAnyRole('ADMIN', 'PARTNER')")
     @ResponseBody
     public CreatePartnerResponse getPartner(@PathVariable Long partnerId) {
@@ -62,7 +62,7 @@ public class PartnerApiController {
         }
         return null;
     }
-    @PatchMapping("/partner/{partnerId}")
+    @PatchMapping("/partner/{partnerId}") // partner 회원 정보 수정
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     @ResponseBody
     public ResponseEntity<UpdateUserResponse> updatePartner(@PathVariable Long partnerId, @RequestBody @Valid PartnerModifyDTO partnerModifyDTO){

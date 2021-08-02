@@ -25,7 +25,7 @@ public class CustomerApiController {
 
     private final CustomerService customerService;
 
-    @PostMapping("/join/customer")
+    @PostMapping("/join/customer") // Customer 회원 가입
     @ResponseBody
     public CreateJoinResponse saveCustomer(@RequestBody @Valid CreateCustomerRequest request,
                                                HttpServletRequest httpServletRequest) {
@@ -42,7 +42,7 @@ public class CustomerApiController {
         return null;
     }
 
-    @GetMapping("/customer/{customerId}")
+    @GetMapping("/customer/{customerId}") // 특정 Customer 정보 호출
     @PreAuthorize("hasAnyRole('ADMIN', 'CUSTOMER')")
     @ResponseBody
     public CreateCustomerResponse getCustomer(@PathVariable Long customerId) {
