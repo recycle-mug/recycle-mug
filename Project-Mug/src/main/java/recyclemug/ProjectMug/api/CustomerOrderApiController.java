@@ -67,7 +67,7 @@ public class CustomerOrderApiController {
         }
     }
 
-    @GetMapping("/customer/return-cup/normal")
+    @GetMapping("/customer/return-cup/normal") // customer가 일반적인 cup 반납 UI 접속
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     @ResponseBody
     public CustomerReturnDto returnPartnerCupNormalDTO(@RequestParam Long partnerId){
@@ -75,7 +75,7 @@ public class CustomerOrderApiController {
         return new CustomerReturnDto(partnerId,partner.getBusinessName(),"safe");
     }
 
-    @PostMapping("/customer/return-cup/normal")
+    @PostMapping("/customer/return-cup/normal") // customer cup 반납
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> returnPartnerCupNormal(@RequestBody @Valid CreateReturnRequest request){

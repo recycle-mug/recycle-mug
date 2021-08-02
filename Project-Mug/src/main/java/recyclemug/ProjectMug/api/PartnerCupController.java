@@ -36,7 +36,7 @@ public class PartnerCupController {
     private final PartnerCupRepository partnerCupRepository;
     private final PartnerOrderRepository partnerOrderRepository;
 
-    @GetMapping("/partner-cup/{partnerId}")
+    @GetMapping("/partner-cup/{partnerId}") // 특정 partner의 컵 목록
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     @ResponseBody
     public List<PartnerCupResponseDTO> getPartnerCup(@PathVariable Long partnerId) throws IOException {

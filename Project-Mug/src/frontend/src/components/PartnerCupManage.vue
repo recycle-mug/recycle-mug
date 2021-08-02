@@ -24,16 +24,21 @@
     <!-- 매장 내 컵 현황 -->
     <div class="card-wrapper" v-if="radioInput === 'PartnerCupList'">
       <div class="card">
-        <partner-cup-list></partner-cup-list>
+        <partner-cup-list v-if="partnerId" :partnerId="partnerId"></partner-cup-list>
       </div>
     </div>
 
     <div class="card-wrapper" v-else-if="radioInput === 'PartnerOrderList'">
       <!-- 발주 신청하기 -->
-      <partner-order-cup @makeToast="makeToast" @modeSwitch="switchMode"></partner-order-cup>
+      <partner-order-cup
+        :partnerId="partnerId"
+        @makeToast="makeToast"
+        @modeSwitch="switchMode"
+        v-if="partnerId"
+      ></partner-order-cup>
       <!-- 발주 신청 내역 -->
       <div class="card">
-        <partner-order-list></partner-order-list>
+        <partner-order-list :partnerId="partnerId"></partner-order-list>
       </div>
     </div>
   </div>
@@ -44,10 +49,13 @@ import PartnerCupList from "./PartnerCupList.vue";
 import PartnerOrderCup from "./PartnerOrderCup.vue";
 import PartnerOrderList from "./PartnerOrderList.vue";
 
+import axios from "axios";
+
 export default {
   data() {
     return {
       radioInput: "PartnerCupList",
+      partnerId: null,
     };
   },
   components: { PartnerCupList, PartnerOrderCup, PartnerOrderList },
@@ -58,8 +66,33 @@ export default {
     switchMode() {
       this.radioInput = "PartnerCupList";
     },
+    getPartnerId() {
+      const path = "/backend/profile";
+
+      const { accessToken } = localStorage;
+      if (accessToken) {
+        const authUser = axios.create();
+
+        authUser
+          .get(path)
+          .then((res) => {
+            if (res.data.error) {
+              throw res.data.error;
+            } else {
+              this.partnerId = res.data.id;
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert(error);
+            localStorage.removeItem("accessToken");
+          });
+      }
+    },
   },
-  mounted() {},
+  mounted() {
+    this.getPartnerId();
+  },
 };
 </script>
 

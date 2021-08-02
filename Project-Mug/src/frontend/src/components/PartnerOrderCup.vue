@@ -63,69 +63,28 @@ export default {
     return {
       selectedCup: "",
       quantity: null,
-      partnerId: null,
       cups: [],
       errorMsg: "",
     };
   },
+  props: ["partnerId"],
   methods: {
     selectCup(e) {
       this.selectedCup = e.target.id;
     },
     getAllCups() {
-      const { accessToken } = localStorage;
+      const path = "/backend/get-all-cups";
 
-      if (accessToken) {
-        const path = "/backend/get-all-cups";
+      let cupList = axios.create();
 
-        let cupList = axios.create();
-
-        cupList.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-        cupList.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-        cupList.defaults.headers.common["Access-Control-Allow-Methods"] =
-          "GET,POST,PUT,DELETE,OPTIONS";
-        cupList.defaults.headers.common["Content-Type"] =
-          "application/x-www-form-urlencoded;charset=utf-8";
-
-        cupList
-          .get(path)
-          .then((res) => {
-            this.cups = res.data;
-          })
-          .catch((err) => {
-            console.log("err :>> ", err);
-          });
-      }
-    },
-    getPartnerId() {
-      const path = "/backend/profile";
-
-      const { accessToken } = localStorage;
-      if (accessToken) {
-        const authUser = axios.create({ baseUrl: path });
-        authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-        authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-        authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
-          "GET,POST,PUT,DELETE,OPTIONS";
-
-        authUser.defaults.headers.common["Content-Type"] =
-          "application/x-www-form-urlencoded;charset=utf-8";
-
-        authUser
-          .get(path)
-          .then((res) => {
-            if (res.data.error) {
-              throw res.data.error;
-            } else {
-              this.partnerId = res.data.id;
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            alert(error);
-            localStorage.removeItem("accessToken");
-          });
-      }
+      cupList
+        .get(path)
+        .then((res) => {
+          this.cups = res.data;
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
     },
     orderCup(cupId, partnerId, stockQuantity) {
       const path = "/backend/partner/cup/order";
@@ -135,17 +94,7 @@ export default {
         stockQuantity: parseInt(stockQuantity),
       };
 
-      console.log("payload :>> ", payload);
-      const { accessToken } = localStorage;
-
       let orderCup = axios.create();
-
-      orderCup.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-      orderCup.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      orderCup.defaults.headers.common["Access-Control-Allow-Methods"] =
-        "GET,POST,PUT,DELETE,OPTIONS";
-      orderCup.defaults.headers.common["Content-Type"] =
-        "application/x-www-form-urlencoded;charset=utf-8";
 
       orderCup
         .post(path, payload)
@@ -176,10 +125,7 @@ export default {
     },
   },
   mounted() {
-    if (localStorage.getItem("accessToken")) {
-      this.getAllCups();
-      this.getPartnerId();
-    }
+    this.getAllCups();
   },
 };
 </script>

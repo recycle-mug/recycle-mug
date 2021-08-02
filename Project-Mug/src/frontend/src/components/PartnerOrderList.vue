@@ -77,7 +77,33 @@
 </template>
 
 <script>
-export default {};
+import axios from "axios";
+export default {
+  data() {
+    return {
+      orderList: [],
+    };
+  },
+  props: ["partnerId"],
+  methods: {
+    getOrders() {
+      const path = `/backend/partner/orders/${this.partnerId}`;
+      let orders = axios.create();
+
+      orders
+        .get(path)
+        .then((res) => {
+          console.log("res :>> ", res);
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
+    },
+  },
+  mounted() {
+    this.getOrders();
+  },
+};
 </script>
 
 <style lang="scss" scoped>
