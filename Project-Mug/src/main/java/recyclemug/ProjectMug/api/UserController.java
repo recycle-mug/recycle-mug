@@ -14,6 +14,8 @@ import recyclemug.ProjectMug.data.UpdateUserResponse;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.domain.user.User;
+import recyclemug.ProjectMug.dto.CustomerResponseDto;
+import recyclemug.ProjectMug.dto.PartnerResponseDto;
 import recyclemug.ProjectMug.repository.UserRepository;
 import recyclemug.ProjectMug.service.CustomerService;
 import recyclemug.ProjectMug.service.PartnerService;
@@ -63,6 +65,34 @@ public class UserController {
         }
         return partnerResponses;
     }
+    @GetMapping("/user/normal/find-all-partners")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER','CUSTOMER')")
+    public List<PartnerResponseDto> getAllPartnersForAllUsers() {
+        List<Partner> partners = partnerService.findPartners();
+        List<PartnerResponseDto> dto = new ArrayList<>();
+        for (Partner partner : partners){
+            dto.add(new PartnerResponseDto(partner.getId(),
+                    partner.getBusinessName(),
+                    partner.getAddress(),
+                    partner.getPhoneNumber(),
+                    partner.getLatitude(),
+                    partner.getLongitude()));
+        }
+        return dto;
+    }
+    @GetMapping("/user/normal/find-all-customers")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER','CUSTOMER')")
+    public List<CustomerResponseDto> getAllCustomersForAllUsers(){
+        List<Customer> customers = customerService.findCustomers();
+        List<CustomerResponseDto> dto = new ArrayList<>();
+        for(Customer customer : customers){
+            dto.add(new CustomerResponseDto(customer.getId(),
+                    customer.getEmail(),
+                    customer.getNickname()));
+        }
+        return dto;
+    }
+
     @PatchMapping("/user/customer/profile-image")
     @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
     @ResponseBody
