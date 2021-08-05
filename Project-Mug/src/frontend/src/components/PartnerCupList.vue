@@ -32,7 +32,7 @@
           <div class="col col-4">개당 가격</div>
         </li>
         <li class="table-row" v-for="(cup, index) in partnerCups" :key="index">
-          <div class="col col-1" data-label="Index">{{ index }}</div>
+          <div class="col col-1" data-label="Index">{{ index + 1 }}</div>
           <div class="col col-2" data-label="컵이름">
             <div class="image-wrapper"><img src="" alt="" /></div>
             <span>{{ cup.name }}</span>

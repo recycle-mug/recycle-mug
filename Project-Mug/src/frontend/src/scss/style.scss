@@ -20,3 +20,36 @@ html body {
   height: 100%;
   transition: 0.2s background-color ease-in-out;
 }
+
+.map-marker {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(216, 214, 222, 0.9);
+  max-width: 200px;
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1rem;
+    white-space: nowrap;
+
+    .close {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid $gray;
+      box-shadow: $shadow;
+      transition: all 0.2s ease;
+      margin-left: 20px;
+
+      &:hover,
+      &:active {
+        background-color: darken(white, 10%);
+      }
+    }
+  }
+}

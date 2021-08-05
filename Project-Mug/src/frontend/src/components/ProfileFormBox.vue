@@ -99,7 +99,7 @@
         </div>
       </div>
 
-      <div class="row" v-if="userInfo.address" :class="{ changed: changed.address }">
+      <div class="row" v-if="userRole === 'partner'" :class="{ changed: changed.address }">
         <div class="category">주소</div>
         <input
           type="text"
@@ -113,7 +113,7 @@
         />
       </div>
 
-      <div class="row" v-if="userInfo.businessName" :class="{ changed: changed.businessName }">
+      <div class="row" v-if="userRole === 'partner'" :class="{ changed: changed.businessName }">
         <div class="category">매장 명</div>
         <input
           type="text"
