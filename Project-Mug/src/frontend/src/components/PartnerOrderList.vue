@@ -10,66 +10,20 @@
         <div class="col col-6">총가격</div>
         <div class="col col-7">상태</div>
       </li>
-      <li class="table-row">
-        <div class="col col-1" data-label="Index">1</div>
-        <div class="col col-2" data-label="주문날짜">2021-07-23 14:39:21</div>
+      <li class="table-row" v-for="(order, index) in orderList" :key="index">
+        <div class="col col-1" data-label="Index">{{ index + 1 }}</div>
+        <div class="col col-2" data-label="주문날짜">{{ order.orderDateTime.slice(0, 10) }}</div>
         <div class="col col-3" data-label="주문한 컵">
-          <div class="image-wrapper"><img src="" alt="" /></div>
-          <span>컵 A</span>
+          <span>{{ order.cupName }}</span>
         </div>
-        <div class="col col-4" data-label="주문수량">50</div>
-        <div class="col col-5" data-label="개당가격">1000</div>
-        <div class="col col-6" data-label="총가격">50000</div>
-        <div class="col col-7" data-label="상태">출고대기</div>
-      </li>
-
-      <li class="table-row">
-        <div class="col col-1" data-label="Index">1</div>
-        <div class="col col-2" data-label="주문날짜">2021-07-23 14:39:21</div>
-        <div class="col col-3" data-label="주문한 컵">
-          <div class="image-wrapper"><img src="" alt="" /></div>
-          <span>컵 A</span>
+        <div class="col col-4" data-label="주문수량">{{ addComma(order.stockQuantity) }}</div>
+        <div class="col col-5" data-label="개당가격">{{ addComma(order.price) }}</div>
+        <div class="col col-6" data-label="총가격">
+          {{ addComma(order.stockQuantity * order.price) }}
         </div>
-        <div class="col col-4" data-label="주문수량">50</div>
-        <div class="col col-5" data-label="개당가격">1000</div>
-        <div class="col col-6" data-label="총가격">50000</div>
-        <div class="col col-7" data-label="상태">출고대기</div>
-      </li>
-      <li class="table-row">
-        <div class="col col-1" data-label="Index">1</div>
-        <div class="col col-2" data-label="주문날짜">2021-07-23 14:39:21</div>
-        <div class="col col-3" data-label="주문한 컵">
-          <div class="image-wrapper"><img src="" alt="" /></div>
-          <span>컵 A</span>
+        <div class="col col-7" data-label="상태">
+          <span :class="[order.state]">{{ order.state }}</span>
         </div>
-        <div class="col col-4" data-label="주문수량">50</div>
-        <div class="col col-5" data-label="개당가격">1000</div>
-        <div class="col col-6" data-label="총가격">50000</div>
-        <div class="col col-7" data-label="상태">출고대기</div>
-      </li>
-      <li class="table-row">
-        <div class="col col-1" data-label="Index">1</div>
-        <div class="col col-2" data-label="주문날짜">2021-07-23 14:39:21</div>
-        <div class="col col-3" data-label="주문한 컵">
-          <div class="image-wrapper"><img src="" alt="" /></div>
-          <span>컵 A</span>
-        </div>
-        <div class="col col-4" data-label="주문수량">50</div>
-        <div class="col col-5" data-label="개당가격">1000</div>
-        <div class="col col-6" data-label="총가격">50000</div>
-        <div class="col col-7" data-label="상태">출고대기</div>
-      </li>
-      <li class="table-row">
-        <div class="col col-1" data-label="Index">1</div>
-        <div class="col col-2" data-label="주문날짜">2021-07-23 14:39:21</div>
-        <div class="col col-3" data-label="주문한 컵">
-          <div class="image-wrapper"><img src="" alt="" /></div>
-          <span>컵 A</span>
-        </div>
-        <div class="col col-4" data-label="주문수량">50</div>
-        <div class="col col-5" data-label="개당가격">1000</div>
-        <div class="col col-6" data-label="총가격">50000</div>
-        <div class="col col-7" data-label="상태">출고대기</div>
       </li>
     </div>
     <div class="table-footer">다음페이지</div>
@@ -93,11 +47,32 @@ export default {
       orders
         .get(path)
         .then((res) => {
-          console.log("res :>> ", res);
+          this.orderList = res.data;
+          this.setState();
         })
         .catch((err) => {
           console.log("err :>> ", err);
         });
+    },
+    setState() {
+      for (let order in this.orderList) {
+        if (this.orderList[order].state === "DELIVERY_WAITING") {
+          this.orderList[order].state = "waiting";
+        }
+
+        if (this.orderList[order].state === "COMPLETE") {
+          this.orderList[order].state = "complete";
+        }
+
+        if (this.orderList[order].state === "CANCEL") {
+          this.orderList[order].state = "canceled";
+        }
+      }
+    },
+    addComma(str) {
+      let text = str.toString().replace(/[^0-9]/g, "");
+      const result = text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return result;
     },
   },
   mounted() {
@@ -134,7 +109,7 @@ export default {
           background-color: map-get($map: $theme, $key: "content-background");
           color: map-get($map: $theme, $key: "text-light");
           transition: all 0.2s ease;
-          padding: 1rem;
+          padding: 1.2rem;
 
           &:hover {
             background-color: darken(
@@ -159,7 +134,6 @@ export default {
         }
         .col-3 {
           flex-basis: 20%;
-          display: flex;
         }
         .col-4 {
           flex-basis: 15%;
@@ -172,6 +146,29 @@ export default {
         }
         .col-7 {
           flex-basis: 10%;
+
+          span {
+            user-select: none;
+            border-radius: 10px;
+            border: 1px solid rgba($white, 0.1);
+            padding: 2px 5px;
+            font-size: 0.85rem;
+
+            &.complete {
+              background-color: rgba(#20c997, 0.1);
+              color: #20c997;
+            }
+
+            &.waiting {
+              background-color: rgba(#fa8b0c, 0.1);
+              color: #fa8b0c;
+            }
+
+            &.canceled {
+              background-color: rgba(#ff4d4f, 0.1);
+              color: #ff4d4f;
+            }
+          }
         }
       }
 

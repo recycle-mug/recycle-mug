@@ -125,7 +125,7 @@ export default {
               this.username = res.data.nickname;
               this.profileImg = res.data.profilePicture;
 
-              if (this.username === null) {
+              if (this.username === null || this.username === "") {
                 this.username = "익명";
               }
             }

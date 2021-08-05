@@ -455,7 +455,7 @@ export default {
           address: this.formData.joinAddress.address,
           businessName: this.formData.joinAddress.addressName,
           latitude: this.formData.joinAddress.addressLat,
-          altitude: this.formData.joinAddress.addressLng,
+          longitude: this.formData.joinAddress.addressLng,
         };
 
         let sendJoinForm = axios.create();

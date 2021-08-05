@@ -38,7 +38,11 @@
       ></partner-order-cup>
       <!-- 발주 신청 내역 -->
       <div class="card">
-        <partner-order-list :partnerId="partnerId"></partner-order-list>
+        <partner-order-list
+          :partnerId="partnerId"
+          @makeToast="makeToast"
+          @modeSwitch="switchMode"
+        ></partner-order-list>
       </div>
     </div>
   </div>
