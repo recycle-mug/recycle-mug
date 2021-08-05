@@ -10,15 +10,13 @@ public class MapPartnerInfoDto {
     private String address;
     private String nickname;
     private byte[] profilePicture;
-    private String profilePictureAddress;
     private List<PartnerCupResponseDTO> partnerCups;
 
-    public MapPartnerInfoDto(String businessName,String address,String nickname,byte[] profilePicture, String profilePictureAddress,List<PartnerCupResponseDTO> partnerCups){
+    public MapPartnerInfoDto(String businessName,String address,String nickname,byte[] profilePicture,List<PartnerCupResponseDTO> partnerCups){
         this.businessName = businessName;
         this.address = address;
         this.nickname = nickname;
         this.profilePicture = profilePicture;
-        this.profilePictureAddress = profilePictureAddress;
         this.partnerCups = partnerCups;
     }
 }

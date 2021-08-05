@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import recyclemug.ProjectMug.data.CreateMapPartnerInfoResponse;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.data.CreatePartnerCupRequest;
 import recyclemug.ProjectMug.domain.cup.Cup;
@@ -63,31 +64,38 @@ public class PartnerCupController {
     @GetMapping("/partner/map/{partnerId}") // map에서 partner정보 확인
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER','CUSTOMER')")
     @ResponseBody
-    public MapPartnerInfoDto getMapPartnerInfo(@PathVariable Long partnerId) throws IOException{
-        List<PartnerCup> partnerCupsAll = partnerCupRepository.findCupOfPartner(partnerId);
-        Partner partner = partnerRepository.findOne(partnerId);
-        List<PartnerCupResponseDTO> partnerCups = new ArrayList<>();
-        for(PartnerCup partnerCup : partnerCupsAll){
-            FileInputStream imageStream = new FileInputStream(partnerCup.getCup().getProfilePictureAddress());
-            byte[] image = imageStream.readAllBytes();
-            PartnerCupResponseDTO partnerCupResponseDTO = PartnerCupResponseDTO.builder()
-                    .id(partnerCup.getId())
-                    .name(partnerCup.getCup().getName())
-                    .stockQuantity(partnerCup.getStockQuantity())
-                    .image(image)
-                    .price(partnerCup.getCup().getPrice())
-                    .build();
-            partnerCups.add(partnerCupResponseDTO);
+    public ResponseEntity<CreateMapPartnerInfoResponse> getMapPartnerInfo(@PathVariable Long partnerId) throws IOException{
+        try {
+            List<PartnerCup> partnerCupsAll = partnerCupRepository.findCupOfPartner(partnerId);
+            Partner partner = partnerRepository.findOne(partnerId);
+            List<PartnerCupResponseDTO> partnerCups = new ArrayList<>();
+            for (PartnerCup partnerCup : partnerCupsAll) {
+                FileInputStream imageStream = new FileInputStream(partnerCup.getCup().getProfilePictureAddress());
+                byte[] image = imageStream.readAllBytes();
+                PartnerCupResponseDTO partnerCupResponseDTO = PartnerCupResponseDTO.builder()
+                        .id(partnerCup.getId())
+                        .name(partnerCup.getCup().getName())
+                        .stockQuantity(partnerCup.getStockQuantity())
+                        .image(image)
+                        .price(partnerCup.getCup().getPrice())
+                        .build();
+                partnerCups.add(partnerCupResponseDTO);
+            }
+            FileInputStream profileImageStream = new FileInputStream(partner.getProfilePictureAddress());
+            byte[] profileImage = profileImageStream.readAllBytes();
+            MapPartnerInfoDto mapPartnerInfoDto = new MapPartnerInfoDto(partner.getBusinessName(),
+                    partner.getAddress(),
+                    partner.getNickname(),
+                    profileImage,
+                    partnerCups);
+            return new ResponseEntity<>(new CreateMapPartnerInfoResponse("success","getPartnerInfo",mapPartnerInfoDto),HttpStatus.OK);
+        }catch(NullPointerException e){
+            log.error("NullPointException in MapPartnerInfo");
+            return new ResponseEntity<>(new CreateMapPartnerInfoResponse("fail","NullPointException",null),HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            log.error("Exception in MapPartnerInfo");
+            return new ResponseEntity<>(new CreateMapPartnerInfoResponse("fail","Exception",null),HttpStatus.BAD_REQUEST);
         }
-        FileInputStream profileImageStream = new FileInputStream(partner.getProfilePictureAddress());
-        byte[] profileImage = profileImageStream.readAllBytes();
-        MapPartnerInfoDto mapPartnerInfoDto = new MapPartnerInfoDto(partner.getBusinessName(),
-                partner.getAddress(),
-                partner.getNickname(),
-                profileImage,
-                partner.getProfilePictureAddress(),
-                partnerCups);
-        return mapPartnerInfoDto;
     }
 
     @PostMapping("/partner-cup/add") // partner의 cup 대여 신청을 admin이 승인했을 시 partnerCup 등록
@@ -98,12 +106,12 @@ public class PartnerCupController {
         try{
             partnerOrderService.completeOrder(partnerOrder);
             log.info("Admin accept partner's order   id : " + partnerOrder.getId());
-            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("success","complete"),HttpStatus.OK);
+            return new ResponseEntity<>(new CreateOrderResponse("success","complete"),HttpStatus.OK);
         }catch (NotEnoughStockException e){
-            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Not enough cup"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail","Not enough cup"), HttpStatus.BAD_REQUEST);
         }
         catch(Exception e){
-            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -115,9 +123,9 @@ public class PartnerCupController {
         try{
             partnerOrderService.rejectOrder(partnerOrder);
             log.info("Admin reject partner's order   id : " + partnerOrder.getId());
-            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("success","reject"),HttpStatus.OK);
+            return new ResponseEntity<>(new CreateOrderResponse("success","reject"),HttpStatus.OK);
         }catch(Exception e){
-            return new ResponseEntity<CreateOrderResponse>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);
         }
     }
 }
