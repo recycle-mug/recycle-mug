@@ -13,6 +13,7 @@ import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
 import recyclemug.ProjectMug.domain.user.Partner;
+import recyclemug.ProjectMug.dto.MapPartnerInfoDto;
 import recyclemug.ProjectMug.dto.PartnerCupResponseDTO;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.PartnerCupRepository;
@@ -58,6 +59,35 @@ public class PartnerCupController {
             partnerCups.add(partnerCupResponseDTO);
         }
         return partnerCups;
+    }
+    @GetMapping("/partner/map/{partnerId}") // map에서 partner정보 확인
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER','CUSTOMER')")
+    @ResponseBody
+    public MapPartnerInfoDto getMapPartnerInfo(@PathVariable Long partnerId) throws IOException{
+        List<PartnerCup> partnerCupsAll = partnerCupRepository.findCupOfPartner(partnerId);
+        Partner partner = partnerRepository.findOne(partnerId);
+        List<PartnerCupResponseDTO> partnerCups = new ArrayList<>();
+        for(PartnerCup partnerCup : partnerCupsAll){
+            FileInputStream imageStream = new FileInputStream(partnerCup.getCup().getProfilePictureAddress());
+            byte[] image = imageStream.readAllBytes();
+            PartnerCupResponseDTO partnerCupResponseDTO = PartnerCupResponseDTO.builder()
+                    .id(partnerCup.getId())
+                    .name(partnerCup.getCup().getName())
+                    .stockQuantity(partnerCup.getStockQuantity())
+                    .image(image)
+                    .price(partnerCup.getCup().getPrice())
+                    .build();
+            partnerCups.add(partnerCupResponseDTO);
+        }
+        FileInputStream profileImageStream = new FileInputStream(partner.getProfilePictureAddress());
+        byte[] profileImage = profileImageStream.readAllBytes();
+        MapPartnerInfoDto mapPartnerInfoDto = new MapPartnerInfoDto(partner.getBusinessName(),
+                partner.getAddress(),
+                partner.getNickname(),
+                profileImage,
+                partner.getProfilePictureAddress(),
+                partnerCups);
+        return mapPartnerInfoDto;
     }
 
     @PostMapping("/partner-cup/add") // partner의 cup 대여 신청을 admin이 승인했을 시 partnerCup 등록
