@@ -577,7 +577,7 @@ export default {
 
         .address-card {
           box-sizing: border-box;
-          background-color: rgba(map-get($map: $theme, $key: "content-background"), 0.8);
+          background-color: rgba(map-get($map: $theme, $key: "content-background"), 0.7);
           border: 1px solid map-get($map: $theme, $key: "border");
           margin: 0.5rem;
           width: 95%;
@@ -586,11 +586,12 @@ export default {
           min-height: 6rem;
           cursor: pointer;
           box-shadow: $shadow-lighter;
+          transition: all 0.3s ease;
 
           &:hover {
             box-shadow: $shadow;
-            transition: all 0.2s ease-in;
             background-color: rgba(map-get($map: $theme, $key: "content-background"), 1);
+            transform: translateX(10px);
           }
 
           .card-container {
