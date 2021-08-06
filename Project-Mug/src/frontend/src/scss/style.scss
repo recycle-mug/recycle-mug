@@ -23,32 +23,113 @@ html body {
 
 .map-marker {
   background-color: white;
-  padding: 1rem;
   border-radius: 6px;
   border: 1px solid rgba(216, 214, 222, 0.9);
-  max-width: 200px;
+  width: 200px;
+  overflow: hidden;
+  color: $black;
+  z-index: 10;
+  cursor: pointer;
 
-  .title {
+  .image-wrapper {
+    width: 100%;
+    max-height: 100px;
+    overflow: hidden;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    font-weight: bold;
-    font-size: 1rem;
-    white-space: nowrap;
+    transition: all 0.2s ease;
+    cursor: pointer;
 
-    .close {
-      width: 30px;
-      height: 30px;
-      cursor: pointer;
-      border-radius: 6px;
-      border: 1px solid $gray;
-      box-shadow: $shadow;
+    &:hover {
+      max-height: 130px;
+    }
+
+    img {
+      width: 100%;
+      object-fit: cover;
       transition: all 0.2s ease;
-      margin-left: 20px;
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
 
-      &:hover,
-      &:active {
-        background-color: darken(white, 10%);
+  .content {
+    padding: 1rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      padding-top: 1rem;
+    }
+
+    .title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1rem;
+
+      .title-content {
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .close-btn-container {
+    width: 25px;
+    height: 25px;
+    margin: 3px 3px 0 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 999;
+
+    .close-icon {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform: rotate(0deg);
+      transition: 0.5s ease-in-out;
+      cursor: pointer;
+
+      span {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 23px;
+        height: 3px;
+        width: 90%;
+        background: #000;
+        border-radius: 4px;
+        transform: rotate(0deg);
+        transition: 0.2s ease-in-out;
+      }
+
+      span:nth-child(1),
+      span:nth-child(3) {
+        width: 45%;
+        transform: rotate(45deg);
+      }
+
+      span:nth-child(1) {
+        left: 2px;
+        top: 6px;
+      }
+
+      span:nth-child(2) {
+        transform: rotate(-45deg);
+        top: 10px;
+      }
+
+      span:nth-child(3) {
+        left: 10px;
+        top: 14px;
       }
     }
   }
