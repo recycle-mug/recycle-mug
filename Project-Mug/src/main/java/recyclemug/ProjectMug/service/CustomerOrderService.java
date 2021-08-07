@@ -57,29 +57,28 @@ public class CustomerOrderService {
      */
     @Transactional
     public void cupReturnOfCustomer(Customer customer, Partner partner) throws NoCupsForReturnException{
-        List<CustomerOrder> customerOrders = customerOrderRepository.findListOfCustomer(customer.getId());
-        if (customerOrders.isEmpty()) {
-            throw new NoCupsForReturnException();
-        } else {
-            Long customerCupId = customerOrders.get(0).getId();
-            CustomerOrder customerOrder = customerOrderRepository.findById(customerCupId);
-            Cup cup = customerOrder.getCup();
-            int cupPrice = cup.getPrice();
+        if (customer.getCustomerState() == CustomerState.USE) {
+            CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
+            if (lastOrder.getReturnedDateTime() != null) {
+                throw new NoCupsForReturnException();
+            }
+            Cup orderCup = lastOrder.getCup();
+            int cupPrice = orderCup.getPrice();
 
-            if (LocalDateTime.now().isBefore(customerOrder.getReturnDateTime())) {
+            if (LocalDateTime.now().isBefore(lastOrder.getReturnDateTime())) {
                 customer.completeReturnCup(cupPrice, CustomerState.NONE);
             } else {
                 customer.completeReturnCup(cupPrice, CustomerState.OVERDUE);
             }
-            customerOrder.setReturnedDateTime(LocalDateTime.now());
 
-            List<PartnerReturn> partnerReturns = partnerReturnRepository.findByPartnerIdAndCupId(partner.getId(), cup.getId());
+            lastOrder.setReturnedDateTime(LocalDateTime.now());
+            List<PartnerReturn> partnerReturnList = partnerReturnRepository.findByPartnerIdAndCupId(partner.getId(), orderCup.getId());
 
-            if (partnerReturns.isEmpty()) {
-                PartnerReturn partnerReturn = new PartnerReturn(partner, cup, 1);
+            if (partnerReturnList.isEmpty()) {
+                PartnerReturn partnerReturn = new PartnerReturn(partner, orderCup, 1);
                 partnerReturnRepository.save(partnerReturn);
             } else {
-                PartnerReturn partnerReturn = partnerReturns.get(0);
+                PartnerReturn partnerReturn = partnerReturnList.get(0);
                 partnerReturn.setReturnQuantity(partnerReturn.getReturnQuantity() + 1);
             }
         }
@@ -90,11 +89,13 @@ public class CustomerOrderService {
      * @param customer
      */
     @Transactional
-    public void cupRemoveOfCustomer(Customer customer) {
+    public void cupRemoveOfCustomer(Customer customer) throws NoCupsForReturnException{
         if (customer.getCustomerState() == CustomerState.USE) {
             CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
             lastOrder.setReturnedDateTime(LocalDateTime.now());
-            customer.setCustomerState(CustomerState.NONE);
+            customer.completeReturnCup(0, CustomerState.NONE);
+        } else {
+            throw new NoCupsForReturnException();
         }
     }
 }
