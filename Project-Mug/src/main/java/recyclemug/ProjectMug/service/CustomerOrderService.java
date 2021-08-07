@@ -87,12 +87,14 @@ public class CustomerOrderService {
 
     /**
      * Customer 가 컵을 파손, 분실하여 컵이 삭제되는 메서드
-     * @param customerOrder
+     * @param customer
      */
     @Transactional
-    public void cupRemoveOfCustomer(CustomerOrder customerOrder) {
-        Customer customer = customerOrder.getCustomer();
-        customer.setCustomerState(CustomerState.NONE);
-        customerOrder.setReturnedDateTime(LocalDateTime.now());
+    public void cupRemoveOfCustomer(Customer customer) {
+        if (customer.getCustomerState() == CustomerState.USE) {
+            CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
+            lastOrder.setReturnedDateTime(LocalDateTime.now());
+            customer.setCustomerState(CustomerState.NONE);
+        }
     }
 }
