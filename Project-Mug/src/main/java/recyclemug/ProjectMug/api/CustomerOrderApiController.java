@@ -80,16 +80,12 @@ public class CustomerOrderApiController {
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> returnPartnerCupNormal(@RequestBody @Valid CreateReturnRequest request){
-        try{
-            Customer customer = customerRepository.findOne(request.getCustomerId());
-            Partner partner = partnerRepository.findOne(request.getPartnerId());
-            customerOrderService.cupReturnOfCustomer(customer,partner);
-            log.info("Return cup normal customer : " + customer.getNickname() + " Partner : " + partner.getNickname());
-            return new ResponseEntity<>(new CreateOrderResponse("success","Return Complete"),HttpStatus.OK);
-        }catch(Exception e){
-            log.error("Customer return cup exception");
-            return new ResponseEntity<>(new CreateOrderResponse("fail",e.toString()),HttpStatus.BAD_REQUEST);
-        }
+        Customer customer = customerRepository.findOne(request.getCustomerId());
+        Partner partner = partnerRepository.findOne(request.getPartnerId());
+        customerOrderService.cupReturnOfCustomer(customer,partner);
+        log.info("Return cup normal customer : " + customer.getNickname() + " Partner : " + partner.getNickname());
+        return new ResponseEntity<>(new CreateOrderResponse("success","Return Complete"),HttpStatus.OK);
+
     }
     @GetMapping("/customer/return-cup/report")
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
