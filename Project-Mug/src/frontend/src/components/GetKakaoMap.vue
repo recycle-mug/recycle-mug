@@ -3,6 +3,18 @@
     <div v-if="locationErr">위치 정보를 찾을 수 없습니다.</div>
     <div v-if="gettingLocation">위치 정보 조회 중...</div>
 
+    <div v-if="opened" style="position:absolute;top:0;left:0;" @click="closeModal()">
+      <div class="modal-wrapper">
+        <div class="modal" @click.stop>
+          <customer-qrcode-generator
+            :cupId="orderCupId"
+            @closeModal="closeModal"
+            @makeToast="makeToast"
+          ></customer-qrcode-generator>
+        </div>
+      </div>
+    </div>
+
     <div id="map" style="width:500px;height:500px;" class="map-container"></div>
     <div class="place-description" v-if="clicked">
       <div class="close-btn" @click="onCloseDetail">
@@ -53,7 +65,7 @@
                     </div>
                   </div>
                   <div class="btn-row">
-                    <button>주문하기</button>
+                    <button @click="orderCup(cup)">주문하기</button>
                   </div>
                 </div>
               </div>
@@ -87,6 +99,8 @@
 </template>
 
 <script>
+import CustomerQrcodeGenerator from "./CustomerQrcodeGenerator.vue";
+
 import axios from "axios";
 
 import { Carousel, Slide } from "vue-carousel";
@@ -106,10 +120,16 @@ export default {
       partnerLocations: [], // address, businessName, latitude, longitude, phoneNumber, userId
       detailInfo: null,
       clicked: false,
+      opened: false,
+      orderCupId: null,
     };
   },
-  components: { Carousel, Slide, FontAwesomeIcon },
+  components: { Carousel, Slide, FontAwesomeIcon, CustomerQrcodeGenerator },
   methods: {
+    closeModal() {
+      this.opened = false;
+      this.orderCupId = null;
+    },
     onLoadMap() {
       const container = document.getElementById("map");
       let options;
@@ -193,7 +213,6 @@ export default {
     onClickPartner(partner) {
       this.clicked = true;
       this.detailInfo = partner;
-      console.log("partner :>> ", partner);
     },
     createCustomOverlay(data, map, marker) {
       const iwContent = document.createElement("div");
@@ -291,6 +310,13 @@ export default {
       const result = text.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       return result;
     },
+    makeToast(toast) {
+      this.$emit("makeToast", toast);
+    },
+    orderCup(cup) {
+      this.orderCupId = cup.id;
+      this.opened = true;
+    },
   },
   mounted() {
     this.onAddScript();
@@ -306,6 +332,29 @@ export default {
   &.#{map-get($theme, "name")} {
     * {
       box-sizing: border-box;
+    }
+
+    .modal-wrapper {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+      top: 0;
+      left: 0;
+
+      .modal {
+        width: 720px;
+        max-width: 90%;
+        max-height: 90%;
+        background-color: map-get($map: $theme, $key: "content-background");
+        z-index: 999;
+        position: fixed;
+        border-radius: 6px;
+      }
     }
 
     .container {
