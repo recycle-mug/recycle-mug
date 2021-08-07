@@ -24,6 +24,8 @@ public class PartnerReturn {
 
     private int returnQuantity;
 
+    protected PartnerReturn(){}
+
     public PartnerReturn(Partner partner, Cup cup, int returnQuantity) {
         this.partner = partner;
         this.cup = cup;
