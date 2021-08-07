@@ -30,6 +30,8 @@ public class CustomerOrder {
     private LocalDateTime returnDateTime;
     private LocalDateTime returnedDateTime;
 
+    protected CustomerOrder(){}
+
     public CustomerOrder(Customer customer, Cup cup) {
         this.customer = customer;
         this.cup = cup;

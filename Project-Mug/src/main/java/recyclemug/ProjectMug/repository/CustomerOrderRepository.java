@@ -24,16 +24,10 @@ public class CustomerOrderRepository {
     }
 
     /**
-     * Customer 의 CustomerOrder 을 rentDateTime 내림차순으로 전부 반환
+     * return last cup order of customer
      * @param customerId
      * @return
      */
-    public List<CustomerOrder> findListOfCustomer(Long customerId) {
-        return em.createQuery("select c.customerOrders from Customer c where c.id=:customerId order by c.rentDateTime desc", CustomerOrder.class)
-                .setParameter("customerId", customerId)
-                .getResultList();
-    }
-
     public CustomerOrder findLastOrderOfCustomer(Long customerId) {
         String query = "SELECT o FROM CustomerOrder o INNER JOIN o.customer c WHERE c.id=:customerId ORDER BY o.rentDateTime DESC";
         return em.createQuery(query, CustomerOrder.class)
