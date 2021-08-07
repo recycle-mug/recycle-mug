@@ -10,6 +10,8 @@
     "apexcharts": "^3.27.1",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "npm": "^7.20.5",
+    "qrcode": "^1.4.4",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.6.1",
     "vue-qrcode": "^0.4.0",
