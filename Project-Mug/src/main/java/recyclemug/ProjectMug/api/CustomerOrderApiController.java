@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.data.CreateRentRequest;
 import recyclemug.ProjectMug.data.CreateReturnRequest;
+import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
@@ -54,7 +55,7 @@ public class CustomerOrderApiController {
         try {
             customerOrderService.cupOrderOfCustomer(customer, partnerCup);
             log.info("Customer(" + customer.getNickname() + ") rents cup at the " + partnerCup.getPartner().getNickname());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new CreateOrderResponse("success",""),HttpStatus.OK);
         }catch (NotEnoughStockException e){
             log.error("Not Enuough Point Exception");
             return new ResponseEntity<>(new CreateOrderResponse("fail","Not Enough point Exception"), HttpStatus.BAD_REQUEST);
@@ -63,7 +64,7 @@ public class CustomerOrderApiController {
             return new ResponseEntity<>(new CreateOrderResponse("fail","Customer state not allowed"), HttpStatus.BAD_REQUEST);
         }catch (Exception e){
             log.error("Invalid access");
-            return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail",e.toString()), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -87,7 +88,28 @@ public class CustomerOrderApiController {
             return new ResponseEntity<>(new CreateOrderResponse("success","Return Complete"),HttpStatus.OK);
         }catch(Exception e){
             log.error("Customer return cup exception");
-            return new ResponseEntity<>(new CreateOrderResponse("fail","Exception Error"),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail",e.toString()),HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/customer/return-cup/report")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
+    @ResponseBody
+    public CustomerReturnDto returnPartnerCupReportDTO(@RequestParam Long customerId){
+        return new CustomerReturnDto(null,null,"destroy");
+    }
+
+    @PostMapping("/customer/return-cup/report")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
+    @ResponseBody
+    public ResponseEntity<CreateOrderResponse> returnPartnerCupReport(@RequestBody @Valid CreateReturnRequest request){
+        try{
+            Customer customer = customerRepository.findOne(request.getCustomerId());
+            customerOrderService.cupRemoveOfCustomer(customer);
+            return new ResponseEntity<>(new CreateOrderResponse("success","Report Complete"),HttpStatus.OK);
+        }catch(Exception e){
+            log.error("Customer return cup exception");
+            return new ResponseEntity<>(new CreateOrderResponse("fail",e.toString()),HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
