@@ -4,7 +4,7 @@
     <header-nav></header-nav>
     <div class="content-body">
       <qr-code-scanner></qr-code-scanner>
-      <get-kakao-map v-if="role === 'customer'"></get-kakao-map>
+      <get-kakao-map v-if="role === 'customer'" @makeToast="onToastMessage"></get-kakao-map>
       <partner-cup-manage
         v-if="role === 'partner'"
         @makeToast="onToastMessage"
