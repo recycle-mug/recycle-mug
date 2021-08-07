@@ -66,6 +66,8 @@ import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
 faLibrary.add(faUser);
 
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -97,12 +99,43 @@ export default {
         .catch((err) => (this.errors.response = err));
     },
     getProfile() {
-      this.$store.dispatch("GETPROFILE").then(() => {
-        this.isLogin = true;
-        this.username = this.$store.state.user.nickname;
-        this.profileImg = this.$store.state.user.profilePicture;
-        console.log("this.$store.state.user :>> ", this.$store.state.user);
-      });
+      const path = "/backend/profile";
+
+      const { accessToken } = localStorage;
+      if (!accessToken) {
+        this.isLogin = false;
+        this.username = "익명";
+      } else {
+        const authUser = axios.create({ baseUrl: path });
+        authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+        authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
+          "GET,POST,PUT,DELETE,OPTIONS";
+
+        authUser.defaults.headers.common["Content-Type"] =
+          "application/x-www-form-urlencoded;charset=utf-8";
+
+        authUser
+          .get(path)
+          .then((res) => {
+            if (res.data.error) {
+              throw res.data.error;
+            } else {
+              this.isLogin = true;
+              this.username = res.data.nickname;
+              this.profileImg = res.data.profilePicture;
+
+              if (this.username === null || this.username === "") {
+                this.username = "익명";
+              }
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert(error);
+            localStorage.removeItem("accessToken");
+          });
+      }
     },
     activateDropdown() {
       this.dropDown = !this.dropDown;
