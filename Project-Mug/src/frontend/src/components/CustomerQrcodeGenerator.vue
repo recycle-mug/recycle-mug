@@ -19,7 +19,6 @@
 
 <script>
 import VueQrcode from "vue-qrcode";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -43,7 +42,8 @@ export default {
     getProfile() {
       this.$store.dispatch("GETPROFILE").then(() => {
         this.userId = this.$store.state.user.id;
-        this.customUri = `http://localhost:5000/customer/rent-cup?customerId=${this.userId}&partnerCupId=${this.cupId}`;
+        // this.customUri = `http://localhost:5000/customer/rent-cup?customerId=${this.userId}&partnerCupId=${this.cupId}`;
+        this.customUri = `/backend/customer/rent-cup?customerId=${this.userId}&partnerCupId=${this.cupId}`;
       });
     },
   },
