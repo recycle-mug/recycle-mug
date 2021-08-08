@@ -99,9 +99,8 @@ export default {
     getProfile() {
       this.$store.dispatch("GETPROFILE").then(() => {
         this.isLogin = true;
-        this.username = this.$store.state.user.nickname;
-        this.profileImg = this.$store.state.user.profilePicture;
-        console.log("this.$store.state.user :>> ", this.$store.state.user);
+        this.username = this.getUser.nickname;
+        this.profileImg = this.getUser.profilePicture;
       });
     },
     activateDropdown() {
@@ -111,6 +110,9 @@ export default {
   computed: {
     getTheme() {
       return this.$store.state.theme;
+    },
+    getUser() {
+      return this.$store.state.user;
     },
   },
   mounted() {
