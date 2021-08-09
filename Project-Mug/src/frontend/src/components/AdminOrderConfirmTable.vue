@@ -6,10 +6,30 @@
           <div class="orderlist-header">
             <div class="header-nav">
               <ul>
-                <li class="active">All</li>
-                <li>승인대기</li>
-                <li>승인완료</li>
-                <li>승인취소</li>
+                <li
+                  :class="{ active: activeCategory === 'all' ? true : false }"
+                  @click="changeActiveCategory('all')"
+                >
+                  All
+                </li>
+                <li
+                  :class="{ active: activeCategory === 'waiting' ? true : false }"
+                  @click="changeActiveCategory('waiting')"
+                >
+                  승인대기
+                </li>
+                <li
+                  :class="{ active: activeCategory === 'complete' ? true : false }"
+                  @click="changeActiveCategory('complete')"
+                >
+                  승인완료
+                </li>
+                <li
+                  :class="{ active: activeCategory === 'canceled' ? true : false }"
+                  @click="changeActiveCategory('canceled')"
+                >
+                  승인취소
+                </li>
               </ul>
             </div>
           </div>
@@ -37,8 +57,8 @@
               <tbody class="table-body">
                 <tr v-for="index in parseInt(perPage)" :key="index">
                   <td
-                    v-if="entryList[(currentPage - 1) * perPage + index - 1]"
                     class="selection-column"
+                    v-if="entryList[(currentPage - 1) * perPage + index - 1]"
                   >
                     <input
                       type="checkbox"
@@ -50,34 +70,34 @@
                       v-if="entryList[(currentPage - 1) * perPage + index - 1].state === 'waiting'"
                     />
                   </td>
-                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="id">
+                  <td class="id" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span>{{ entryList.length - ((currentPage - 1) * perPage + index - 1) }}</span>
                   </td>
-                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="customer">
+                  <td class="customer" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span>{{
                       entryList[(currentPage - 1) * perPage + index - 1].businessName
                     }}</span>
                   </td>
-                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="status">
+                  <td class="status" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span
                       :class="['status', entryList[(currentPage - 1) * perPage + index - 1].state]"
                       >{{ entryList[(currentPage - 1) * perPage + index - 1].state }}</span
                     >
                   </td>
-                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="cup">
+                  <td class="cup" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span>{{ entryList[(currentPage - 1) * perPage + index - 1].cupName }}</span>
                   </td>
-                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="amount">
+                  <td class="amount" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span>{{
                       entryList[(currentPage - 1) * perPage + index - 1].stockQuantity
                     }}</span>
                   </td>
-                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="date">
+                  <td class="date" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span>{{
                       entryList[(currentPage - 1) * perPage + index - 1].orderDateTime.slice(0, 19)
                     }}</span>
                   </td>
-                  <td v-if="entryList[(currentPage - 1) * perPage + index - 1]" class="action">
+                  <td class="action" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span
                       class="icon-wrapper submit"
                       @click="submitOrder((currentPage - 1) * perPage + index - 1)"
@@ -231,19 +251,19 @@
                   <ul class="content-list">
                     <li>
                       <span class="content-list-title">승인대기</span>
-                      <span class="content-list-text">500개</span>
+                      <span class="content-list-text">{{ orderSum.wait }}개</span>
                     </li>
                     <li>
                       <span class="content-list-title">승인완료</span>
-                      <span class="content-list-text">500개</span>
+                      <span class="content-list-text">{{ orderSum.complete }}개</span>
                     </li>
                     <li>
                       <span class="content-list-title">승인취소</span>
-                      <span class="content-list-text">500개</span>
+                      <span class="content-list-text">{{ orderSum.cancel }}개</span>
                     </li>
                     <li>
                       <span class="content-list-title">총</span>
-                      <span class="content-list-text">500개</span>
+                      <span class="content-list-text">{{ orderSum.total }}개</span>
                     </li>
                   </ul>
                 </div>
@@ -275,6 +295,13 @@ export default {
       entryList: [],
       orderIds: [],
       allSelected: false,
+      activeCategory: "all",
+      orderSum: {
+        wait: 0,
+        cancel: 0,
+        total: 0,
+        complete: 0,
+      },
     };
   },
   components: { FontAwesomeIcon },
@@ -301,10 +328,33 @@ export default {
       findUsers
         .get(path)
         .then((res) => {
-          this.entryList = res.data;
-          this.setStatus();
-          this.total = this.entryList.length;
-          this.maxPage = Math.ceil(this.total / this.perPage);
+          let tmp = [];
+          if (this.activeCategory !== "all") {
+            let stateTmp = "";
+            if (this.activeCategory === "waiting") {
+              stateTmp = "DELIVERY_WAITING";
+            } else if (this.activeCategory === "canceled") {
+              stateTmp = "COMPLETE";
+            } else if (this.activeCategory === "complete") {
+              stateTmp = "CANCEL";
+            }
+            for (let entry in res.data) {
+              if (res.data[entry].state === stateTmp) {
+                console.log("res.data[entry].state :>> ", res.data[entry].state);
+                tmp.push(res.data[entry]);
+              }
+            }
+            this.entryList = tmp;
+            this.setStatus();
+            this.total = tmp.length;
+            this.maxPage = Math.ceil(this.total / this.perPage);
+            console.log("this.entryList :>> ", this.entryList);
+          } else {
+            this.entryList = res.data;
+            this.setStatus();
+            this.total = this.entryList.length;
+            this.maxPage = Math.ceil(this.total / this.perPage);
+          }
         })
         .catch((err) => {
           console.log("err :>> ", err);
@@ -322,8 +372,6 @@ export default {
           }
         }
       }
-
-      console.log("this.orderIds :>> ", this.orderIds);
     },
     checkOne() {
       this.allSelected = false;
@@ -344,7 +392,6 @@ export default {
       }
 
       this.entryList.reverse();
-      console.log("this.entryList :>> ", this.entryList);
     },
     submitOrder(index) {
       const cup = this.entryList[index];
@@ -398,7 +445,7 @@ export default {
           const cup = this.entryList[orderId];
 
           promises.push(
-            new Promise((resolve, reject) => {
+            new Promise((resolve) => {
               if (cup.state === "waiting") {
                 const path = "/backend/partner-cup/add";
 
@@ -431,7 +478,7 @@ export default {
           const cup = this.entryList[orderId];
 
           promises.push(
-            new Promise((resolve, reject) => {
+            new Promise((resolve) => {
               if (cup.state === "waiting") {
                 const path = "/backend/partner-cup/reject";
 
@@ -453,12 +500,27 @@ export default {
         Promise.all(promises).then(() => {
           this.$emit("makeToast", { status: "success", msg: "주문을 모두 거부했습니다." });
           this.getOrderList();
+          this.activeCategory = "all";
         });
       }
+    },
+    changeActiveCategory(category) {
+      this.activeCategory = category;
+      this.getOrderList();
+    },
+    getOrderSummary() {
+      const path = "/backend/get-order-summary";
+      axios.get(path).then((res) => {
+        this.orderSum.wait = res.data.wait;
+        this.orderSum.cancel = res.data.cancel;
+        this.orderSum.total = res.data.total;
+        this.orderSum.complete = res.data.complete;
+      });
     },
   },
   mounted() {
     this.getOrderList();
+    this.getOrderSummary();
   },
 };
 </script>

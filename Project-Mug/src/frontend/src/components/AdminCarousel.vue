@@ -39,13 +39,6 @@
                     <span class="unit">(개)</span>
                   </div>
                 </div>
-                <div class="description-row">
-                  <p>price</p>
-                  <div class="row-num">
-                    <span>2,000</span>
-                    <span class="unit">(원)</span>
-                  </div>
-                </div>
               </div>
             </div>
           </slide>
@@ -238,7 +231,6 @@ export default {
                 display: flex;
                 flex-direction: column;
                 width: 240px;
-                height: 320px;
                 border-radius: 14px;
                 background-color: map-get($map: $theme, $key: "background");
                 padding: 18px;
