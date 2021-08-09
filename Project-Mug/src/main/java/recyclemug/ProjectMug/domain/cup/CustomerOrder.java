@@ -36,6 +36,6 @@ public class CustomerOrder {
         this.customer = customer;
         this.cup = cup;
         this.rentDateTime = LocalDateTime.now();
-        this.rentDateTime = LocalDateTime.now().plusWeeks(1);
+        this.returnDateTime = LocalDateTime.now().plusWeeks(1);
     }
 }
