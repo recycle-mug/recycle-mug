@@ -10,9 +10,9 @@ public class CustomerOrderDto {
     private String partnerBusinessName;
     private Long cupId;
     private String cupName;
-    private String cupImage;
+    private byte[] cupImage;
 
-    public CustomerOrderDto(Long customerId,String customerName,Long partnerId,String partnerBusinessName, Long cupId,String cupName,String cupImage){
+    public CustomerOrderDto(Long customerId,String customerName,Long partnerId,String partnerBusinessName, Long cupId,String cupName,byte[] cupImage){
         this.customerId = customerId;
         this.customerName = customerName;
         this.partnerId = partnerId;

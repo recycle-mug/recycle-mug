@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.data.CreateRentRequest;
 import recyclemug.ProjectMug.data.CreateReturnRequest;
-import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
@@ -22,6 +21,8 @@ import recyclemug.ProjectMug.repository.*;
 import recyclemug.ProjectMug.service.CustomerOrderService;
 
 import javax.validation.Valid;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,14 +36,16 @@ public class CustomerOrderApiController {
     @GetMapping("/customer/rent-cup")
     @PreAuthorize("hasAnyRole('PARTNER','ADMIN')") // partner가 customerQR코드에 접속
     @ResponseBody
-    public CustomerOrderDto rentPartnerCupDTO(@RequestParam Long customerId, @RequestParam Long partnerCupId){
+    public CustomerOrderDto rentPartnerCupDTO(@RequestParam Long customerId, @RequestParam Long partnerCupId) throws IOException {
         String customerName = customerRepository.findOne(customerId).getNickname();
         PartnerCup partnerCup = partnerCupRepository.findById(partnerCupId);
         Long partnerId = partnerCup.getPartner().getId();
         String partnerBusinessName = partnerCup.getPartner().getBusinessName();
         Long cupId = partnerCupId;
         String partnerCupName = partnerCup.getCup().getName();
-        String partnerCupImage = partnerCup.getCup().getProfilePictureAddress();
+        FileInputStream imageStream = new FileInputStream(partnerCup.getCup().getProfilePictureAddress());
+        byte[] partnerCupImage = imageStream.readAllBytes();
+        imageStream.close();
         return new CustomerOrderDto(customerId,customerName,partnerId,partnerBusinessName,cupId,partnerCupName,partnerCupImage);
     }
 
