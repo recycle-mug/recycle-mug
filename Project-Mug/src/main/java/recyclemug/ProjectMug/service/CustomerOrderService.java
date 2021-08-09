@@ -1,6 +1,7 @@
 package recyclemug.ProjectMug.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import recyclemug.ProjectMug.domain.cup.Cup;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerOrderService {
 
     private final CustomerOrderRepository customerOrderRepository;
@@ -60,8 +62,10 @@ public class CustomerOrderService {
         if (customer.getCustomerState() == CustomerState.USE) {
             CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
             if (lastOrder.getReturnedDateTime() != null) {
+                log.error("no cups for return for customer id: " + customer.getId());
                 throw new NoCupsForReturnException();
             }
+
             Cup orderCup = lastOrder.getCup();
             int cupPrice = orderCup.getPrice();
 
@@ -81,6 +85,9 @@ public class CustomerOrderService {
                 PartnerReturn partnerReturn = partnerReturnList.get(0);
                 partnerReturn.setReturnQuantity(partnerReturn.getReturnQuantity() + 1);
             }
+        } else {
+            log.error("CustomerState is not USE");
+            throw new NoCupsForReturnException("CustomerState is not USE");
         }
     }
 

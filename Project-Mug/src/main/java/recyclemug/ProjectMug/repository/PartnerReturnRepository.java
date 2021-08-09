@@ -43,7 +43,9 @@ public class PartnerReturnRepository {
      * @return
      */
     public List<PartnerReturn> findByPartnerId(Long partnerId) {
-        return em.createQuery("SELECT pr FROM PartnerReturn pr JOIN pr.partner p WHERE p.id=:partnerId", PartnerReturn.class).getResultList();
+        return em.createQuery("SELECT pr FROM PartnerReturn pr JOIN pr.partner p WHERE p.id=:partnerId", PartnerReturn.class)
+                .setParameter("partnerId", partnerId)
+                .getResultList();
     }
 
     /**
@@ -54,8 +56,11 @@ public class PartnerReturnRepository {
      * @return
      */
     public List<PartnerReturn> findByPartnerIdAndCupId(Long partnerId, Long cupId) {
-        String query = "SELECT pr FROM PartnerReturn JOIN pr.partner p JOIN pr.cup c WHERE p.id=:partnerId and c.id=:cupId";
-        return em.createQuery(query, PartnerReturn.class).getResultList();
+        String query = "SELECT pr FROM PartnerReturn pr JOIN pr.partner p JOIN pr.cup c WHERE p.id=:partnerId and c.id=:cupId";
+        return em.createQuery(query, PartnerReturn.class)
+                .setParameter("partnerId", partnerId)
+                .setParameter("cupId", cupId)
+                .getResultList();
     }
 
     /**
