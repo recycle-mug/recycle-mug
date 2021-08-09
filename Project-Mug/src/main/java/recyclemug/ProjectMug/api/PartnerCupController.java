@@ -10,21 +10,25 @@ import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateMapPartnerInfoResponse;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.data.CreatePartnerCupRequest;
+import recyclemug.ProjectMug.data.CreateReturnCupsRequest;
 import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.cup.PartnerOrder;
+import recyclemug.ProjectMug.domain.cup.PartnerReturn;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.dto.MapPartnerInfoDto;
 import recyclemug.ProjectMug.dto.PartnerCupResponseDTO;
+import recyclemug.ProjectMug.dto.PartnerReturnDto;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.PartnerCupRepository;
 import recyclemug.ProjectMug.repository.PartnerOrderRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
+import recyclemug.ProjectMug.repository.PartnerReturnRepository;
+import recyclemug.ProjectMug.service.PartnerReturnService;
 import recyclemug.ProjectMug.service.PartnerOrderService;
 
 import javax.validation.Valid;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +41,8 @@ public class PartnerCupController {
     private final PartnerOrderService partnerOrderService;
     private final PartnerCupRepository partnerCupRepository;
     private final PartnerOrderRepository partnerOrderRepository;
+    private final PartnerReturnRepository partnerReturnRepository;
+    private final PartnerReturnService partnerReturnService;
 
     @GetMapping("/partner-cup/{partnerId}") // 특정 partner의 컵 목록
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
@@ -64,7 +70,7 @@ public class PartnerCupController {
     @GetMapping("/partner/map/{partnerId}") // map에서 partner정보 확인
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER','CUSTOMER')")
     @ResponseBody
-    public ResponseEntity<CreateMapPartnerInfoResponse> getMapPartnerInfo(@PathVariable Long partnerId) throws IOException{
+    public ResponseEntity<CreateMapPartnerInfoResponse> getMapPartnerInfo(@PathVariable Long partnerId){
         try {
             List<PartnerCup> partnerCupsAll = partnerCupRepository.findCupOfPartner(partnerId);
             Partner partner = partnerRepository.findOne(partnerId);
@@ -126,6 +132,38 @@ public class PartnerCupController {
             return new ResponseEntity<>(new CreateOrderResponse("success","reject"),HttpStatus.OK);
         }catch(Exception e){
             return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/partner-cup/return/{partnerId}") // ADMIN이 partner에 반납된 사용 컵 회수해가는 컵 목록 UI
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ResponseBody
+    public List<PartnerReturnDto> getPartnerReturnCups(@PathVariable Long partnerId){
+        try {
+            List<PartnerReturn> partnerReturns = partnerReturnRepository.findByPartnerId(partnerId);
+            List<PartnerReturnDto> result = new ArrayList<>();
+            for (PartnerReturn partnerReturn : partnerReturns) {
+                PartnerReturnDto partnerReturnDto = new PartnerReturnDto(partnerReturn.getPartner().getBusinessName(),
+                        partnerReturn.getCup().getName(),
+                        partnerReturn.getReturnQuantity());
+                result.add(partnerReturnDto);
+            }
+            return result;
+        }catch(Exception e){
+            log.error("Invalid PartnerId");
+            return null;
+        }
+    }
+    @PostMapping("/partner-cup/return") // ADMIN이 partner에 반납된 사용컵들 회수 로직 수행
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ResponseBody
+    public ResponseEntity<CreateOrderResponse> returnPartnerCups(@RequestBody @Valid CreateReturnCupsRequest request){
+        try {
+            partnerReturnService.completeReturn(request.getPartnerId());
+            log.info("Return cups for : " + request.getPartnerId());
+            return new ResponseEntity<>(new CreateOrderResponse("success","Return Complete"),HttpStatus.OK);
+        }catch(Exception e){
+            log.error("Invalid PartnerId");
+            return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid partnerId"),HttpStatus.BAD_REQUEST);
         }
     }
 }
