@@ -81,12 +81,6 @@ export default {
       this.toastStatus = status;
       this.toastMessage = msg;
       this.onToast = true;
-
-      setTimeout(() => {
-        this.onToast = false;
-        this.toastStatus = "";
-        this.toastMessage = "";
-      }, 5000);
     },
   },
   computed: {

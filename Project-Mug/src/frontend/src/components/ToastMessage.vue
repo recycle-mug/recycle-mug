@@ -1,25 +1,27 @@
 <template>
   <div :class="styleObject">
-    <div class="img">
-      <font-awesome-icon
-        :icon="['fas', 'exclamation-triangle']"
-        style="width:100%;"
-        v-if="status === 'error'"
-      ></font-awesome-icon>
+    <div class="wrapper">
+      <div class="img">
+        <font-awesome-icon
+          :icon="['fas', 'exclamation-triangle']"
+          style="width:100%;"
+          v-if="status === 'error'"
+        ></font-awesome-icon>
 
-      <font-awesome-icon
-        :icon="['fas', 'exclamation']"
-        style="width:100%;"
-        v-if="status === 'waiting'"
-      ></font-awesome-icon>
+        <font-awesome-icon
+          :icon="['fas', 'exclamation']"
+          style="width:100%;"
+          v-if="status === 'waiting'"
+        ></font-awesome-icon>
 
-      <font-awesome-icon
-        :icon="['fas', 'check']"
-        style="width:100%;"
-        v-if="status === 'success'"
-      ></font-awesome-icon>
+        <font-awesome-icon
+          :icon="['fas', 'check']"
+          style="width:100%;"
+          v-if="status === 'success'"
+        ></font-awesome-icon>
+      </div>
+      <div class="message">{{ msg }}</div>
     </div>
-    <div class="message">{{ msg }}</div>
   </div>
 </template>
 
@@ -180,7 +182,7 @@ export default {
       border-radius: 2px;
       user-select: none;
       position: fixed;
-      z-index: 1;
+      z-index: 9999;
       left: 0;
       right: 0;
       bottom: 30px;
@@ -236,6 +238,13 @@ export default {
         white-space: nowrap;
         user-select: none;
       }
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
     }
   }
 }
