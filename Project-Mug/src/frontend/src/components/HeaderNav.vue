@@ -23,7 +23,8 @@
           <div v-if="isLogin">
             <div class="profile-btn" @click="activateDropdown()">
               <img :src="'data:image/jpeg;base64,' + profileImg" alt="" />
-              <span>{{ username }}님 안녕하세요</span>
+              <span v-if="username">{{ username }}님 안녕하세요</span>
+              <span v-else>익명님 안녕하세요</span>
               <div class="icon-wrapper">
                 <font-awesome-icon
                   :icon="['fas', 'user']"
@@ -58,6 +59,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import ThemePicker from "./ThemePicker.vue";
 import SideBar from "./SideBar";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -71,7 +73,7 @@ export default {
     return {
       theme: this.getTheme,
       isActive: "",
-      username: "익명",
+      username: "",
       isLogin: false,
       dropDown: false,
       profileImg: "",
@@ -97,11 +99,36 @@ export default {
         .catch((err) => (this.errors.response = err));
     },
     getProfile() {
-      this.$store.dispatch("GETPROFILE").then(() => {
-        this.isLogin = true;
-        this.username = this.getUser.nickname;
-        this.profileImg = this.getUser.profilePicture;
-      });
+      const path = "/backend/profile";
+
+      const { accessToken } = localStorage;
+      if (accessToken) {
+        const authUser = axios.create({ baseUrl: path });
+        authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+        authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+        authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
+          "GET,POST,PUT,DELETE,OPTIONS";
+
+        authUser.defaults.headers.common["Content-Type"] =
+          "application/x-www-form-urlencoded;charset=utf-8";
+
+        authUser
+          .get(path)
+          .then((res) => {
+            if (res.data.error) {
+              throw res.data.error;
+            } else {
+              this.isLogin = true;
+              this.username = res.data.nickname;
+              this.profileImg = res.data.profilePicture;
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert(error);
+            localStorage.removeItem("accessToken");
+          });
+      }
     },
     activateDropdown() {
       this.dropDown = !this.dropDown;
@@ -110,9 +137,6 @@ export default {
   computed: {
     getTheme() {
       return this.$store.state.theme;
-    },
-    getUser() {
-      return this.$store.state.user;
     },
   },
   mounted() {

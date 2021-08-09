@@ -19,7 +19,6 @@ export default new Vuex.Store({
   state: {
     theme: "theme-light",
     accessToken: null,
-    user: null,
   },
   getters: {
     theme: (state) => state.theme,
@@ -36,12 +35,6 @@ export default new Vuex.Store({
     LOGOUT(state) {
       state.accessToken = null;
       delete localStorage.accessToken;
-    },
-    SETPROFILE(state, user) {
-      state.user = user;
-      if (state.user.nickname === "" || state.user.nickname === null) {
-        state.user.nickname = "익명";
-      }
     },
   },
   actions: {
@@ -68,36 +61,6 @@ export default new Vuex.Store({
     },
     LOGOUT({ commit }) {
       commit("LOGOUT");
-    },
-    GETPROFILE({ commit }) {
-      const path = "/backend/profile";
-
-      const { accessToken } = localStorage;
-      if (accessToken) {
-        const authUser = axios.create({ baseUrl: path });
-        authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
-        authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-        authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
-          "GET,POST,PUT,DELETE,OPTIONS";
-
-        authUser.defaults.headers.common["Content-Type"] =
-          "application/x-www-form-urlencoded;charset=utf-8";
-
-        authUser
-          .get(path)
-          .then((res) => {
-            if (res.data.error) {
-              throw res.data.error;
-            } else {
-              commit("SETPROFILE", res.data);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            alert(error);
-            localStorage.removeItem("accessToken");
-          });
-      }
     },
   },
   plugins: [createPersistedState()],
