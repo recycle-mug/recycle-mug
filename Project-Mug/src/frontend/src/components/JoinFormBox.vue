@@ -114,7 +114,7 @@
 
         <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
         <button @click.prevent="onSubmitForm">join</button>
-        <router-link :to="{ name: 'login', query: { role: 'partner' } }" tag="span" class="caption"
+        <router-link :to="{ name: 'login' }" tag="span" class="caption"
           >Already has Account</router-link
         >
       </form>
@@ -205,7 +205,7 @@
         <span class="error-msg">{{ errors.joinTel }}</span>
         <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
         <button @click.prevent="onSubmitForm">join</button>
-        <router-link :to="{ name: 'login', query: { role: 'customer' } }" tag="span" class="caption"
+        <router-link :to="{ name: 'login' }" tag="span" class="caption"
           >Already has Account</router-link
         >
       </form>

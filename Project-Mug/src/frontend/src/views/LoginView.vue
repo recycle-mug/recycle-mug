@@ -2,7 +2,7 @@
   <div :class="getTheme">
     <header-nav></header-nav>
     <div class="content-body">
-      <login-form-box :role="role"></login-form-box>
+      <login-form-box></login-form-box>
     </div>
     <footer-nav></footer-nav>
   </div>
@@ -14,11 +14,6 @@ import LoginFormBox from "../components/LoginFormBox";
 import FooterNav from "../components/FooterNav";
 
 export default {
-  data() {
-    return {
-      role: this.$route.query.role,
-    };
-  },
   components: { LoginFormBox, HeaderNav, FooterNav },
   computed: {
     getTheme() {

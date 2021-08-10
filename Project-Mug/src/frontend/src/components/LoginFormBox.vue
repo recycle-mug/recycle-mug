@@ -1,46 +1,9 @@
 <template>
   <div class="wrapper">
     <div class="container">
-      <div class="form-container partner-form-container" v-if="role === 'partner'">
+      <div class="form-container">
         <form action="#">
-          <h1>파트너 로그인하기</h1>
-          <div class="social-container">
-            <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
-            <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
-            <a href="#"><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon></a>
-          </div>
-
-          <span>or use your email for registration</span>
-          <div class="row">
-            <input
-              type="email"
-              placeholder="partner ID (Email)"
-              v-model="formData.loginId"
-              @keydown.enter.prevent="nextInput"
-              @keyup="checkId"
-            />
-            <span class="error-msg">{{ errors.loginId }}</span>
-          </div>
-          <div class="row">
-            <input
-              type="password"
-              placeholder="partner Password"
-              maxlength="20"
-              v-model="formData.loginPw"
-              @keydown.enter.prevent="onSubmit"
-            />
-          </div>
-          <span class="error-msg">{{ errors.response }}</span>
-          <button type="submit" @click.prevent="onSubmit">Login</button>
-          <router-link :to="{ name: 'join', query: { role: 'partner' } }" tag="span" class="caption"
-            >파트너 계정이 없으신가요?</router-link
-          >
-        </form>
-      </div>
-
-      <div class="form-container customer-form-container" v-else-if="role === 'customer'">
-        <form action="#">
-          <h1>일반 사용자로 로그인하기</h1>
+          <h1>로그인하기</h1>
           <div class="social-container">
             <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
             <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -78,37 +41,6 @@
           >
         </form>
       </div>
-
-      <div class="overlay-container overlay-left" v-if="role === 'partner'">
-        <div class="overlay">
-          <div class="overlay-panel ">
-            <h1>위컵 사용자이신가요?</h1>
-            <p>일반 로그인하러가기 👉</p>
-            <router-link
-              :to="{ name: 'login', query: { role: 'customer' } }"
-              tag="button"
-              class="ghost"
-            >
-              Login As Customer</router-link
-            >
-          </div>
-        </div>
-      </div>
-
-      <div class="overlay-container overlay-right" v-else-if="role === 'customer'">
-        <div class="overlay">
-          <div class="overlay-panel ">
-            <h1>카페 사장님이신가요?</h1>
-            <p>파트너 로그인하러가기 👉</p>
-            <router-link
-              :to="{ name: 'login', query: { role: 'partner' } }"
-              tag="button"
-              class="ghost"
-              >Login As Partner</router-link
-            >
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -125,7 +57,6 @@ export default {
   data() {
     return {
       formData: {
-        role: this.role,
         loginId: "",
         loginPw: "",
       },
@@ -136,7 +67,6 @@ export default {
       },
     };
   },
-  props: ["role"],
   components: { FontAwesomeIcon },
   methods: {
     nextInput() {
@@ -173,13 +103,12 @@ export default {
       e.preventDefault();
       this.validate();
 
-      const role = this.formData.role;
       const email = this.formData.loginId;
       const password = this.formData.loginPw;
 
       if (!this.errors.loginId) {
         this.$store
-          .dispatch("LOGIN", { role, email, password })
+          .dispatch("LOGIN", { email, password })
           .then(this.redirect)
           .catch((err) => (this.errors.response = err));
       }
@@ -218,14 +147,16 @@ export default {
         box-shadow: $shadow;
         position: relative;
         overflow: hidden;
-        width: 1050px;
-        max-width: 100%;
+        width: 100%;
+        max-width: 500px;
         min-height: 540px;
         margin: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         .form-container {
-          position: absolute;
-          top: 0;
+          width: 100%;
           height: 100%;
           transition: all 0.6s ease-in-out;
 
@@ -347,101 +278,6 @@ export default {
               font-size: 0.75rem;
             }
           }
-        }
-
-        .partner-form-container {
-          right: 0;
-          width: 50%;
-          opacity: 1;
-          z-index: 1;
-        }
-
-        .customer-form-container {
-          left: 0;
-          width: 50%;
-          z-index: 2;
-        }
-
-        .overlay-container {
-          position: absolute;
-          top: 0;
-          width: 50%;
-          height: 100%;
-          overflow: hidden;
-          transform: translateX(0);
-          transition: transform 0.6s ease-in-out;
-
-          .overlay {
-            background-color: $main-color;
-            color: $white;
-            position: relative;
-            height: 100%;
-            width: 100%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-
-            .overlay-panel {
-              position: absolute;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              flex-direction: column;
-              padding: 0 3rem;
-              text-align: center;
-              top: 0;
-              height: 100%;
-              width: 100%;
-              transform: translateX(0);
-              transition: transform 0.6s ease-in-out;
-              box-sizing: border-box;
-
-              h1 {
-                font-weight: bold;
-                margin: 0.5rem;
-                font-size: 1.5rem;
-              }
-
-              p {
-                letter-spacing: 0.1rem;
-                margin: 1.5rem 0 2rem;
-                line-height: 1.2rem;
-              }
-
-              button {
-                border-radius: 20px;
-                border: 1px solid $white;
-                background-color: transparent;
-                color: $white;
-                border-radius: 20px;
-                font-weight: bold;
-                padding: 1rem 3rem;
-                letter-spacing: 0.05rem;
-                cursor: pointer;
-
-                &:active {
-                  transform: scale(0.95);
-                }
-
-                &:focus {
-                  outline: none;
-                }
-
-                &:hover {
-                  transition: all 0.2s ease-in-out;
-                  background-color: $white;
-                  color: $main-color;
-                }
-              }
-            }
-          }
-        }
-
-        .overlay-left {
-          left: 0;
-        }
-
-        .overlay-right {
-          right: 0;
         }
       }
     }

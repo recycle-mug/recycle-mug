@@ -41,7 +41,7 @@ export default new Vuex.Store({
     SETSTYLE({ commit }) {
       commit("SETSTYLE");
     },
-    LOGIN({ commit }, { role, email, password }) {
+    LOGIN({ commit }, { email, password }) {
       const payload = {
         email: email,
         password: password,
@@ -51,7 +51,7 @@ export default new Vuex.Store({
       sendData.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
 
       return sendData
-        .post(`${resourceHost}/login/${role}`, payload)
+        .post(`${resourceHost}/login/`, payload)
         .then(({ data }) => {
           commit("LOGIN", data.token);
         })
