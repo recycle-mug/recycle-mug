@@ -23,6 +23,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/fontawesome-free-regular";
+import axios from "axios";
 
 faLibrary.add(faTimes, faTrashAlt);
 
@@ -40,11 +41,29 @@ export default {
       this.$emit("closeModal");
     },
     getProfile() {
-      this.$store.dispatch("GETPROFILE").then(() => {
-        this.userId = this.$store.state.user.id;
-        // this.customUri = `http://localhost:5000/customer/rent-cup?customerId=${this.userId}&partnerCupId=${this.cupId}`;
-        this.customUri = `/backend/customer/rent-cup?customerId=${this.userId}&partnerCupId=${this.cupId}`;
-      });
+      const path = "/backend/profile";
+
+      const { accessToken } = localStorage;
+      if (accessToken) {
+        const authUser = axios.create({ baseUrl: path });
+
+        authUser
+          .get(path)
+          .then((res) => {
+            if (res.data.error) {
+              throw res.data.error;
+            } else {
+              this.userId = res.data.id;
+              // this.customUri = `http://localhost:5000/customer/rent-cup?customerId=${this.userId}&partnerCupId=${this.cupId}`;
+              this.customUri = `/backend/customer/rent-cup?customerId=${this.userId}&partnerCupId=${this.cupId}`;
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            alert(error);
+            localStorage.removeItem("accessToken");
+          });
+      }
     },
   },
   mounted() {

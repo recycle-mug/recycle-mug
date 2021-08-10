@@ -356,7 +356,19 @@ export default {
         border-radius: 6px;
       }
     }
+    @media (min-width: 1140px) {
+      .container {
+        display: flex;
+        flex-direction: row;
+      }
+    }
 
+    @media (max-width: 1140px) {
+      .container {
+        display: flex;
+        flex-direction: column;
+      }
+    }
     .container {
       max-width: 1140px;
       margin: auto;
