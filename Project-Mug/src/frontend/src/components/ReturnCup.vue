@@ -46,6 +46,7 @@ export default {
             throw res.data.error;
           } else {
             this.customerId = res.data.id;
+            console.log("res.data :>> ", res.data);
           }
         })
         .catch((error) => {
@@ -63,7 +64,8 @@ export default {
           .post(this.url.split("?")[0], payload)
           .then((res) => {
             if (res.status === 200) {
-              this.makeToast("success", "컵을 대여했습니다.");
+              this.makeToast("success", "컵을 반납했습니다.");
+              this.closeThisModal();
             }
           })
           .catch((err) => {
