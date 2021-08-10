@@ -374,23 +374,6 @@ export default {
     checkOne() {
       this.allSelected = false;
     },
-    setStatus() {
-      for (let entry in this.entryList) {
-        if (this.entryList[entry].state === "DELIVERY_WAITING") {
-          this.entryList[entry].state = "waiting";
-        }
-
-        if (this.entryList[entry].state === "COMPLETE") {
-          this.entryList[entry].state = "complete";
-        }
-
-        if (this.entryList[entry].state === "CANCEL") {
-          this.entryList[entry].state = "canceled";
-        }
-      }
-
-      this.entryList.reverse();
-    },
     submitOrder(index) {
       const cup = this.entryList[index];
 

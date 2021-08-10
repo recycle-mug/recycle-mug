@@ -65,6 +65,7 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.makeToast("success", "컵을 대여했습니다.");
+            this.closeThisModal();
           }
         })
         .catch((err) => {
