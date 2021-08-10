@@ -103,7 +103,7 @@ export default {
         this.opened = false;
         this.scannerSelect = "";
         this.cupUrl = "";
-        this.isValid = false;
+        this.isValid = undefined;
         this.turnCameraOn();
       }
     },
@@ -133,6 +133,10 @@ export default {
     closeModal() {
       this.opened = false;
       this.orderCupId = null;
+      this.scannerSelect = "";
+      this.cupUrl = "";
+      this.isValid = false;
+      this.turnCameraOn();
     },
     makeToast(toast) {
       this.$emit("makeToast", toast);

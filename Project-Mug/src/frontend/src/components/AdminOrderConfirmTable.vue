@@ -340,7 +340,6 @@ export default {
             }
             for (let entry in res.data) {
               if (res.data[entry].state === stateTmp) {
-                console.log("res.data[entry].state :>> ", res.data[entry].state);
                 tmp.push(res.data[entry]);
               }
             }
@@ -348,7 +347,6 @@ export default {
             this.setStatus();
             this.total = tmp.length;
             this.maxPage = Math.ceil(this.total / this.perPage);
-            console.log("this.entryList :>> ", this.entryList);
           } else {
             this.entryList = res.data;
             this.setStatus();
