@@ -100,7 +100,6 @@ export default new Router({
       path: "/login",
       name: "login",
       component: LoginView,
-      props: true,
     },
     {
       path: "/join",
