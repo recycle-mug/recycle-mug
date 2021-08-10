@@ -3,6 +3,7 @@ package recyclemug.ProjectMug.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.PartnerReturn;
 import recyclemug.ProjectMug.repository.PartnerReturnRepository;
 
@@ -21,6 +22,8 @@ public class PartnerReturnService {
     @Transactional
     public void completeReturn(Long partnerReturnId) {
         PartnerReturn partnerReturn = partnerReturnRepository.findById(partnerReturnId);
+        Cup cup = partnerReturn.getCup();
+        cup.setPrice(partnerReturn.getReturnQuantity());
         partnerReturnRepository.remove(partnerReturn);
     }
 }
