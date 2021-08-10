@@ -87,15 +87,15 @@ export default {
         overflow: hidden;
         position: relative;
 
-        &:hover {
-          height: 250px;
-          .fold {
-            display: none;
-          }
-          .unfold {
-            display: block;
-          }
-        }
+        // &:hover {
+        //   height: 250px;
+        //   .fold {
+        //     display: none;
+        //   }
+        //   .unfold {
+        //     display: block;
+        //   }
+        // }
 
         &.USE {
           background-color: $main-color;

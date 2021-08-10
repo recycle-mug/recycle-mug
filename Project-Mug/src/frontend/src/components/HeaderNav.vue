@@ -169,6 +169,7 @@ export default {
         position: relative;
         z-index: 10;
         padding: 0 2rem;
+        box-sizing: border-box;
 
         .content-wrapper {
           box-sizing: border-box;
