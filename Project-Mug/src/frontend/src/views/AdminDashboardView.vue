@@ -15,6 +15,9 @@
         <admin-order-confirm-table @makeToast="onToastMessage"></admin-order-confirm-table>
       </div>
       <div class="row">
+        <admin-return-cups-table @makeToast="onToastMessage"></admin-return-cups-table>
+      </div>
+      <div class="row">
         <admin-user-table role="customer"></admin-user-table>
       </div>
       <div class="row">
@@ -33,6 +36,7 @@ import AdminUserTable from "../components/AdminUserTable.vue";
 import FooterNav from "../components/FooterNav.vue";
 import AdminSidebar from "../components/AdminSidebar.vue";
 import AdminOrderConfirmTable from "../components/AdminOrderConfirmTable.vue";
+import AdminReturnCupsTable from "../components/AdminReturnCupsTable.vue";
 import ToastMessage from "../components/ToastMessage.vue";
 
 export default {
@@ -44,6 +48,7 @@ export default {
     AdminChart,
     AdminSidebar,
     AdminOrderConfirmTable,
+    AdminReturnCupsTable,
     ToastMessage,
   },
   data() {

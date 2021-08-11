@@ -1,274 +1,191 @@
 <template>
-  <div class="confirm-table-card-container">
-    <div class="confirm-table-card">
-      <div class="card-left">
-        <div class="orderlist-wrapper">
-          <div class="orderlist-header">
-            <div class="header-nav">
-              <ul>
-                <li
-                  :class="{ active: activeCategory === 'all' ? true : false }"
-                  @click="changeActiveCategory('all')"
-                >
-                  All
-                </li>
-                <li
-                  :class="{ active: activeCategory === 'waiting' ? true : false }"
-                  @click="changeActiveCategory('waiting')"
-                >
-                  승인대기
-                </li>
-                <li
-                  :class="{ active: activeCategory === 'complete' ? true : false }"
-                  @click="changeActiveCategory('complete')"
-                >
-                  승인완료
-                </li>
-                <li
-                  :class="{ active: activeCategory === 'canceled' ? true : false }"
-                  @click="changeActiveCategory('canceled')"
-                >
-                  승인취소
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="orderlist-body">
-            <table class="orderlist-table">
-              <colgroup>
-                <col class="selection-col" />
-              </colgroup>
-
-              <thead class="table-header">
-                <tr>
-                  <th class="selection-column">
-                    <input type="checkbox" name="" id="" @input="checkAll" v-model="allSelected" />
-                  </th>
-                  <th class="id">#</th>
-                  <th class="customer">Customer</th>
-                  <th class="status">Status</th>
-                  <th class="cup">Cup</th>
-                  <th class="amount">Amount</th>
-                  <th class="date">Date</th>
-                  <th class="action">Action</th>
-                </tr>
-              </thead>
-
-              <tbody class="table-body">
-                <tr v-for="index in parseInt(perPage)" :key="index">
-                  <td
-                    class="selection-column"
-                    v-if="entryList[(currentPage - 1) * perPage + index - 1]"
-                  >
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      :value="(currentPage - 1) * perPage + index - 1"
-                      v-model="orderIds"
-                      @click="checkOne"
-                      v-if="entryList[(currentPage - 1) * perPage + index - 1].state === 'waiting'"
-                    />
-                  </td>
-                  <td class="id" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span>{{ entryList.length - ((currentPage - 1) * perPage + index - 1) }}</span>
-                  </td>
-                  <td class="customer" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span>{{
-                      entryList[(currentPage - 1) * perPage + index - 1].businessName
-                    }}</span>
-                  </td>
-                  <td class="status" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span
-                      :class="['status', entryList[(currentPage - 1) * perPage + index - 1].state]"
-                      >{{ entryList[(currentPage - 1) * perPage + index - 1].state }}</span
-                    >
-                  </td>
-                  <td class="cup" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span>{{ entryList[(currentPage - 1) * perPage + index - 1].cupName }}</span>
-                  </td>
-                  <td class="amount" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span>{{
-                      entryList[(currentPage - 1) * perPage + index - 1].stockQuantity
-                    }}</span>
-                  </td>
-                  <td class="date" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span>{{
-                      entryList[(currentPage - 1) * perPage + index - 1].orderDateTime.slice(0, 19)
-                    }}</span>
-                  </td>
-                  <td class="action" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span
-                      class="icon-wrapper submit"
-                      @click="submitOrder((currentPage - 1) * perPage + index - 1)"
-                      v-if="entryList[(currentPage - 1) * perPage + index - 1].state === 'waiting'"
-                    >
-                      <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
-                    </span>
-                    <span
-                      class="icon-wrapper reject"
-                      @click="rejectOrder((currentPage - 1) * perPage + index - 1)"
-                      v-if="entryList[(currentPage - 1) * perPage + index - 1].state === 'waiting'"
-                    >
-                      <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="orderlist-footer">
-            <div class="footer-nav">
-              <ul role="menubar" aria-label="Pagination">
-                <li role="presentation">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    tabindex="-1"
-                    class="page-item prev-item"
-                    @click="prevPage"
-                    v-if="currentPage > 5"
-                  >
-                    <font-awesome-icon :icon="['fas', 'angle-left']"></font-awesome-icon>
-                  </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    tabindex="-1"
-                    class="page-item "
-                    :class="{
-                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 1,
-                    }"
-                    @click="selectPage"
-                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 1 <= maxPage"
-                  >
-                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 1 }}
-                  </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    tabindex="-1"
-                    class="page-item"
-                    :class="{
-                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 2,
-                    }"
-                    @click="selectPage"
-                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 2 <= maxPage"
-                  >
-                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 2 }}
-                  </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    tabindex="-1"
-                    class="page-item"
-                    :class="{
-                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 3,
-                    }"
-                    @click="selectPage"
-                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 3 <= maxPage"
-                  >
-                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 3 }}
-                  </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    tabindex="-1"
-                    class="page-item"
-                    :class="{
-                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4,
-                      'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 4 == maxPage,
-                    }"
-                    :style="[
-                      currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4
-                        ? { backgroundColor: userStyle }
-                        : {},
-                    ]"
-                    @click="selectPage"
-                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 4 <= maxPage"
-                  >
-                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 4 }}
-                  </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    tabindex="-1"
-                    class="page-item"
-                    :class="{
-                      active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 5,
-                      'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 5 == maxPage,
-                    }"
-                    @click="selectPage"
-                    v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 5 <= maxPage"
-                  >
-                    {{ (Math.ceil(currentPage / 5) - 1) * 5 + 5 }}
-                  </button>
-                </li>
-                <li role="presentation">
-                  <button
-                    role="menuitem"
-                    type="button"
-                    tabindex="-1"
-                    class="page-item next-item"
-                    @click="nextPage"
-                    v-if="currentPage <= Math.floor((maxPage - 1) / 5) * 5"
-                  >
-                    <font-awesome-icon :icon="['fas', 'angle-right']"></font-awesome-icon>
-                  </button>
-                </li>
-              </ul>
-
-              <div class="footer-button-wrapper">
-                <span class="footer-button submit" @click="submitSelectedOrders()">
-                  <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
-                </span>
-
-                <span class="footer-button reject" @click="rejectSelectedOrders()">
-                  <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
-                </span>
-              </div>
-            </div>
+  <div class="return-table-card-container">
+    <div class="return-table-card">
+      <div class="orderlist-wrapper">
+        <div class="orderlist-header">
+          <div class="header-nav">
+            <span>회수 대기 중인 컵</span>
           </div>
         </div>
-      </div>
-      <div class="card-right">
-        <div class="order-summmary-wrapper">
-          <div class="order-summmary">
-            <div class="summary-card-content">
-              <h1 class="card-title">Order Summary</h1>
-              <div class="card-body">
-                <div class="body-content">
-                  <ul class="content-list">
-                    <li>
-                      <span class="content-list-title">승인대기</span>
-                      <span class="content-list-text">{{ orderSum.wait }}개</span>
-                    </li>
-                    <li>
-                      <span class="content-list-title">승인완료</span>
-                      <span class="content-list-text">{{ orderSum.complete }}개</span>
-                    </li>
-                    <li>
-                      <span class="content-list-title">승인취소</span>
-                      <span class="content-list-text">{{ orderSum.cancel }}개</span>
-                    </li>
-                    <li>
-                      <span class="content-list-title">총</span>
-                      <span class="content-list-text">{{ orderSum.total }}개</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+        <div class="orderlist-body">
+          <table class="orderlist-table">
+            <colgroup>
+              <col class="selection-col" />
+            </colgroup>
+
+            <thead class="table-header">
+              <tr>
+                <th class="selection-column">
+                  <input type="checkbox" name="" id="" @input="checkAll" v-model="allSelected" />
+                </th>
+                <th class="id">#</th>
+                <th class="customer">Customer</th>
+                <th class="cup">Cup</th>
+                <th class="date">Date</th>
+                <th class="action">Action</th>
+              </tr>
+            </thead>
+
+            <tbody class="table-body">
+              <tr v-for="index in parseInt(perPage)" :key="index">
+                <td
+                  class="selection-column"
+                  v-if="entryList[(currentPage - 1) * perPage + index - 1]"
+                >
+                  <input
+                    type="checkbox"
+                    name=""
+                    id=""
+                    :value="(currentPage - 1) * perPage + index - 1"
+                    v-model="orderIds"
+                    @click="checkOne"
+                  />
+                </td>
+                <td class="id" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
+                  <span>{{ entryList.length - ((currentPage - 1) * perPage + index - 1) }}</span>
+                </td>
+                <td class="customer" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
+                  <span>{{ entryList[(currentPage - 1) * perPage + index - 1].businessName }}</span>
+                </td>
+                <td class="cup" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
+                  <span>cup a : 50개</span>
+                  <span>cup a : 50개</span>
+                  <span>cup a : 50개</span>
+                  <span>cup a : 50개</span>
+                </td>
+                <td class="date" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
+                  <span>{{
+                    entryList[(currentPage - 1) * perPage + index - 1].orderDateTime.slice(0, 19)
+                  }}</span>
+                </td>
+                <td class="action" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
+                  <span
+                    class="icon-wrapper submit"
+                    @click="submitOrder((currentPage - 1) * perPage + index - 1)"
+                  >
+                    <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="orderlist-footer">
+          <div class="footer-nav">
+            <div class="footer-button-wrapper">
+              <span class="footer-button submit" @click="submitSelectedOrders()">
+                <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
+              </span>
             </div>
+
+            <ul role="menubar" aria-label="Pagination">
+              <li role="presentation">
+                <button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  class="page-item prev-item"
+                  @click="prevPage"
+                  v-if="currentPage > 5"
+                >
+                  <font-awesome-icon :icon="['fas', 'angle-left']"></font-awesome-icon>
+                </button>
+              </li>
+              <li role="presentation">
+                <button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  class="page-item "
+                  :class="{
+                    active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 1,
+                  }"
+                  @click="selectPage"
+                  v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 1 <= maxPage"
+                >
+                  {{ (Math.ceil(currentPage / 5) - 1) * 5 + 1 }}
+                </button>
+              </li>
+              <li role="presentation">
+                <button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  class="page-item"
+                  :class="{
+                    active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 2,
+                  }"
+                  @click="selectPage"
+                  v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 2 <= maxPage"
+                >
+                  {{ (Math.ceil(currentPage / 5) - 1) * 5 + 2 }}
+                </button>
+              </li>
+              <li role="presentation">
+                <button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  class="page-item"
+                  :class="{
+                    active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 3,
+                  }"
+                  @click="selectPage"
+                  v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 3 <= maxPage"
+                >
+                  {{ (Math.ceil(currentPage / 5) - 1) * 5 + 3 }}
+                </button>
+              </li>
+              <li role="presentation">
+                <button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  class="page-item"
+                  :class="{
+                    active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4,
+                    'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 4 == maxPage,
+                  }"
+                  :style="[
+                    currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 4
+                      ? { backgroundColor: userStyle }
+                      : {},
+                  ]"
+                  @click="selectPage"
+                  v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 4 <= maxPage"
+                >
+                  {{ (Math.ceil(currentPage / 5) - 1) * 5 + 4 }}
+                </button>
+              </li>
+              <li role="presentation">
+                <button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  class="page-item"
+                  :class="{
+                    active: currentPage == (Math.ceil(currentPage / 5) - 1) * 5 + 5,
+                    'last-item': (Math.ceil(currentPage / 5) - 1) * 5 + 5 == maxPage,
+                  }"
+                  @click="selectPage"
+                  v-if="(Math.ceil(currentPage / 5) - 1) * 5 + 5 <= maxPage"
+                >
+                  {{ (Math.ceil(currentPage / 5) - 1) * 5 + 5 }}
+                </button>
+              </li>
+              <li role="presentation">
+                <button
+                  role="menuitem"
+                  type="button"
+                  tabindex="-1"
+                  class="page-item next-item"
+                  @click="nextPage"
+                  v-if="currentPage <= Math.floor((maxPage - 1) / 5) * 5"
+                >
+                  <font-awesome-icon :icon="['fas', 'angle-right']"></font-awesome-icon>
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -295,13 +212,6 @@ export default {
       entryList: [],
       orderIds: [],
       allSelected: false,
-      activeCategory: "all",
-      orderSum: {
-        wait: 0,
-        cancel: 0,
-        total: 0,
-        complete: 0,
-      },
     };
   },
   components: { FontAwesomeIcon },
@@ -328,34 +238,12 @@ export default {
       findUsers
         .get(path)
         .then((res) => {
-          let tmp = [];
-          if (this.activeCategory !== "all") {
-            let stateTmp = "";
-            if (this.activeCategory === "waiting") {
-              stateTmp = "DELIVERY_WAITING";
-            } else if (this.activeCategory === "canceled") {
-              stateTmp = "COMPLETE";
-            } else if (this.activeCategory === "complete") {
-              stateTmp = "CANCEL";
-            }
-            for (let entry in res.data) {
-              if (res.data[entry].state === stateTmp) {
-                tmp.push(res.data[entry]);
-              }
-            }
-            this.entryList = tmp;
-            this.setStatus();
-            this.total = tmp.length;
-            this.maxPage = Math.ceil(this.total / this.perPage);
-          } else {
-            this.entryList = res.data;
-            this.setStatus();
-            this.total = this.entryList.length;
-            this.maxPage = Math.ceil(this.total / this.perPage);
-          }
+          this.entryList = res.data;
+          this.total = this.entryList.length;
+          this.maxPage = Math.ceil(this.total / this.perPage);
         })
         .catch((err) => {
-          console.log("err :>> ", err);
+          console.log("findUsers :>> ", err);
         });
     },
     checkAll() {
@@ -363,11 +251,7 @@ export default {
 
       if (!this.allSelected) {
         for (let index = 1; index <= this.perPage; index++) {
-          if (
-            this.entryList[(this.currentPage - 1) * this.perPage + index - 1].state == "waiting"
-          ) {
-            this.orderIds.push((this.currentPage - 1) * this.perPage + index - 1);
-          }
+          this.orderIds.push((this.currentPage - 1) * this.perPage + index - 1);
         }
       }
     },
@@ -377,45 +261,21 @@ export default {
     submitOrder(index) {
       const cup = this.entryList[index];
 
-      if (cup.state === "waiting") {
-        if (confirm(`${cup.cupName} : ${cup.stockQuantity}개\n이 주문을 승인하시겠습니까?`)) {
-          const orderId = cup.id;
-          const path = `/backend/partner-cup/add`;
+      if (confirm(`${cup.cupName} : ${cup.stockQuantity}개\n이 주문을 승인하시겠습니까?`)) {
+        const orderId = cup.id;
+        const path = `/backend/partner-cup/add`;
 
-          let addOrder = axios.create();
+        let addOrder = axios.create();
 
-          addOrder
-            .post(path, { partnerOrderId: orderId })
-            .then(() => {
-              this.$emit("makeToast", { status: "success", msg: "주문을 승인했습니다." });
-              this.getOrderList();
-            })
-            .catch((err) => {
-              console.log("err :>> ", err);
-            });
-        }
-      }
-    },
-    rejectOrder(index) {
-      const cup = this.entryList[index];
-
-      if (cup.state === "waiting") {
-        if (confirm(`${cup.cupName} : ${cup.stockQuantity}개\n이 주문을 거절하시겠습니까?`)) {
-          const orderId = cup.id;
-          const path = `/backend/partner-cup/reject`;
-
-          let rejectOrder = axios.create();
-
-          rejectOrder
-            .post(path, { partnerOrderId: orderId })
-            .then(() => {
-              this.$emit("makeToast", { status: "success", msg: "주문을 거절했습니다." });
-              this.getOrderList();
-            })
-            .catch((err) => {
-              console.log("err :>> ", err);
-            });
-        }
+        addOrder
+          .post(path, { partnerOrderId: orderId })
+          .then(() => {
+            this.$emit("makeToast", { status: "success", msg: "주문을 승인했습니다." });
+            this.getOrderList();
+          })
+          .catch((err) => {
+            console.log("err :>> ", err);
+          });
       }
     },
     submitSelectedOrders() {
@@ -427,20 +287,18 @@ export default {
 
           promises.push(
             new Promise((resolve) => {
-              if (cup.state === "waiting") {
-                const path = "/backend/partner-cup/add";
+              const path = "/backend/partner-cup/add";
 
-                let submitCups = axios.create();
+              let submitCups = axios.create();
 
-                submitCups
-                  .post(path, { partnerOrderId: cup.id })
-                  .then((res) => {
-                    resolve(res.data);
-                  })
-                  .catch((err) => {
-                    console.log("err :>> ", err);
-                  });
-              }
+              submitCups
+                .post(path, { partnerOrderId: cup.id })
+                .then((res) => {
+                  resolve(res.data);
+                })
+                .catch((err) => {
+                  console.log("err :>> ", err);
+                });
             }),
           );
         }
@@ -451,57 +309,13 @@ export default {
         });
       }
     },
-    rejectSelectedOrders() {
-      let promises = [];
-
-      if (confirm("선택한 주문을 모두 거부하시겠습니까?")) {
-        for (const orderId of this.orderIds) {
-          const cup = this.entryList[orderId];
-
-          promises.push(
-            new Promise((resolve) => {
-              if (cup.state === "waiting") {
-                const path = "/backend/partner-cup/reject";
-
-                let rejectCups = axios.create();
-
-                rejectCups
-                  .post(path, { partnerOrderId: cup.id })
-                  .then((res) => {
-                    resolve(res.data);
-                  })
-                  .catch((err) => {
-                    console.log("err :>> ", err);
-                  });
-              }
-            }),
-          );
-        }
-
-        Promise.all(promises).then(() => {
-          this.$emit("makeToast", { status: "success", msg: "주문을 모두 거부했습니다." });
-          this.getOrderList();
-          this.activeCategory = "all";
-        });
-      }
-    },
     changeActiveCategory(category) {
       this.activeCategory = category;
       this.getOrderList();
     },
-    getOrderSummary() {
-      const path = "/backend/get-order-summary";
-      axios.get(path).then((res) => {
-        this.orderSum.wait = res.data.wait;
-        this.orderSum.cancel = res.data.cancel;
-        this.orderSum.total = res.data.total;
-        this.orderSum.complete = res.data.complete;
-      });
-    },
   },
   mounted() {
     this.getOrderList();
-    this.getOrderSummary();
   },
 };
 </script>
@@ -513,7 +327,7 @@ export default {
       box-sizing: border-box;
     }
 
-    .confirm-table-card-container {
+    .return-table-card-container {
       background-color: map-get($map: $theme, $key: "content-background");
       box-shadow: $shadow-light;
       padding: 1rem;
@@ -528,382 +342,267 @@ export default {
       max-width: 1020px;
       margin: 1rem auto;
 
-      .confirm-table-card {
+      .return-table-card {
         display: flex;
 
-        .card-left {
-          max-width: 70%;
+        width: 100%;
+        margin-right: 1rem;
+
+        .orderlist-wrapper {
           width: 100%;
-          margin-right: 1rem;
+          display: flex;
+          flex-direction: column;
 
-          .orderlist-wrapper {
-            width: 100%;
+          .orderlist-header {
             display: flex;
-            flex-direction: column;
+            border-bottom: 1px solid map-get($map: $theme, $key: "border");
 
-            .orderlist-header {
+            .header-nav {
               display: flex;
-              border-bottom: 1px solid map-get($map: $theme, $key: "border");
+              align-items: center;
 
-              .header-nav {
-                display: flex;
-                align-items: center;
-
-                ul {
-                  list-style: none;
-                  display: flex;
-
-                  li {
-                    color: map-get($map: $theme, $key: "text-lighter");
-                    font-weight: normal;
-                    position: relative;
-                    padding: 1rem 1.2rem;
-                    user-select: none;
-                    cursor: pointer;
-                    transition: all 0.2s linear;
-                    border-radius: 6px 6px 0 0;
-
-                    &:hover {
-                      background-color: rgba(map-get($theme, "background"), 0.4);
-                      border-bottom: 2px solid rgba($main-color, 0.4);
-                      font-weight: bold;
-                    }
-
-                    &.active {
-                      border-bottom: 2px solid $main-color;
-                      color: $main-color;
-                      font-weight: bolder;
-                      background-color: map-get($map: $theme, $key: "background");
-                    }
-                  }
-                }
+              span {
+                color: map-get($map: $theme, $key: "text");
+                padding: 1rem 1.2rem;
+                user-select: none;
+                font-weight: bold;
+                font-size: 1.1rem;
               }
             }
+          }
 
-            .orderlist-body {
-              padding: 1rem;
-              background-color: map-get($map: $theme, $key: "background");
+          .orderlist-body {
+            padding: 1rem;
+            background-color: map-get($map: $theme, $key: "background");
+            width: 100%;
+            height: 100%;
+
+            .orderlist-table {
               width: 100%;
-              height: 100%;
+              table-layout: auto;
 
-              .orderlist-table {
-                width: 100%;
-                table-layout: auto;
+              .selection-col {
+                width: 32px;
+              }
 
-                .selection-col {
-                  width: 32px;
-                }
+              .selection-column {
+                cursor: pointer;
+              }
 
-                .selection-column {
-                  cursor: pointer;
-                }
+              .table-header {
+                color: map-get($map: $theme, $key: "text");
+                white-space: nowrap;
+                user-select: none;
 
-                .table-header {
-                  color: map-get($map: $theme, $key: "text");
-                  white-space: nowrap;
-                  user-select: none;
-
-                  tr th {
-                    padding: 1rem 0;
-                    text-align: center;
-                    font-size: 0.9rem;
-                    font-weight: bold;
-                    background-color: map-get($map: $theme, $key: "content-background");
-
-                    &:first-child {
-                      border-radius: 6px 0 0 6px;
-                    }
-
-                    &:last-child {
-                      border-radius: 0 6px 6px 0;
-                    }
-
-                    &.selection-column {
-                      width: 5%;
-                    }
-                    &.id {
-                      width: 5%;
-                    }
-                    &.customer {
-                      width: 20%;
-                    }
-                    &.status {
-                      width: 15%;
-                    }
-                    &.cup {
-                      width: 15%;
-                    }
-                    &.amount {
-                      width: 15%;
-                    }
-                    &.date {
-                      width: 15%;
-                    }
-                    &.action {
-                      width: 15%;
-                    }
-                  }
-                }
-
-                .table-body {
-                  padding: 1rem;
+                tr th {
+                  padding: 1rem 0;
                   text-align: center;
-                  font-size: 0.85rem;
+                  font-size: 0.9rem;
+                  font-weight: bold;
+                  background-color: map-get($map: $theme, $key: "content-background");
 
-                  tr:hover {
-                    background-color: darken($color: map-get($theme, "background"), $amount: 3%);
+                  &:first-child {
+                    border-radius: 6px 0 0 6px;
                   }
 
-                  tr td {
-                    padding: 1rem 0;
-                    cursor: pointer;
-
-                    &:first-child {
-                      border-radius: 6px 0 0 6px;
-                    }
-
-                    &:last-child {
-                      border-radius: 0 6px 6px 0;
-                    }
-
-                    &:hover {
-                      background-color: darken($color: map-get($theme, "background"), $amount: 6%);
-                    }
-
-                    .icon-wrapper {
-                      margin: 5px;
-                      font-size: 1rem;
-
-                      &.submit {
-                        color: $main-color;
-                      }
-
-                      &.reject {
-                        color: $error-msg;
-                      }
-                    }
-
-                    &.selection-column {
-                      width: 5%;
-                    }
-                    &.id {
-                      width: 5%;
-                    }
-                    &.customer {
-                      width: 20%;
-                    }
-                    &.status {
-                      width: 15%;
-                    }
+                  &:last-child {
+                    border-radius: 0 6px 6px 0;
                   }
-                  &.amount {
-                    width: 15%;
+
+                  &.selection-column {
+                    width: 5%;
                   }
+                  &.id {
+                    width: 5%;
+                  }
+                  &.customer {
+                    width: 30%;
+                  }
+                  &.cup {
+                    width: 30%;
+                  }
+
                   &.date {
                     width: 20%;
                   }
                   &.action {
-                    width: 20%;
-                  }
-
-                  span {
-                    &.complete {
-                      border-radius: 10px;
-                      border: 1px solid rgba($white, 0.1);
-                      padding: 2px 5px;
-                      background-color: rgba(#20c997, 0.1);
-                      color: #20c997;
-                    }
-
-                    &.waiting {
-                      border-radius: 10px;
-                      border: 1px solid rgba($white, 0.1);
-                      padding: 2px 5px;
-                      background-color: rgba(#fa8b0c, 0.1);
-                      color: #fa8b0c;
-                    }
-
-                    &.canceled {
-                      border-radius: 10px;
-                      border: 1px solid rgba($white, 0.1);
-                      padding: 2px 5px;
-                      background-color: rgba(#ff4d4f, 0.1);
-                      color: #ff4d4f;
-                    }
+                    width: 15%;
                   }
                 }
               }
-            }
 
-            .orderlist-footer {
-              padding: 0 1rem 1rem 1rem;
-              background-color: map-get($map: $theme, $key: "background");
-              width: 100%;
-              border-radius: 0 0 6px 6px;
+              .table-body {
+                padding: 1rem;
+                text-align: center;
+                font-size: 0.85rem;
 
-              .footer-nav {
-                border-top: 1px solid map-get($map: $theme, $key: "border");
-                display: flex;
-                justify-content: space-between;
+                tr:hover {
+                  background-color: darken($color: map-get($theme, "background"), $amount: 3%);
+                }
 
-                ul {
-                  display: flex;
-                  list-style: none;
-                  box-sizing: border-box;
-                  align-items: center;
-                  padding: 1rem 1rem 0 1rem;
+                tr td {
+                  padding: 1rem 0;
+                  cursor: pointer;
+                  vertical-align: middle;
 
-                  .prev-item {
-                    margin-right: 0.35rem;
-                    border-radius: 50%;
-                  }
-                  .next-item {
-                    margin-left: 0.35rem;
-                    border-radius: 50%;
+                  &:first-child {
+                    border-radius: 6px 0 0 6px;
                   }
 
-                  .page-item {
-                    width: 25px;
-                    height: 25px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    border: none;
-                    transition: all 0.2s ease-out;
-                    cursor: pointer;
-                    font-size: 0.9rem;
-                    background-color: map-get($map: $theme, $key: "content-background");
-                    position: relative;
-                    color: map-get($map: $theme, $key: "text-light");
-                    outline: none;
-                    border-radius: 50%;
-                    margin: 0 5px;
-                    box-shadow: $shadow-light;
-                    transition: all 0.3s ease-in-out;
+                  &:last-child {
+                    border-radius: 0 6px 6px 0;
+                  }
+
+                  &:hover {
+                    background-color: darken($color: map-get($theme, "background"), $amount: 6%);
+                  }
+
+                  .icon-wrapper {
+                    margin: 5px;
+                    font-size: 1rem;
+                    background-color: rgba(map-get($map: $theme, $key: "text"), 0.1);
+                    border-radius: 6px;
+                    transition: all 0.2s ease;
+                    color: $main-color;
+                    padding: 0 0.2rem;
 
                     &:hover {
-                      background-color: rgba($main-color, 0.6);
-                      color: $white;
-                      box-shadow: $shadow;
-                    }
-
-                    &.active {
                       background-color: $main-color;
-                      color: $white;
+                      color: white;
+                    }
+                  }
+
+                  &.selection-column {
+                    width: 5%;
+                  }
+                  &.id {
+                    width: 5%;
+                  }
+                  &.customer {
+                    width: 25%;
+                  }
+                  &.cup {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+
+                    span {
+                      width: fit-content;
+                      margin: 5px 0;
                     }
                   }
                 }
 
-                .footer-button-wrapper {
-                  display: flex;
-                  align-items: center;
-                  align-items: center;
-                  padding: 1rem 1rem 0 1rem;
-
-                  .footer-button {
-                    margin: 0 5px;
-                    width: 25px;
-                    height: 25px;
-                    border: 1px solid map-get($map: $theme, $key: "border");
-                    border-radius: 6px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: pointer;
-                    color: $white;
-                    transition: all 0.2s ease;
-
-                    &.submit {
-                      background-color: $main-color;
-
-                      &:hover,
-                      &:active {
-                        background-color: map-get($map: $theme, $key: "content-background");
-                        border: 3px solid $main-color;
-                        color: $main-color;
-                        box-shadow: $shadow;
-                      }
-                    }
-
-                    &.reject {
-                      background-color: $error-msg;
-
-                      &:hover,
-                      &:active {
-                        background-color: map-get($map: $theme, $key: "content-background");
-                        border: 3px solid $error-msg;
-                        color: $error-msg;
-                        box-shadow: $shadow;
-                      }
-                    }
-                  }
+                &.date {
+                  width: 25%;
+                }
+                &.action {
+                  width: 20%;
                 }
               }
             }
           }
-        }
 
-        .card-right {
-          max-width: 30%;
-          width: 100%;
-
-          .order-summmary-wrapper {
-            position: relative;
-            max-width: 350px;
+          .orderlist-footer {
+            padding: 0 1rem 1rem 1rem;
+            background-color: map-get($map: $theme, $key: "background");
             width: 100%;
-            height: 100%;
+            border-radius: 0 0 6px 6px;
 
-            .order-summmary {
-              background-color: map-get($map: $theme, $key: "background");
-              border-radius: 6px;
-              padding: 1rem;
-              height: 100%;
+            .footer-nav {
+              border-top: 1px solid map-get($map: $theme, $key: "border");
+              display: flex;
+              justify-content: space-between;
 
-              .summary-card-content {
-                margin: 0 auto;
+              ul {
                 display: flex;
-                flex-direction: column;
-                height: 100%;
+                list-style: none;
+                box-sizing: border-box;
+                align-items: center;
+                padding: 1rem 1rem 0 1rem;
 
-                .card-title {
-                  font-size: 1rem;
-                  font-weight: bolder;
-                  color: map-get($map: $theme, $key: "text");
-                  margin-bottom: 25px;
-                  padding: 1rem 1rem 0 1rem;
+                .prev-item {
+                  margin-right: 0.35rem;
+                  border-radius: 50%;
+                }
+                .next-item {
+                  margin-left: 0.35rem;
+                  border-radius: 50%;
                 }
 
-                .card-body {
-                  list-style: none;
-                  position: relative;
+                .page-item {
+                  width: 25px;
+                  height: 25px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  border: none;
+                  transition: all 0.2s ease-out;
+                  cursor: pointer;
+                  font-size: 0.9rem;
                   background-color: map-get($map: $theme, $key: "content-background");
+                  position: relative;
+                  color: map-get($map: $theme, $key: "text-light");
+                  outline: none;
+                  border-radius: 50%;
+                  margin: 0 5px;
+                  box-shadow: $shadow-light;
+                  transition: all 0.3s ease-in-out;
+
+                  &:hover {
+                    background-color: rgba($main-color, 0.6);
+                    color: $white;
+                    box-shadow: $shadow;
+                  }
+
+                  &.active {
+                    background-color: $main-color;
+                    color: $white;
+                  }
+                }
+              }
+
+              .footer-button-wrapper {
+                display: flex;
+                align-items: center;
+                align-items: center;
+                padding: 1rem 1rem 0 1rem;
+
+                .footer-button {
+                  margin: 0 5px;
+                  width: 25px;
+                  height: 25px;
+                  border: 1px solid map-get($map: $theme, $key: "border");
                   border-radius: 6px;
-                  box-shadow: $shadow-lighter;
-                  padding: 1rem;
-                  height: 100%;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  cursor: pointer;
+                  color: $white;
+                  transition: all 0.2s ease;
 
-                  .body-content .content-list {
-                    list-style: none;
+                  &.submit {
+                    background-color: $main-color;
 
-                    li {
-                      margin-bottom: 18px;
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      padding: 1rem;
+                    &:hover,
+                    &:active {
+                      background-color: map-get($map: $theme, $key: "content-background");
+                      border: 3px solid $main-color;
+                      color: $main-color;
+                      box-shadow: $shadow;
+                    }
+                  }
 
-                      &:last-child {
-                        border-top: 1px solid map-get($map: $theme, $key: "border");
-                      }
+                  &.reject {
+                    background-color: $error-msg;
 
-                      .content-list-title {
-                      }
-
-                      .content-list-text {
-                        color: map-get($map: $theme, $key: "text");
-                        font-weight: bolder;
-                        font-size: 1.05rem;
-                      }
+                    &:hover,
+                    &:active {
+                      background-color: map-get($map: $theme, $key: "content-background");
+                      border: 3px solid $error-msg;
+                      color: $error-msg;
+                      box-shadow: $shadow;
                     }
                   }
                 }

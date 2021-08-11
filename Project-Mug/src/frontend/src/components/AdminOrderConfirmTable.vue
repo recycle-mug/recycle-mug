@@ -119,6 +119,16 @@
           </div>
           <div class="orderlist-footer">
             <div class="footer-nav">
+              <div class="footer-button-wrapper">
+                <span class="footer-button submit" @click="submitSelectedOrders()">
+                  <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
+                </span>
+
+                <span class="footer-button reject" @click="rejectSelectedOrders()">
+                  <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
+                </span>
+              </div>
+
               <ul role="menubar" aria-label="Pagination">
                 <li role="presentation">
                   <button
@@ -227,16 +237,6 @@
                   </button>
                 </li>
               </ul>
-
-              <div class="footer-button-wrapper">
-                <span class="footer-button submit" @click="submitSelectedOrders()">
-                  <font-awesome-icon :icon="['fas', 'check']"></font-awesome-icon>
-                </span>
-
-                <span class="footer-button reject" @click="rejectSelectedOrders()">
-                  <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -690,13 +690,28 @@ export default {
                     .icon-wrapper {
                       margin: 5px;
                       font-size: 1rem;
+                      background-color: rgba(map-get($map: $theme, $key: "text"), 0.1);
+                      border-radius: 6px;
+                      transition: all 0.2s ease;
 
                       &.submit {
                         color: $main-color;
+                        padding: 0 0.2rem;
                       }
 
                       &.reject {
                         color: $error-msg;
+                        padding: 0 0.35rem;
+                      }
+
+                      &:hover {
+                        &.submit {
+                          background-color: $main-color;
+                        }
+                        &.reject {
+                          background-color: $error-msg;
+                        }
+                        color: white;
                       }
                     }
 
