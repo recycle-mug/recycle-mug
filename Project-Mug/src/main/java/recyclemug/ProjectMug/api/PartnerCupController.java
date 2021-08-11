@@ -134,7 +134,22 @@ public class PartnerCupController {
             return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid access"), HttpStatus.BAD_REQUEST);
         }
     }
-    @GetMapping("/partner-cup/return/{partnerId}") // ADMIN이 partner에 반납된 사용 컵 회수해가는 컵 목록 UI
+    @GetMapping("/partner-cup/return") // 모든 Partner한테 반납된 컵 목록 UI
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @ResponseBody
+    public List<PartnerReturnDto> getAllPartnerReturnCups(){
+        List<PartnerReturn> partnerReturns = partnerReturnRepository.findAll();
+        List<PartnerReturnDto> partnerReturnDtos = new ArrayList<>();
+        for(PartnerReturn partnerReturn : partnerReturns){
+            PartnerReturnDto partnerReturnDto = new PartnerReturnDto(partnerReturn.getPartner().getBusinessName(),
+                    partnerReturn.getCup().getName(),
+                    partnerReturn.getReturnQuantity());
+            partnerReturnDtos.add(partnerReturnDto);
+        }
+        return partnerReturnDtos;
+    }
+
+    @GetMapping("/partner-cup/return/{partnerId}") // ADMIN이 특정 partner한테 반납된 컵 회수해가는 컵 목록 UI
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseBody
     public List<PartnerReturnDto> getPartnerReturnCups(@PathVariable Long partnerId){
@@ -153,7 +168,7 @@ public class PartnerCupController {
             return null;
         }
     }
-    @PostMapping("/partner-cup/return") // ADMIN이 partner에 반납된 사용컵들 회수 로직 수행
+    @PostMapping("/partner-cup/return") // ADMIN이 특정 partner에 반납된 사용컵들 회수 로직 수행
     @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseBody
     public ResponseEntity<CreateOrderResponse> returnPartnerCups(@RequestBody @Valid CreateReturnCupsRequest request){
@@ -161,9 +176,12 @@ public class PartnerCupController {
             partnerReturnService.completeReturn(request.getPartnerId());
             log.info("Return cups for : " + request.getPartnerId());
             return new ResponseEntity<>(new CreateOrderResponse("success","Return Complete"),HttpStatus.OK);
-        }catch(Exception e){
-            log.error("Invalid PartnerId");
+        }catch(NullPointerException e){
+            log.error("NullPointException in return PartnerCups");
             return new ResponseEntity<>(new CreateOrderResponse("fail","Invalid partnerId"),HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            log.error("Exception in return PartnerCups");
+            return new ResponseEntity<>(new CreateOrderResponse("fail",e.toString()),HttpStatus.BAD_REQUEST);
         }
     }
 }
