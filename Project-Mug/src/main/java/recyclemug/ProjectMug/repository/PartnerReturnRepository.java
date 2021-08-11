@@ -33,7 +33,7 @@ public class PartnerReturnRepository {
      * @return
      */
     public List<PartnerReturn> findAll() {
-        return em.createQuery("SELECT pr FROM PartnerReturn", PartnerReturn.class).getResultList();
+        return em.createQuery("SELECT pr FROM PartnerReturn pr", PartnerReturn.class).getResultList();
     }
 
     /**

@@ -33,5 +33,4 @@ public class PartnerRepository {
                 .setParameter("email", email)
                 .getResultList();
     }
-
 }

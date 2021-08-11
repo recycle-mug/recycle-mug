@@ -16,6 +16,7 @@ import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.dto.CustomerOrderDto;
 import recyclemug.ProjectMug.dto.CustomerReturnDto;
 import recyclemug.ProjectMug.exception.CustomerStateNotAllowedException;
+import recyclemug.ProjectMug.exception.NoCupsForReturnException;
 import recyclemug.ProjectMug.exception.NotEnoughStockException;
 import recyclemug.ProjectMug.repository.*;
 import recyclemug.ProjectMug.service.CustomerOrderService;
@@ -89,9 +90,15 @@ public class CustomerOrderApiController {
             customerOrderService.cupReturnOfCustomer(customer,partner);
             log.info("Return cup normal customer : " + customer.getNickname() + " Partner : " + partner.getNickname());
             return new ResponseEntity<>(new CreateOrderResponse("success","Return Complete"),HttpStatus.OK);
+        }catch(NullPointerException e){
+            log.error("NullPointException in return-cup");
+            return new ResponseEntity<>(new CreateOrderResponse("fail","NullPointerException"),HttpStatus.BAD_REQUEST);
+        }catch(NoCupsForReturnException e) {
+            log.error("NoCupsForReturnException in return-cup");
+            return new ResponseEntity<>(new CreateOrderResponse("fail","NoCupsForReturnException"),HttpStatus.BAD_REQUEST);
         }catch(Exception e){
             log.error("Customer return cup exception");
-            return new ResponseEntity<>(new CreateOrderResponse("fail","Customer return cup exception"),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CreateOrderResponse("fail",e.toString()),HttpStatus.BAD_REQUEST);
         }
     }
     @GetMapping("/customer/return-cup/report")
