@@ -22,13 +22,16 @@ public class ReturnedCup {
     @JoinColumn(name = "cup_id")
     private Cup cup;
 
+    private int returnedQuantity;
+
     private LocalDateTime returnedTime;
 
     protected ReturnedCup(){};
 
-    public ReturnedCup(Partner partner, Cup cup) {
+    public ReturnedCup(Partner partner, Cup cup, int quantity) {
         this.cup = cup;
         this.partner = partner;
         returnedTime = LocalDateTime.now();
+        returnedQuantity = quantity;
     }
 }
