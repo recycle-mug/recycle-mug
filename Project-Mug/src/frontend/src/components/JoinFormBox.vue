@@ -90,7 +90,6 @@
             type="text"
             id="location"
             placeholder="주소"
-            readonly
             @click.prevent="goPopup"
             class="address-input"
             v-model="formData.joinAddress.address"
@@ -107,8 +106,18 @@
             @keydown.enter.prevent="onSubmitForm"
           />
 
-          <input type="hidden" v-model="formData.joinAddress.addressLat" id="location_lat" />
-          <input type="hidden" v-model="formData.joinAddress.addressLng" id="location_lng" />
+          <input
+            type="hidden"
+            v-model="formData.joinAddress.addressLat"
+            id="location_lat"
+            value=""
+          />
+          <input
+            type="hidden"
+            v-model="formData.joinAddress.addressLng"
+            id="location_lng"
+            value=""
+          />
         </div>
         <span class="error-msg">{{ errors.joinAddress }}</span>
 
@@ -268,8 +277,8 @@ export default {
         joinAddress: {
           address: "",
           addressName: "",
-          addressLat: "",
-          addressLng: "",
+          addressLat: "0",
+          addressLng: "0",
         },
       },
       errors: {
