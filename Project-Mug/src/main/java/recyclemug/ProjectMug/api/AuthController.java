@@ -1,6 +1,7 @@
 package recyclemug.ProjectMug.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +25,7 @@ import recyclemug.ProjectMug.jwt.TokenAuthenticationProvider;
 import recyclemug.ProjectMug.repository.AdminRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
+import recyclemug.ProjectMug.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -43,19 +45,22 @@ public class AuthController {
     private final PartnerRepository partnerRepository;
     private final Base64.Decoder decoder;
     private final AdminRepository adminRepository;
+    private final UserService userService;
 
     @Autowired
     public AuthController(TokenAuthenticationProvider tokenAuthenticationProvider,
                           AuthenticationManagerBuilder authenticationManagerBuilder,
                           CustomerRepository customerRepository,
                           PartnerRepository partnerRepository,
-                          AdminRepository adminRepository) {
+                          AdminRepository adminRepository,
+                          UserService userService) {
         this.tokenAuthenticationProvider = tokenAuthenticationProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.decoder = Base64.getDecoder();
         this.customerRepository = customerRepository;
         this.partnerRepository = partnerRepository;
         this.adminRepository = adminRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/login/*")
@@ -92,18 +97,19 @@ public class AuthController {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                user.setLastLoginDateTIme(LocalDateTime.now());
+                userService.updateLastLogin(user);
                 return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole(), user.getSignupDateTIme());
             }
         } else if (headerDTO.getRole().equals("ROLE_PARTNER")) {
             List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
-                user.setLastLoginDateTIme(LocalDateTime.now());
+                userService.updateLastLogin(user);
                 return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole(), user.getSignupDateTIme());
             }
         } else {
             User user = adminRepository.findByEmail(headerDTO.getEmail());
+            userService.updateLastLogin(user);
             return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(picturePath), headerDTO.getRole(), null);
         }
         return null;
