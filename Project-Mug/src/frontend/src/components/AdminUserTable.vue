@@ -60,7 +60,7 @@
             role="row"
             v-for="index in parseInt(perPage)"
             :key="index"
-            @click="activeUserTable((currentPage - 1) * perPage + index - 1)"
+            @click="openModal((currentPage - 1) * perPage + index - 1)"
           >
             <td
               aria-colindex="1"
@@ -264,8 +264,18 @@
         </div>
       </div>
     </div>
+    <div v-if="opened" style="position:absolute;top:0;left:0;" @click="closeModal()">
+      <div class="modal-wrapper">
+        <div class="modal" @click.stop>
+          <admin-user-detail
+            :user="userDetail"
+            :role="role"
+            @closeModal="closeModal"
+          ></admin-user-detail>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- <writing-form-box v-else boardName="board-free"></writing-form-box> -->
 </template>
 
 <script>
@@ -273,6 +283,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faAngleLeft, faAngleRight, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 import axios from "axios";
+import AdminUserDetail from "./AdminUserDetail.vue";
 
 faLibrary.add(faAngleLeft, faAngleRight, faSearch);
 
@@ -288,13 +299,33 @@ export default {
       userStyle: {
         backgroundColor: "#5d9b5e",
       },
+      opened: false,
+      userDetail: null,
     };
   },
   props: ["role"],
   components: {
     FontAwesomeIcon,
+    AdminUserDetail,
   },
   methods: {
+    openModal(index) {
+      const path = `/backend/${this.role}/${this.entryList[index].id}`;
+      let user = axios.create();
+
+      user
+        .get(path)
+        .then((res) => {
+          this.userDetail = res.data;
+          this.opened = true;
+        })
+        .catch((err) => {
+          console.log("err :>> ", err);
+        });
+    },
+    closeModal() {
+      this.opened = false;
+    },
     nextPage() {
       this.currentPage = Math.ceil(this.currentPage / 5) * 5 + 1;
     },
@@ -303,7 +334,6 @@ export default {
     },
     selectPage() {
       this.currentPage = parseInt(event.target.textContent);
-      console.log("this.maxPage :>> ", this.maxPage);
     },
     changePerPage() {
       this.maxPage = Math.ceil(this.total / this.perPage);
@@ -311,14 +341,6 @@ export default {
     onWriting(e) {
       e.preventDefault();
       this.writingMode = !this.writingMode;
-    },
-    activeUserTable(index) {
-      for (let entry in this.entryList) {
-        if (index != entry) {
-          this.entryList[entry].active = false;
-        }
-      }
-      this.entryList[index].active = !this.entryList[index].active;
     },
     findAllUsers() {
       const path = `/backend/user/find-all-${this.role}s`;
@@ -328,7 +350,8 @@ export default {
         .get(path)
         .then((res) => {
           this.entryList = res.data;
-          console.log("res :>> ", res);
+          this.total = this.entryList.length;
+          this.maxPage = Math.ceil(this.total / this.perPage);
         })
         .catch((err) => {
           console.log("err :>> ", err);
@@ -344,8 +367,7 @@ export default {
   },
   mounted: function() {
     this.findAllUsers();
-    this.total = this.entryList.length;
-    this.maxPage = Math.ceil(this.total / this.perPage);
+
     this.setUserStyle();
   },
 };
@@ -357,12 +379,33 @@ export default {
     margin: 0;
     font-size: 1rem;
 
+    .modal-wrapper {
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      position: fixed;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+
+      .modal {
+        width: 720px;
+        height: 800px;
+        max-width: 90%;
+        max-height: 90%;
+        background-color: map-get($map: $theme, $key: "content-background");
+        z-index: 999;
+        position: fixed;
+        border-radius: 6px;
+      }
+    }
+
     .table-card {
       box-shadow: $shadow-light;
       background-color: map-get($map: $theme, $key: "content-background");
       border-radius: 0.428rem;
       transition: all 0.3s ease-in-out;
-      position: relative;
       display: flex;
       flex-direction: column;
       box-sizing: border-box;
@@ -543,7 +586,6 @@ export default {
 
           tbody tr td {
             padding: 0.72rem 2rem;
-            border-top: 1px solid map-get($map: $theme, $key: "table-border");
             vertical-align: middle;
             box-sizing: border-box;
             overflow: hidden;
@@ -577,6 +619,13 @@ export default {
           }
           tbody tr:hover {
             background-color: transparentize(map-get($map: $theme, $key: "table"), 0.2);
+          }
+          tr {
+            border-bottom: 1px solid map-get($map: $theme, $key: "table-border");
+
+            td.active {
+              background-color: $main-color;
+            }
           }
         }
       }
