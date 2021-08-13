@@ -29,7 +29,7 @@ public class PartnerReturnService {
         Cup cup = partnerReturn.getCup();
         Partner partner = partnerReturn.getPartner();
         returnedCupRepository.save(new ReturnedCup(partner, cup, partnerReturn.getReturnQuantity()));
-        cup.setPrice(partnerReturn.getReturnQuantity());
+        cup.setStockQuantity(cup.getStockQuantity() + partnerReturn.getReturnQuantity());
         partnerReturnRepository.remove(partnerReturn);
     }
 }
