@@ -21,7 +21,7 @@
                 <th class="id">#</th>
                 <th class="customer">Customer</th>
                 <th class="cup">Cup</th>
-                <th class="date">Date</th>
+                <th class="date">갯수</th>
                 <th class="action">Action</th>
               </tr>
             </thead>
@@ -48,15 +48,12 @@
                   <span>{{ entryList[(currentPage - 1) * perPage + index - 1].businessName }}</span>
                 </td>
                 <td class="cup" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                  <span>cup a : 50개</span>
-                  <span>cup a : 50개</span>
-                  <span>cup a : 50개</span>
-                  <span>cup a : 50개</span>
+                  <span>{{ entryList[(currentPage - 1) * perPage + index - 1].cupName }}</span>
                 </td>
                 <td class="date" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                  <span>{{
-                    entryList[(currentPage - 1) * perPage + index - 1].orderDateTime.slice(0, 19)
-                  }}</span>
+                  <span
+                    >{{ entryList[(currentPage - 1) * perPage + index - 1].returnQuantity }}개</span
+                  >
                 </td>
                 <td class="action" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                   <span
@@ -231,11 +228,11 @@ export default {
       this.allSelected = false;
       this.orderIds = [];
     },
-    getOrderList() {
-      const path = `/backend/partner/orders`;
-      let findUsers = axios.create();
+    getReturnCups() {
+      const path = `/backend/partner-cup/return`;
+      let returnCups = axios.create();
 
-      findUsers
+      returnCups
         .get(path)
         .then((res) => {
           this.entryList = res.data;
@@ -243,7 +240,7 @@ export default {
           this.maxPage = Math.ceil(this.total / this.perPage);
         })
         .catch((err) => {
-          console.log("findUsers :>> ", err);
+          console.log("returnCups :>> ", err);
         });
     },
     checkAll() {
@@ -259,19 +256,21 @@ export default {
       this.allSelected = false;
     },
     submitOrder(index) {
-      const cup = this.entryList[index];
+      const returnCup = this.entryList[index];
 
-      if (confirm(`${cup.cupName} : ${cup.stockQuantity}개\n이 주문을 승인하시겠습니까?`)) {
-        const orderId = cup.id;
-        const path = `/backend/partner-cup/add`;
+      console.log("returnCup :>> ", returnCup);
+
+      if (confirm(`이 컵을 회수하시겠습니까?`)) {
+        const orderId = returnCup.id;
+        const path = `/backend/partner-cup/return`;
 
         let addOrder = axios.create();
 
         addOrder
           .post(path, { partnerOrderId: orderId })
           .then(() => {
-            this.$emit("makeToast", { status: "success", msg: "주문을 승인했습니다." });
-            this.getOrderList();
+            this.$emit("makeToast", { status: "success", msg: "회수 했습니다." });
+            this.getReturnCups();
           })
           .catch((err) => {
             console.log("err :>> ", err);
@@ -281,13 +280,13 @@ export default {
     submitSelectedOrders() {
       let promises = [];
 
-      if (confirm("선택한 주문을 모두 승인하시겠습니까?")) {
+      if (confirm("모두 회수하시겠습니까?")) {
         for (const orderId of this.orderIds) {
           const cup = this.entryList[orderId];
 
           promises.push(
             new Promise((resolve) => {
-              const path = "/backend/partner-cup/add";
+              const path = "/backend/partner-cup/return";
 
               let submitCups = axios.create();
 
@@ -304,18 +303,18 @@ export default {
         }
 
         Promise.all(promises).then(() => {
-          this.$emit("makeToast", { status: "success", msg: "주문을 모두 승인했습니다." });
-          this.getOrderList();
+          this.$emit("makeToast", { status: "success", msg: "회수 했습니다." });
+          this.getReturnCups();
         });
       }
     },
     changeActiveCategory(category) {
       this.activeCategory = category;
-      this.getOrderList();
+      this.getReturnCups();
     },
   },
   mounted() {
-    this.getOrderList();
+    this.getReturnCups();
   },
 };
 </script>

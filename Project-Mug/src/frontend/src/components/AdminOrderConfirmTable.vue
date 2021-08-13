@@ -674,6 +674,7 @@ export default {
                   tr td {
                     padding: 1rem 0;
                     cursor: pointer;
+                    vertical-align: middle;
 
                     &:first-child {
                       border-radius: 6px 0 0 6px;
@@ -681,6 +682,7 @@ export default {
 
                     &:last-child {
                       border-radius: 0 6px 6px 0;
+                      display: flex;
                     }
 
                     &:hover {
@@ -696,12 +698,12 @@ export default {
 
                       &.submit {
                         color: $main-color;
-                        padding: 0 0.2rem;
+                        padding: 0.2rem;
                       }
 
                       &.reject {
                         color: $error-msg;
-                        padding: 0 0.35rem;
+                        padding: 0.2rem 0.35rem;
                       }
 
                       &:hover {
