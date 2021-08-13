@@ -2,10 +2,15 @@ package recyclemug.ProjectMug.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import recyclemug.ProjectMug.data.CustomerOrderIdResponse;
+import recyclemug.ProjectMug.domain.cup.Cup;
 import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 import recyclemug.ProjectMug.domain.user.Customer;
 
 import javax.persistence.EntityManager;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,5 +38,31 @@ public class CustomerOrderRepository {
         return em.createQuery(query, CustomerOrder.class)
                 .setParameter("customerId", customerId)
                 .setMaxResults(1).getSingleResult();
+    }
+
+    public List<CustomerOrderIdResponse> findByCustomerId(Long customerId) throws IOException{
+        String query = "SELECT o FROM CustomerOrder o INNER JOIN o.customer c WHERE c.id=:customerId ORDER BY o.rentDateTime DESC";
+        ArrayList<CustomerOrderIdResponse> customerOrders = new ArrayList<>();
+        Cup cup;
+        for (CustomerOrder customerOrder : em.createQuery(query, CustomerOrder.class).getResultList()) {
+            cup = customerOrder.getCup();
+            CustomerOrderIdResponse order = CustomerOrderIdResponse.builder()
+                    .partnerName(customerOrder.getPartner().getNickname())
+                    .cupName(cup.getName())
+                    .cupImage(findPicture(cup.getProfilePictureAddress()))
+                    .rentDateTime(customerOrder.getRentDateTime())
+                    .returnDateTime(customerOrder.getReturnDateTime())
+                    .returnedDateTime(customerOrder.getReturnedDateTime())
+                    .build();
+            customerOrders.add(order);
+        }
+        return customerOrders;
+    }
+
+    public byte[] findPicture(String profilePictureAddress) throws IOException {
+        FileInputStream imageStream = new FileInputStream(profilePictureAddress);
+        byte[] image = imageStream.readAllBytes();
+        imageStream.close();
+        return image;
     }
 }
