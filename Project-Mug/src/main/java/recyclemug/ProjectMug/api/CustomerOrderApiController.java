@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.CreateOrderResponse;
 import recyclemug.ProjectMug.data.CreateRentRequest;
 import recyclemug.ProjectMug.data.CreateReturnRequest;
+import recyclemug.ProjectMug.data.CustomerOrderIdResponse;
 import recyclemug.ProjectMug.domain.cup.PartnerCup;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
@@ -24,6 +25,7 @@ import recyclemug.ProjectMug.service.CustomerOrderService;
 import javax.validation.Valid;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,6 +35,7 @@ public class CustomerOrderApiController {
     private final PartnerRepository partnerRepository;
     private final PartnerCupRepository partnerCupRepository;
     private final CustomerOrderService customerOrderService;
+    private final CustomerOrderRepository customerOrderRepository;
 
     @GetMapping("/customer/rent-cup")
     @PreAuthorize("hasAnyRole('PARTNER','ADMIN')") // partner가 customerQR코드에 접속
@@ -122,4 +125,15 @@ public class CustomerOrderApiController {
         }
     }
 
+    @GetMapping("/customer/{customerId}/orders")
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
+    @ResponseBody
+    public List<CustomerOrderIdResponse> returnCustomerOrderById(@PathVariable Long customerId) {
+        try {
+            return customerOrderRepository.findByCustomerId(customerId);
+        } catch (IOException e) {
+            log.error("IOException occur");
+        }
+        return null;
+    }
 }
