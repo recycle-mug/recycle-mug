@@ -261,19 +261,19 @@ export default {
       console.log("returnCup :>> ", returnCup);
 
       if (confirm(`이 컵을 회수하시겠습니까?`)) {
-        const orderId = returnCup.id;
+        const orderId = returnCup.partnerReturnId;
         const path = `/backend/partner-cup/return`;
 
         let addOrder = axios.create();
 
         addOrder
-          .post(path, { partnerOrderId: orderId })
+          .post(path, { partnerReturnId: orderId })
           .then(() => {
             this.$emit("makeToast", { status: "success", msg: "회수 했습니다." });
             this.getReturnCups();
           })
           .catch((err) => {
-            console.log("err :>> ", err);
+            console.log("err :>> ", err.response);
           });
       }
     },
