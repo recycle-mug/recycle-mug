@@ -11,6 +11,9 @@
       <div class="row">
         <button @click="returnCup">컵 반납하기</button>
       </div>
+      <div class="row">
+        <span class="broken" @click="returnBrokenCup">컵이 파손되었나요?</span>
+      </div>
     </div>
   </div>
 </template>
@@ -62,6 +65,27 @@ export default {
         };
         returnCup
           .post(this.url.split("?")[0], payload)
+          .then((res) => {
+            if (res.status === 200) {
+              this.makeToast("success", "컵을 반납했습니다.");
+              this.closeThisModal();
+            }
+          })
+          .catch((err) => {
+            console.log("err :>> ", err.response);
+            this.makeToast("error", err.response.data.message);
+          });
+      }
+    },
+    returnBrokenCup() {
+      if (confirm("파손된 컵을 반납합니까?")) {
+        let returnCup = axios.create();
+        const payload = {
+          customerId: this.customerId,
+          partnerId: this.url.split("?")[1].split("=")[1],
+        };
+        returnCup
+          .post("/backend/customer/return-cup/report", payload)
           .then((res) => {
             if (res.status === 200) {
               this.makeToast("success", "컵을 반납했습니다.");
@@ -154,6 +178,16 @@ export default {
             max-width: 300px;
             max-height: 300px;
             object-fit: contain;
+          }
+
+          .broken {
+            user-select: none;
+            text-decoration: underline;
+            cursor: pointer;
+
+            &:hover {
+              color: $main-color;
+            }
           }
         }
       }
