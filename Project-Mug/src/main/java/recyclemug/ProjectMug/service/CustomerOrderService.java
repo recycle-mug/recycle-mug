@@ -105,4 +105,11 @@ public class CustomerOrderService {
             throw new NoCupsForReturnException();
         }
     }
+
+    @Transactional
+    public void cupStateRenewal(CustomerOrder customerOrder, Customer customer) {
+        if (customerOrder.getReturnDateTime().isBefore(LocalDateTime.now())) {
+            customer.setCustomerState(CustomerState.OVERDUE);
+        }
+    }
 }

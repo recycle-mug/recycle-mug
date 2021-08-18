@@ -27,6 +27,7 @@ import recyclemug.ProjectMug.repository.AdminRepository;
 import recyclemug.ProjectMug.repository.CustomerOrderRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
+import recyclemug.ProjectMug.service.CustomerOrderService;
 import recyclemug.ProjectMug.service.UserService;
 
 import javax.persistence.NoResultException;
@@ -50,6 +51,7 @@ public class AuthController {
     private final Base64.Decoder decoder;
     private final AdminRepository adminRepository;
     private final UserService userService;
+    private final CustomerOrderService customerOrderService;
 
     @Autowired
     public AuthController(TokenAuthenticationProvider tokenAuthenticationProvider,
@@ -58,7 +60,8 @@ public class AuthController {
                           CustomerOrderRepository customerOrderRepository,
                           PartnerRepository partnerRepository,
                           AdminRepository adminRepository,
-                          UserService userService) {
+                          UserService userService,
+                          CustomerOrderService customerOrderService) {
         this.tokenAuthenticationProvider = tokenAuthenticationProvider;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.decoder = Base64.getDecoder();
@@ -67,6 +70,7 @@ public class AuthController {
         this.partnerRepository = partnerRepository;
         this.adminRepository = adminRepository;
         this.userService = userService;
+        this.customerOrderService = customerOrderService;
     }
 
     @PostMapping("/login/*")
@@ -103,29 +107,29 @@ public class AuthController {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 try {
-                    User user = findByEmail.get(0);
-                    userService.updateLastLogin(user);
-                    Customer customer = customerRepository.findOne(user.getId());
-                    CustomerOrder customerOrder = customerOrderRepository.findLastOrderOfCustomer(user.getId());
-                    return new ResponseProfileDTO(user.getId(),
-                            user.getEmail(),
-                            user.getNickname(),
-                            findPicture(user.getProfilePictureAddress()),
+                    Customer customer = findByEmail.get(0);
+                    userService.updateLastLogin(customer);
+                    CustomerOrder customerOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
+                    customerOrderService.cupStateRenewal(customerOrder, customer);
+
+                    return new ResponseProfileDTO(customer.getId(),
+                            customer.getEmail(),
+                            customer.getNickname(),
+                            findPicture(customer.getProfilePictureAddress()),
                             headerDTO.getRole(),
-                            user.getSignupDateTIme(),
+                            customer.getSignupDateTIme(),
                             customer.getCustomerState(),
                             customerOrder.getReturnDateTime());
                 }catch(NoResultException e){
                     log.error("NoResultException in getCustomerProfile");
-                    User user = findByEmail.get(0);
-                    userService.updateLastLogin(user);
-                    Customer customer = customerRepository.findOne(user.getId());
-                    return new ResponseProfileDTO(user.getId(),
-                            user.getEmail(),
-                            user.getNickname(),
-                            findPicture(user.getProfilePictureAddress()),
+                    Customer customer = findByEmail.get(0);
+                    userService.updateLastLogin(customer);
+                    return new ResponseProfileDTO(customer.getId(),
+                            customer.getEmail(),
+                            customer.getNickname(),
+                            findPicture(customer.getProfilePictureAddress()),
                             headerDTO.getRole(),
-                            user.getSignupDateTIme(),
+                            customer.getSignupDateTIme(),
                             customer.getCustomerState(),
                             null);
                 }catch(Exception e){
