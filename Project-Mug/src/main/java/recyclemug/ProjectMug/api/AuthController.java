@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import recyclemug.ProjectMug.data.HeaderJwtDTO;
 import recyclemug.ProjectMug.data.ResponseProfileDTO;
+import recyclemug.ProjectMug.domain.cup.CustomerOrder;
 import recyclemug.ProjectMug.domain.user.Customer;
 import recyclemug.ProjectMug.domain.user.Partner;
 import recyclemug.ProjectMug.domain.user.User;
@@ -23,10 +24,12 @@ import recyclemug.ProjectMug.dto.TokenDto;
 import recyclemug.ProjectMug.jwt.JwtFilter;
 import recyclemug.ProjectMug.jwt.TokenAuthenticationProvider;
 import recyclemug.ProjectMug.repository.AdminRepository;
+import recyclemug.ProjectMug.repository.CustomerOrderRepository;
 import recyclemug.ProjectMug.repository.CustomerRepository;
 import recyclemug.ProjectMug.repository.PartnerRepository;
 import recyclemug.ProjectMug.service.UserService;
 
+import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.FileInputStream;
@@ -42,6 +45,7 @@ public class AuthController {
     private final TokenAuthenticationProvider tokenAuthenticationProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final CustomerRepository customerRepository;
+    private final CustomerOrderRepository customerOrderRepository;
     private final PartnerRepository partnerRepository;
     private final Base64.Decoder decoder;
     private final AdminRepository adminRepository;
@@ -51,6 +55,7 @@ public class AuthController {
     public AuthController(TokenAuthenticationProvider tokenAuthenticationProvider,
                           AuthenticationManagerBuilder authenticationManagerBuilder,
                           CustomerRepository customerRepository,
+                          CustomerOrderRepository customerOrderRepository,
                           PartnerRepository partnerRepository,
                           AdminRepository adminRepository,
                           UserService userService) {
@@ -58,6 +63,7 @@ public class AuthController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.decoder = Base64.getDecoder();
         this.customerRepository = customerRepository;
+        this.customerOrderRepository = customerOrderRepository;
         this.partnerRepository = partnerRepository;
         this.adminRepository = adminRepository;
         this.userService = userService;
@@ -96,21 +102,61 @@ public class AuthController {
         if (headerDTO.getRole().equals("ROLE_CUSTOMER")) {
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
-                User user = findByEmail.get(0);
-                userService.updateLastLogin(user);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole(), user.getSignupDateTIme());
+                try {
+                    User user = findByEmail.get(0);
+                    userService.updateLastLogin(user);
+                    Customer customer = customerRepository.findOne(user.getId());
+                    CustomerOrder customerOrder = customerOrderRepository.findLastOrderOfCustomer(user.getId());
+                    return new ResponseProfileDTO(user.getId(),
+                            user.getEmail(),
+                            user.getNickname(),
+                            findPicture(user.getProfilePictureAddress()),
+                            headerDTO.getRole(),
+                            user.getSignupDateTIme(),
+                            customer.getCustomerState(),
+                            customerOrder.getReturnDateTime());
+                }catch(NoResultException e){
+                    log.error("NoResultException in getCustomerProfile");
+                    User user = findByEmail.get(0);
+                    userService.updateLastLogin(user);
+                    Customer customer = customerRepository.findOne(user.getId());
+                    return new ResponseProfileDTO(user.getId(),
+                            user.getEmail(),
+                            user.getNickname(),
+                            findPicture(user.getProfilePictureAddress()),
+                            headerDTO.getRole(),
+                            user.getSignupDateTIme(),
+                            customer.getCustomerState(),
+                            null);
+                }catch(Exception e){
+                    log.error("Invalid data. Exception : " + e.toString());
+                }
             }
         } else if (headerDTO.getRole().equals("ROLE_PARTNER")) {
             List<Partner> findByEmail = partnerRepository.findByEmail(headerDTO.getEmail());
             if (!findByEmail.isEmpty()) {
                 User user = findByEmail.get(0);
                 userService.updateLastLogin(user);
-                return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(user.getProfilePictureAddress()), headerDTO.getRole(), user.getSignupDateTIme());
+                return new ResponseProfileDTO(user.getId(),
+                        user.getEmail(),
+                        user.getNickname(),
+                        findPicture(user.getProfilePictureAddress()),
+                        headerDTO.getRole(),
+                        user.getSignupDateTIme(),
+                        null,
+                        null);
             }
         } else {
             User user = adminRepository.findByEmail(headerDTO.getEmail());
             userService.updateLastLogin(user);
-            return new ResponseProfileDTO(user.getId(), user.getEmail(), user.getNickname(), findPicture(picturePath), headerDTO.getRole(), null);
+            return new ResponseProfileDTO(user.getId(),
+                    user.getEmail(),
+                    user.getNickname(),
+                    findPicture(picturePath),
+                    headerDTO.getRole(),
+                    null,
+                    null
+            ,null);
         }
         return null;
     }
