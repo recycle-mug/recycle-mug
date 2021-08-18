@@ -17,7 +17,7 @@
             {{ (currentPage - 1) * perPage + index }}
           </div>
           <div class="col col-2" data-label="주문날짜">
-            {{ orderList[(currentPage - 1) * perPage + index - 1].orderDateTime.slice(0, 10) }}
+            {{ setTime(orderList[(currentPage - 1) * perPage + index - 1].orderDateTime) }}
           </div>
           <div class="col col-3" data-label="주문한 컵">
             <span>{{ orderList[(currentPage - 1) * perPage + index - 1].cupName }}</span>
@@ -233,6 +233,43 @@ export default {
           this.orderList[order].state = "canceled";
         }
       }
+    },
+    setTime(timeString) {
+      const orderDate = new Date(timeString);
+      const nowDate = new Date();
+
+      const diff = nowDate.getTime() - orderDate.getTime();
+      const diffDay = parseInt(diff / (1000 * 60 * 60 * 24));
+      const diffHour = parseInt(diff / (1000 * 60 * 60));
+      const diffMin = parseInt(diff / (1000 * 60));
+
+      let resString = "";
+
+      switch (diffDay) {
+        case 0:
+          if (diffHour === 0) {
+            resString = diffMin + "분 전";
+          } else {
+            resString = diffHour + "시간 전";
+          }
+          break;
+        case 1:
+          resString = "어제";
+          break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+          resString = diffDay + "일 전";
+          break;
+        default:
+          resString = `${orderDate.getUTCFullYear()}-${orderDate.getUTCMonth() +
+            1}-${orderDate.getUTCDate()}`;
+      }
+
+      return resString;
     },
     addComma(str) {
       let text = str.toString().replace(/[^0-9]/g, "");
