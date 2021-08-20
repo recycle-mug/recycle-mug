@@ -40,6 +40,11 @@ public class CustomerOrderRepository {
                 .setMaxResults(1).getSingleResult();
     }
 
+    public List<CustomerOrder> findAll() {
+        String query = "SELECT co FROM CustomerOrder co";
+        return em.createQuery(query, CustomerOrder.class).getResultList();
+    }
+
     public List<CustomerOrderIdResponse> findByCustomerId(Long customerId) throws IOException{
         String query = "SELECT o FROM CustomerOrder o INNER JOIN o.customer c WHERE c.id=:customerId ORDER BY o.rentDateTime DESC";
         ArrayList<CustomerOrderIdResponse> customerOrders = new ArrayList<>();
