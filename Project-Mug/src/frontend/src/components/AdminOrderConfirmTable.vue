@@ -71,7 +71,7 @@
                     />
                   </td>
                   <td class="id" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
-                    <span>{{ entryList.length - ((currentPage - 1) * perPage + index - 1) }}</span>
+                    <span>{{ (currentPage - 1) * perPage + index }}</span>
                   </td>
                   <td class="customer" v-if="entryList[(currentPage - 1) * perPage + index - 1]">
                     <span>{{

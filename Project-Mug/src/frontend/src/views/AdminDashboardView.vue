@@ -23,6 +23,9 @@
       <div class="row">
         <admin-user-table role="partner"></admin-user-table>
       </div>
+      <div class="row">
+        <admin-cup-log-table></admin-cup-log-table>
+      </div>
       <footer-nav></footer-nav>
     </div>
   </div>
@@ -37,6 +40,7 @@ import FooterNav from "../components/FooterNav.vue";
 import AdminSidebar from "../components/AdminSidebar.vue";
 import AdminOrderConfirmTable from "../components/AdminOrderConfirmTable.vue";
 import AdminReturnCupsTable from "../components/AdminReturnCupsTable.vue";
+import AdminCupLogTable from "../components/AdminCupLogTable.vue";
 import ToastMessage from "../components/ToastMessage.vue";
 
 export default {
@@ -49,6 +53,7 @@ export default {
     AdminSidebar,
     AdminOrderConfirmTable,
     AdminReturnCupsTable,
+    AdminCupLogTable,
     ToastMessage,
   },
   data() {
