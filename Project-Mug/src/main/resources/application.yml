@@ -1,14 +1,19 @@
 spring:
 
-  h2:
-    console:
-      enabled: true
-
   datasource:
-    url: jdbc:h2:tcp://localhost/~/cupTest
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://18.189.54.77:3306/WECUP_DB?useSSL=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: onAuspicious
+    password: 1447
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#  h2:
+#    console:
+#      enabled: true
+
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/cupTest
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
 
     data: classpath*:/data.sql
 
