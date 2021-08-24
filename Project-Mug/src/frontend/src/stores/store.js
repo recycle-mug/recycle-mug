@@ -11,6 +11,8 @@ const enhanceAccessToken = () => {
   const { accessToken } = localStorage;
   if (!accessToken) return;
   axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+  axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+  axios.defaults.headers.common["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS";
 };
 
 enhanceAccessToken();
