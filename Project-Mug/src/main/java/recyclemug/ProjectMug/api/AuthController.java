@@ -156,7 +156,7 @@ public class AuthController {
             return new ResponseProfileDTO(user.getId(),
                     user.getEmail(),
                     user.getNickname(),
-                    findPicture(picturePath),
+                    null,
                     headerDTO.getRole(),
                     null,
                     null
