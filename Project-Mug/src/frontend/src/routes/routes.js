@@ -55,7 +55,7 @@ const checkAdmin = () => (from, to, next) => {
     alert("로그인 해주세요");
     next({ path: "/" });
   } else {
-    const getRole = axios.create());
+    const getRole = axios.create();
     getRole.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
     getRole.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     getRole.defaults.headers.common["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS";
