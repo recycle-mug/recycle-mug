@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final TokenAuthenticationProvider tokenAuthenticationProvider;
@@ -81,12 +81,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .authorizeRequests()
+                .anyRequest().authenticated()
                 .antMatchers("/api/authenticate").permitAll()
                 .antMatchers("/api/signup").permitAll()
                 .antMatchers("/join/**").permitAll()
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/").permitAll()
-                .anyRequest().authenticated()
+
 
                 .and()
                 .cors()
