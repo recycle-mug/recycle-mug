@@ -369,7 +369,7 @@ export default {
     },
     getProfile() {
       console.log(this.$root.API);
-      const path = `http://18.189.54.77:5000/${this.userRole}/${this.userId}`;
+      const path = `/backend/${this.userRole}/${this.userId}`;
 
       const { accessToken } = localStorage;
       if (!accessToken) {
@@ -454,7 +454,7 @@ export default {
       document.getElementById("imageBtn").click();
     },
     saveImage() {
-      const path = `http://18.189.54.77:5000/user/${this.userRole}/profile-image`;
+      const path = `/backend/user/${this.userRole}/profile-image`;
       let file = this.imgFile;
       const blob = file.slice(0, file.size, "image/jpeg");
       const newFileName = this.userInfo.email.split("@");
@@ -486,7 +486,7 @@ export default {
         !this.errors.address &&
         !this.errors.businessName
       ) {
-        const path = `http://18.189.54.77:5000/${this.userRole}/${this.userId}`;
+        const path = `/backend/${this.userRole}/${this.userId}`;
 
         let editUser = axios.create();
 
