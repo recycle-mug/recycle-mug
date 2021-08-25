@@ -368,7 +368,7 @@ export default {
       );
     },
     getProfile() {
-      const path = `/backend/${this.userRole}/${this.userId}`;
+      const path = `http://18.189.54.77:5000/${this.userRole}/${this.userId}`;
 
       const { accessToken } = localStorage;
       if (!accessToken) {
@@ -485,7 +485,7 @@ export default {
         !this.errors.address &&
         !this.errors.businessName
       ) {
-        const path = `/backend/${this.userRole}/${this.userId}`;
+        const path = `http://18.189.54.77:5000/${this.userRole}/${this.userId}`;
 
         let editUser = axios.create();
 
