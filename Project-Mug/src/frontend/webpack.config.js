@@ -16,7 +16,7 @@ module.exports = {
     historyApiFallback: true,
     proxy: {
       "/backend": {
-        target: "http://localhost:5000",
+        target: "http://18.189.54.77/",
         changeOrigin: true,
         pathRewrite: {
           "^/backend": "",
