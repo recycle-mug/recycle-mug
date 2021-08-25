@@ -24,14 +24,11 @@ const requireAuth = () => (from, to, next) => {
     alert("로그인 해주세요");
     next({ path: "/" });
   } else {
-    const authUser = axios.create({ baseUrl: path });
+    const authUser = axios.create();
     authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
     authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
       "GET,POST,PUT,DELETE,OPTIONS";
-
-    authUser.defaults.headers.common["Content-Type"] =
-      "application/x-www-form-urlencoded;charset=utf-8";
 
     authUser
       .get(path)
@@ -51,14 +48,14 @@ const requireAuth = () => (from, to, next) => {
 };
 
 const checkAdmin = () => (from, to, next) => {
-  const path = "http://18.189.54.77:5000/profile";
+  const path = "/backend/profile";
 
   const { accessToken } = localStorage;
   if (!accessToken) {
     alert("로그인 해주세요");
     next({ path: "/" });
   } else {
-    const getRole = axios.create({ baseUrl: path });
+    const getRole = axios.create());
     getRole.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
     getRole.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
     getRole.defaults.headers.common["Access-Control-Allow-Methods"] = "GET,POST,PUT,DELETE,OPTIONS";
