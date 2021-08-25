@@ -5,7 +5,7 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
-const resourceHost = "http://18.189.54.77:5000";
+const resourceHost = "/backend";
 
 const enhanceAccessToken = () => {
   const { accessToken } = localStorage;
