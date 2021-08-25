@@ -452,7 +452,7 @@ export default {
         !this.errors.joinAddress
       ) {
         // path
-        const path = "/backend/join/" + this.formData.role;
+        const path = "http://18.189.54.77:5000/join/" + this.formData.role;
 
         const payload = {
           email: this.formData.joinId,
