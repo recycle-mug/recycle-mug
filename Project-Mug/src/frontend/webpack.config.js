@@ -15,13 +15,13 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     proxy: {
-      "/backend": {
-        target: "http://18.189.54.77:5000/",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/backend": "",
-        },
-      },
+      // "/backend": {
+      //   target: "http://18.189.54.77:5000/",
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     "^/backend": "",
+      //   },
+      // },
       "/tokenApi": {
         target: "https://kauth.kakao.com",
         changeOrigin: true,
