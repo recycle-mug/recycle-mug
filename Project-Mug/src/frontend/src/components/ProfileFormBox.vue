@@ -453,7 +453,7 @@ export default {
       document.getElementById("imageBtn").click();
     },
     saveImage() {
-      const path = `/backend/user/${this.userRole}/profile-image`;
+      const path = `http://18.189.54.77:5000/user/${this.userRole}/profile-image`;
       let file = this.imgFile;
       const blob = file.slice(0, file.size, "image/jpeg");
       const newFileName = this.userInfo.email.split("@");
