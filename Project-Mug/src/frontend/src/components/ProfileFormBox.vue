@@ -368,6 +368,7 @@ export default {
       );
     },
     getProfile() {
+      console.log(this.$root.API);
       const path = `http://18.189.54.77:5000/${this.userRole}/${this.userId}`;
 
       const { accessToken } = localStorage;

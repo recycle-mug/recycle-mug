@@ -51,7 +51,7 @@ const requireAuth = () => (from, to, next) => {
 };
 
 const checkAdmin = () => (from, to, next) => {
-  const path = "/backend/profile";
+  const path = "http://18.189.54.77:5000/profile";
 
   const { accessToken } = localStorage;
   if (!accessToken) {
