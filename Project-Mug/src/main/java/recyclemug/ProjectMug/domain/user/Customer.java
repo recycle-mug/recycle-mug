@@ -27,7 +27,7 @@ public class Customer extends User{
         customer.setEmail(email);
         customer.setPassword(password);
         customer.setPhoneNumber(phoneNumber);
-        customer.setPoint(10000000);
+        customer.setPoint(5000);
         customer.setProfilePictureAddress(profilePictureAddress);
         customer.setCustomerState(CustomerState.NONE);
         customer.setSignupDateTIme(LocalDateTime.now());

@@ -156,7 +156,7 @@ public class AuthController {
             return new ResponseProfileDTO(user.getId(),
                     user.getEmail(),
                     user.getNickname(),
-                    null,
+                    findPicture("/home/ubuntu/images/users/default_user.jpg"),
                     headerDTO.getRole(),
                     null,
                     null
