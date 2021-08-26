@@ -103,18 +103,18 @@ public class UserController {
             Customer customer = customerService.findById(request.getUserId());
             Date date = new Date();
             StringBuilder sb = new StringBuilder();
-            String picturePathName = httpServletRequest.getServletContext().getRealPath("/images/users/");
+            String picturePath = "/home/ubuntu/images/users/";
             if (file.isEmpty()) {
                 sb.append("none");
             } else {
                 sb.append(date.getTime());
                 sb.append(file.getOriginalFilename());
             }
-            picturePathName += sb.toString();
-            customerService.modifyProfilePicture(picturePathName, customer);
+            picturePath += sb.toString();
+            customerService.modifyProfilePicture(picturePath, customer);
             log.info("ProfileImage changed. userId : " + request.getUserId());
             if (!file.isEmpty()) {
-                File dest = new File(picturePathName);
+                File dest = new File(picturePath);
                 try {
                     file.transferTo(dest);
                 } catch (IOException e) {
@@ -134,24 +134,23 @@ public class UserController {
     @PatchMapping("/user/partner/profile-image")
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     public ResponseEntity<UpdateUserResponse> updatePartnerProfileImage(@RequestParam MultipartFile file,
-                                                                        @ModelAttribute("request") UpdateProfileImageRequest request,
-                                                                        HttpServletRequest httpServletRequest){
+                                                                        @ModelAttribute("request") UpdateProfileImageRequest request){
         try{
             Partner partner = partnerService.findById(request.getUserId());
             Date date = new Date();
             StringBuilder sb = new StringBuilder();
-            String picturePathName = httpServletRequest.getServletContext().getRealPath("/images/users/");
+            String picturePath = "/home/ubuntu/images/users/";
             if (file.isEmpty()) {
                 sb.append("none");
             } else {
                 sb.append(date.getTime());
                 sb.append(file.getOriginalFilename());
             }
-            picturePathName += sb.toString();
-            partnerService.modifyProfilePicture(picturePathName,partner);
+            picturePath += sb.toString();
+            partnerService.modifyProfilePicture(picturePath, partner);
             log.info("ProfileImage changed. userId : " + request.getUserId());
             if (!file.isEmpty()) {
-                File dest = new File(picturePathName);
+                File dest = new File(picturePath);
                 try {
                     file.transferTo(dest);
                 } catch (IOException e) {
@@ -166,7 +165,6 @@ public class UserController {
             log.error("Error to change profileImage.(Exception) userId : " + request.getUserId());
             return new ResponseEntity<>(new UpdateUserResponse("fail","Invalid data!"),HttpStatus.BAD_REQUEST);
         }
-
     }
 
     public CreatePartnerResponse createPartnerResponse(Partner partner) throws IOException {
