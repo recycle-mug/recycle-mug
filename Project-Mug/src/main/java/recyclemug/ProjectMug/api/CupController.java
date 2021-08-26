@@ -42,7 +42,7 @@ public class CupController {
         // Image File 처리 original File name 을 만들어 새로운 src 주소를 만들어낸다.
         Date date = new Date();
         StringBuilder sb = new StringBuilder();
-        String picturePathName = httpServletRequest.getServletContext().getRealPath("/images/cups/");
+        String picturePath = "/home/ubuntu/images/cups/";
 
         // file image 가 없을 경우
         if (file.isEmpty()) {
@@ -52,14 +52,14 @@ public class CupController {
             sb.append(file.getOriginalFilename());
         }
 
-        picturePathName += sb.toString();
+        picturePath += sb.toString();
 
-        Cup cup = Cup.createCup(request.getName(), request.getPrice(), request.getStockQuantity(), picturePathName);
+        Cup cup = Cup.createCup(request.getName(), request.getPrice(), request.getStockQuantity(), picturePath);
         cupService.addCup(cup);
         log.info("Admin adds a new cup : " + cup.getName());
 
         if (!file.isEmpty()) {
-            File dest = new File(picturePathName);
+            File dest = new File(picturePath);
             try {
                 file.transferTo(dest);
             } catch (IOException e) {
