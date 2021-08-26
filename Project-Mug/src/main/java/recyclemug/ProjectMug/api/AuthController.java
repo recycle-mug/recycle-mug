@@ -93,6 +93,7 @@ public class AuthController {
     @GetMapping("/profile")
     @PreAuthorize("hasAnyRole('CUSTOMER', 'PARTNER', 'ADMIN')")
     public ResponseProfileDTO checkUserProfile(@RequestHeader(name = "Authorization") String token) throws IOException {
+        log.info("start!");
         String jwt = token.substring(7);
         String[] jwtSplit = jwt.split("\\.");
         String payload = new String(decoder.decode(jwtSplit[1]));
@@ -152,6 +153,7 @@ public class AuthController {
                         null);
             }
         } else {
+            log.info("admin 호출");
             User user = adminRepository.findByEmail(headerDTO.getEmail());
             userService.updateLastLogin(user);
             return new ResponseProfileDTO(user.getId(),
