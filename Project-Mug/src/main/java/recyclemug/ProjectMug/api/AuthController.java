@@ -93,7 +93,6 @@ public class AuthController {
     @GetMapping("/profile")
     @PreAuthorize("hasAnyRole('CUSTOMER', 'PARTNER', 'ADMIN')")
     public ResponseProfileDTO checkUserProfile(@RequestHeader(name = "Authorization") String token) throws IOException {
-        log.info("start!");
         String jwt = token.substring(7);
         String[] jwtSplit = jwt.split("\\.");
         String payload = new String(decoder.decode(jwtSplit[1]));
@@ -103,12 +102,9 @@ public class AuthController {
         HeaderJwtDTO headerDTO = mapper.readValue(payload, HeaderJwtDTO.class);
 
         if (headerDTO.getRole().equals("ROLE_CUSTOMER")) {
-            log.info(" 여기까지 왔어요 1.");
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
-            log.info(" 여기까지 왔어요 2");
             if (!findByEmail.isEmpty()) {
                 try {
-                    log.info(" 여기까지 왔어요 3");
                     Customer customer = findByEmail.get(0);
                     userService.updateLastLogin(customer);
                     CustomerOrder customerOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
@@ -122,8 +118,8 @@ public class AuthController {
                             customer.getSignupDateTIme(),
                             customer.getCustomerState(),
                             customerOrder.getReturnDateTime());
-                }catch(NoResultException e){
-                    log.error("NoResultException in getCustomerProfile");
+                }catch(Exception e){
+                    log.error(e.toString());
                     Customer customer = findByEmail.get(0);
                     userService.updateLastLogin(customer);
                     return new ResponseProfileDTO(customer.getId(),
@@ -134,8 +130,6 @@ public class AuthController {
                             customer.getSignupDateTIme(),
                             customer.getCustomerState(),
                             null);
-                }catch(Exception e){
-                    log.error("Invalid data. Exception : " + e.toString());
                 }
             }
         } else if (headerDTO.getRole().equals("ROLE_PARTNER")) {
