@@ -92,12 +92,10 @@ public class AuthController {
 
     @GetMapping("/profile")
     @PreAuthorize("hasAnyRole('CUSTOMER', 'PARTNER', 'ADMIN')")
-    public ResponseProfileDTO checkUserProfile(@RequestHeader(name = "Authorization") String token,
-                                               HttpServletRequest httpServletRequest) throws IOException {
+    public ResponseProfileDTO checkUserProfile(@RequestHeader(name = "Authorization") String token) throws IOException {
         String jwt = token.substring(7);
         String[] jwtSplit = jwt.split("\\.");
         String payload = new String(decoder.decode(jwtSplit[1]));
-        String picturePath = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
 
         // Json -> Object
         ObjectMapper mapper = new ObjectMapper();

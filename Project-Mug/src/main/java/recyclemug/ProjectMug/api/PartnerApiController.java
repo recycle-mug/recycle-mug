@@ -29,12 +29,12 @@ public class PartnerApiController {
     private final PartnerRepository partnerRepository;
     @PostMapping("/join/partner") // partner 회원 가입
     @ResponseBody
-    public ResponseEntity<CreateJoinResponse> savePartner(@RequestBody @Valid CreatePartnerRequest request, HttpServletRequest httpServletRequest) {
-        String pictureAddress = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
+    public ResponseEntity<CreateJoinResponse> savePartner(@RequestBody @Valid CreatePartnerRequest request) {
+        String picturePath = "/home/ubuntu/images/users/default_user.jpg";
         try {
             Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
                     request.getBusinessName(), request.getAddress() , request.getLatitude(), request.getAltitude());
-            partner.setProfilePictureAddress(pictureAddress);
+            partner.setProfilePictureAddress(picturePath);
             partnerService.join(partner);
             return ResponseEntity.ok(new CreateJoinResponse("success", "회원가입에 성공했습니다."));
         } catch (IllegalStateException e) {

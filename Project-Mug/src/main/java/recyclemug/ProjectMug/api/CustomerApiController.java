@@ -27,9 +27,8 @@ public class CustomerApiController {
 
     @PostMapping("/join/customer") // Customer 회원 가입
     @ResponseBody
-    public CreateJoinResponse saveCustomer(@RequestBody @Valid CreateCustomerRequest request,
-                                               HttpServletRequest httpServletRequest) {
-        String picturePath = httpServletRequest.getServletContext().getRealPath("/images/users/default_user.jpg");
+    public CreateJoinResponse saveCustomer(@RequestBody @Valid CreateCustomerRequest request) {
+        String picturePath = "/home/ubuntu/images/users/default_user.jpg";
 
         try {
             Customer customer = Customer.createCustomer(request.getEmail(), request.getPassword(), request.getPhoneNumber(), picturePath);
