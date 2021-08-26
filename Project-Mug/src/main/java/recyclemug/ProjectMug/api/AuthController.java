@@ -102,9 +102,12 @@ public class AuthController {
         HeaderJwtDTO headerDTO = mapper.readValue(payload, HeaderJwtDTO.class);
 
         if (headerDTO.getRole().equals("ROLE_CUSTOMER")) {
+            log.info(" 여기까지 왔어요 1.");
             List<Customer> findByEmail = customerRepository.findByEmail(headerDTO.getEmail());
+            log.info(" 여기까지 왔어요 2");
             if (!findByEmail.isEmpty()) {
                 try {
+                    log.info(" 여기까지 왔어요 3");
                     Customer customer = findByEmail.get(0);
                     userService.updateLastLogin(customer);
                     CustomerOrder customerOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
