@@ -5,7 +5,7 @@
         <div class="icon-wrapper">
           <img src="../assets/logo/logo.png" alt="" />
         </div>
-        <span>Recycle Mug</span>
+        <span>WeCup</span>
       </li>
 
       <router-link :to="{ name: 'admin' }" tag="li">
