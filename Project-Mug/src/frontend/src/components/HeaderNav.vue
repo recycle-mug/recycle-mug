@@ -16,7 +16,16 @@
         </div>
 
         <router-link :to="{ name: 'main' }" class="content-center">
-          <h1>RecycleMug</h1>
+          <h1>
+            We
+            <div class="icon-wrapper">
+              <font-awesome-icon
+                :icon="['fas', 'coffee']"
+                style="width:100%; cursor:pointer;"
+              ></font-awesome-icon>
+            </div>
+            Cup
+          </h1>
         </router-link>
 
         <div class="content-right">
@@ -25,12 +34,6 @@
               <img :src="'data:image/jpeg;base64,' + profileImg" alt="" />
               <span v-if="username">{{ username }}님 안녕하세요</span>
               <span v-else>익명님 안녕하세요</span>
-              <div class="icon-wrapper">
-                <font-awesome-icon
-                  :icon="['fas', 'user']"
-                  style="width:100%; cursor:pointer;"
-                ></font-awesome-icon>
-              </div>
             </div>
 
             <ul class="sub-menu" v-if="dropDown">
@@ -63,10 +66,10 @@ import axios from "axios";
 import ThemePicker from "./ThemePicker.vue";
 import SideBar from "./SideBar";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
-faLibrary.add(faUser);
+faLibrary.add(faCoffee);
 
 export default {
   data() {
@@ -258,6 +261,11 @@ export default {
               cursor: pointer;
               text-align: center;
               transition: 0.3s color linear;
+              letter-spacing: 0.5rem;
+              white-space: nowrap;
+              display: flex;
+              align-items: center;
+              user-select: none;
             }
           }
 
