@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <div class="card USE" :class="[cupState === 'USE' ? USE : OVERDUE]" v-if="cupState !== 'NONE'">
+    <div
+      class="card USE"
+      :class="[cupState === 'USE' ? 'USE' : 'OVERDUE']"
+      v-if="cupState !== 'NONE'"
+    >
       <div class="fold">
         <div class="left">
           <div class="icon-wrapper">
@@ -40,8 +44,12 @@ export default {
       let customerInfo = axios.create();
       customerInfo.get(path).then((res) => {
         this.cupState = res.data.customerState;
-        this.returnTime = res.data.returnDateTime;
-        this.setTimeFormat();
+        if (this.cupState === "NONE") {
+          this.returnTime = null;
+        } else {
+          this.returnTime = res.data.returnDateTime;
+          this.setTimeFormat();
+        }
       });
     },
     setTimeFormat() {
