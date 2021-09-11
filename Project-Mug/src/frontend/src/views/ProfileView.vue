@@ -10,6 +10,7 @@
         @makeToast="onToastMessage"
       ></profile-form-box>
     </div>
+    <footer-nav></footer-nav>
   </div>
 </template>
 
@@ -17,6 +18,7 @@
 import HeaderNav from "../components/HeaderNav";
 import ProfileFormBox from "../components/ProfileFormBox.vue";
 import ToastMessage from "../components/ToastMessage.vue";
+import FooterNav from "../components/FooterNav";
 
 import axios from "axios";
 
@@ -31,7 +33,7 @@ export default {
       toastMessage: "",
     };
   },
-  components: { HeaderNav, ProfileFormBox, ToastMessage },
+  components: { HeaderNav, ProfileFormBox, ToastMessage, FooterNav },
   computed: {
     getTheme() {
       return this.$store.state.theme;
@@ -104,9 +106,11 @@ export default {
 
     .content-body {
       width: 100%;
-      max-width: 1140px;
+      height: 100%;
       margin: auto;
       box-sizing: border-box;
+      background-color: map-get($map: $theme, $key: "background");
+      padding: 0 1rem;
     }
   }
 }
