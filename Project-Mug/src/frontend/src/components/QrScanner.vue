@@ -218,6 +218,7 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        margin: 2rem 0;
 
         .scanner-wrapper {
           width: 100%;
