@@ -553,12 +553,16 @@ export default {
 <style lang="scss" scoped>
 @each $theme in $themes {
   &.#{map-get($theme, "name")} {
+    width: 100%;
+    height: 100%;
+
     * {
       box-sizing: border-box;
     }
 
     .card {
-      display: grid;
+      display: flex;
+      flex-direction: row;
       margin: auto;
       max-width: 800px;
       width: 100%;
@@ -566,9 +570,13 @@ export default {
       box-shadow: $shadow-light;
       border-radius: 14px;
       padding: 2rem;
-      grid-template-columns: 0.8fr 1fr;
+
+      @media screen and (max-width: 768px) {
+        flex-direction: column;
+      }
 
       .image-section {
+        width: 100%;
         position: relative;
         min-height: 350px;
         display: flex;
@@ -584,7 +592,6 @@ export default {
           cursor: pointer;
           transition: all 0.2s ease;
           position: relative;
-          left: -3rem;
           background-color: map-get($map: $theme, $key: "background");
 
           &.changed {
@@ -678,6 +685,16 @@ export default {
           &:hover {
             transform: scale(1.05);
           }
+        }
+      }
+
+      .wrapper,
+      .form-wrapper {
+        width: 100%;
+
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+          margin-top: 2rem;
         }
       }
     }

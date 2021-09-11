@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <div v-if="locationErr">위치 정보를 찾을 수 없습니다.</div>
-    <div v-if="gettingLocation">위치 정보 조회 중...</div>
+    <div style="position:absolute" v-if="locationErr">위치 정보를 찾을 수 없습니다.</div>
+    <div style="position:absolute" v-if="gettingLocation">위치 정보 조회 중...</div>
 
     <div v-if="opened" style="position:absolute;top:0;left:0;" @click="closeModal()">
       <div class="modal-wrapper">
@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div id="map" style="width:500px;height:500px;" class="map-container"></div>
+    <div id="map" class="map-container"></div>
     <div class="place-description" v-if="clicked">
       <div class="close-btn" @click="onCloseDetail">
         <font-awesome-icon
@@ -320,6 +320,7 @@ export default {
   },
   mounted() {
     this.onAddScript();
+    this.getCurrentLocation();
   },
   created() {
     this.getCurrentLocation();
@@ -373,16 +374,21 @@ export default {
       max-width: 1140px;
       margin: auto;
       display: flex;
+      box-sizing: border-box;
+
+      @media screen and (max-width: 768px) {
+        padding: 0 2rem;
+      }
 
       .map-container {
-        margin: 0.5rem;
         box-sizing: border-box;
         box-shadow: $shadow-lighter;
         border-radius: 30px;
         overflow: hidden;
         transition: all 0.3s ease-in-out;
         width: 100%;
-        height: 100%;
+        height: 500px;
+        max-height: 100%;
         border: 1px solid map-get($map: $theme, $key: "border");
 
         &:hover {
@@ -398,7 +404,6 @@ export default {
         border-radius: 12px;
         transition: all 0.3s ease-in-out;
         width: 100%;
-        max-width: 500px;
         height: 500px;
         background-color: map-get($map: $theme, $key: "content-background");
         border: 1px solid map-get($map: $theme, $key: "border");
@@ -618,7 +623,6 @@ export default {
         overflow-y: overlay;
         transition: all 0.3s ease-in-out;
         width: 100%;
-        max-width: 500px;
         height: 500px;
 
         &::-webkit-scrollbar {

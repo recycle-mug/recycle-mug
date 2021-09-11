@@ -10,7 +10,7 @@
             <a href="#"><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon></a>
           </div>
 
-          <span>or use your email for registration</span>
+          <span>👇 이메일로 로그인하기 👇</span>
           <div class="row">
             <input
               type="email"
@@ -32,7 +32,7 @@
             />
           </div>
           <span class="error-msg">{{ errors.response }}</span>
-          <button type="submit" @click.prevent="onSubmit">Login</button>
+          <button type="submit" @click.prevent="onSubmit">로그인</button>
           <router-link
             :to="{ name: 'join', query: { role: 'customer' } }"
             tag="span"
@@ -140,6 +140,7 @@ export default {
       box-sizing: border-box;
       width: 100%;
       height: 100%;
+      padding: 1rem;
 
       .container {
         background-color: map-get($map: $theme, $key: "content-background");

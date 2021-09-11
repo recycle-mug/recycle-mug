@@ -29,7 +29,7 @@
         </router-link>
 
         <div class="content-right">
-          <div v-if="isLogin">
+          <div v-if="isLogin && windowWidth >= 768">
             <div class="profile-btn" @click="activateDropdown()">
               <img :src="'data:image/jpeg;base64,' + profileImg" alt="" />
               <span v-if="username">{{ username }}님 안녕하세요</span>
@@ -48,13 +48,34 @@
             :to="{ name: 'login', query: { role: 'customer' } }"
             tag="span"
             class="login-btn"
-            v-else
+            v-else-if="!isLogin && windowWidth >= 768"
             >로그인 / 회원가입</router-link
           >
-        </div>
+          <div v-else-if="isLogin && windowWidth < 768">
+            <router-link :to="{ name: 'profile' }" tag="div" class="icon-wrapper">
+              <font-awesome-icon
+                :icon="['fas', 'user']"
+                style="width:100%; cursor:pointer;"
+              ></font-awesome-icon
+            ></router-link>
+          </div>
 
-        <div class="theme-picker-wrapper">
-          <theme-picker></theme-picker>
+          <div v-else-if="!isLogin && windowWidth < 768">
+            <router-link
+              :to="{ name: 'login', query: { role: 'customer' } }"
+              tag="div"
+              class="icon-wrapper"
+            >
+              <font-awesome-icon
+                :icon="['fas', 'user']"
+                style="width:100%; cursor:pointer;"
+              ></font-awesome-icon>
+            </router-link>
+          </div>
+
+          <div class="theme-picker-wrapper">
+            <theme-picker></theme-picker>
+          </div>
         </div>
       </div>
     </div>
@@ -66,10 +87,10 @@ import axios from "axios";
 import ThemePicker from "./ThemePicker.vue";
 import SideBar from "./SideBar";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { faCoffee, faUser } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
-faLibrary.add(faCoffee);
+faLibrary.add(faCoffee, faUser);
 
 export default {
   data() {
@@ -80,6 +101,7 @@ export default {
       isLogin: false,
       dropDown: false,
       profileImg: "",
+      windowWidth: window.innerWidth,
     };
   },
   components: {
@@ -146,6 +168,9 @@ export default {
     if (localStorage.getItem("accessToken")) {
       this.getProfile();
     }
+    window.addEventListener("resize", () => {
+      this.windowWidth = window.innerWidth;
+    });
   },
 };
 </script>
