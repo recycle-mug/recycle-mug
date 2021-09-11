@@ -51,10 +51,10 @@
             v-else
             >로그인 / 회원가입</router-link
           >
-        </div>
 
-        <div class="theme-picker-wrapper">
-          <theme-picker></theme-picker>
+          <div class="theme-picker-wrapper">
+            <theme-picker></theme-picker>
+          </div>
         </div>
       </div>
     </div>
@@ -66,10 +66,10 @@ import axios from "axios";
 import ThemePicker from "./ThemePicker.vue";
 import SideBar from "./SideBar";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { faCoffee, faUser } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
-faLibrary.add(faCoffee);
+faLibrary.add(faCoffee, faUser);
 
 export default {
   data() {
