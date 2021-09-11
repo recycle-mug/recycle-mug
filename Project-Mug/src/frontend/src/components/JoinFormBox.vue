@@ -1,8 +1,16 @@
 <template>
   <div class="container">
     <div class="form-container partner-form-container" v-if="role === 'partner'">
+      <router-link
+        :to="{ name: 'join', query: { role: 'customer' } }"
+        tag="button"
+        class="overlay-top"
+      >
+        👈 사용자 회원가입하러가기</router-link
+      >
+
       <form action="#">
-        <h1>join as partner</h1>
+        <h1>파트너 회원가입하기</h1>
         <div class="social-container">
           <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
           <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -11,7 +19,7 @@
           ></a>
         </div>
 
-        <span>or use your email for registration</span>
+        <span>👇 이메일로 회원가입하기 👇</span>
 
         <!-- Partner ID -->
         <input
@@ -122,16 +130,23 @@
         <span class="error-msg">{{ errors.joinAddress }}</span>
 
         <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
-        <button @click.prevent="onSubmitForm">join</button>
+        <button @click.prevent="onSubmitForm">회원가입</button>
         <router-link :to="{ name: 'login' }" tag="span" class="caption"
-          >Already has Account</router-link
+          >계정이 이미 있어요</router-link
         >
       </form>
     </div>
 
     <div class="form-container customer-form-container" v-else-if="role === 'customer'">
+      <router-link
+        :to="{ name: 'join', query: { role: 'partner' } }"
+        tag="button"
+        class="overlay-top"
+      >
+        👉 파트너 회원가입하러가기</router-link
+      >
       <form action="#">
-        <h1>join as customer</h1>
+        <h1>사용자 회원가입하기</h1>
         <div class="social-container">
           <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
           <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
@@ -140,7 +155,7 @@
           ></a>
         </div>
 
-        <span>or use your email for registration</span>
+        <span>👇 이메일로 회원가입하기 👇</span>
 
         <!-- ID -->
         <input
@@ -213,9 +228,9 @@
         </div>
         <span class="error-msg">{{ errors.joinTel }}</span>
         <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
-        <button @click.prevent="onSubmitForm">join</button>
+        <button @click.prevent="onSubmitForm">회원가입</button>
         <router-link :to="{ name: 'login' }" tag="span" class="caption"
-          >Already has Account</router-link
+          >계정이 이미 있어요</router-link
         >
       </form>
     </div>
@@ -223,14 +238,14 @@
     <div class="overlay-container overlay-left" v-if="role === 'partner'">
       <div class="overlay">
         <div class="overlay-panel ">
-          <h1>Welcome Back!</h1>
-          <p>Hi there</p>
+          <h1>반가워요!</h1>
+          <p>혹시, 컵을 빌리러 오셨나요?</p>
           <router-link
             :to="{ name: 'join', query: { role: 'customer' } }"
             tag="button"
             class="ghost"
           >
-            join As customer</router-link
+            사용자 회원가입하기</router-link
           >
         </div>
       </div>
@@ -239,10 +254,10 @@
     <div class="overlay-container overlay-right" v-else-if="role === 'customer'">
       <div class="overlay">
         <div class="overlay-panel ">
-          <h1>Welcome Back!</h1>
-          <p>Hi there</p>
+          <h1>반가워요!</h1>
+          <p>혹시, 재휴 카페 사장님이신가요?</p>
           <router-link :to="{ name: 'join', query: { role: 'partner' } }" tag="button" class="ghost"
-            >join As partner</router-link
+            >파트너 회원가입하기</router-link
           >
         </div>
       </div>
@@ -507,6 +522,7 @@ export default {
     height: 100%;
     box-sizing: border-box;
     text-align: center;
+    padding: auto 1rem;
 
     .container {
       background-color: map-get($map: $theme, $key: "content-background");
@@ -517,7 +533,7 @@ export default {
       width: 1050px;
       max-width: 100%;
       min-height: 840px;
-      margin: 2rem auto;
+      margin: auto;
 
       .form-container {
         position: absolute;
@@ -525,6 +541,31 @@ export default {
         height: 100%;
         transition: all 0.6s ease-in-out;
         box-sizing: border-box;
+
+        @media screen and (max-width: 1020px) {
+          position: static;
+        }
+
+        .overlay-top {
+          display: none;
+
+          @media screen and (max-width: 1020px) {
+            display: block;
+            width: 100%;
+            margin-top: 1rem;
+            color: $main-color;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            font-weight: bold;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
 
         form {
           background-color: map-get($map: $theme, $key: "content-background");
@@ -632,6 +673,10 @@ export default {
                 border: none;
                 box-sizing: border-box;
               }
+
+              &::placeholder {
+                color: rgba(map-get($map: $theme, $key: "text-muted"), 0.5);
+              }
             }
           }
 
@@ -724,12 +769,20 @@ export default {
         width: 50%;
         opacity: 1;
         z-index: 1;
+
+        @media screen and (max-width: 1020px) {
+          width: 100%;
+        }
       }
 
       .customer-form-container {
         left: 0;
         width: 50%;
         z-index: 2;
+
+        @media screen and (max-width: 1020px) {
+          width: 100%;
+        }
       }
 
       .overlay-container {
@@ -804,6 +857,10 @@ export default {
               }
             }
           }
+        }
+
+        @media screen and (max-width: 1020px) {
+          display: none;
         }
       }
 
