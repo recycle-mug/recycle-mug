@@ -33,7 +33,7 @@ public class PartnerApiController {
         String picturePath = "/home/ubuntu/images/users/default_user.jpg";
         try {
             Partner partner = Partner.createPartner(request.getEmail(), request.getPassword(), request.getPhoneNumber(),
-                    request.getBusinessName(), request.getAddress() , request.getLatitude(), request.getAltitude());
+                    request.getBusinessName(), request.getAddress() , request.getLongitude(), request.getAltitude());
             partner.setProfilePictureAddress(picturePath);
             partnerService.join(partner);
             return ResponseEntity.ok(new CreateJoinResponse("success", "회원가입에 성공했습니다."));
