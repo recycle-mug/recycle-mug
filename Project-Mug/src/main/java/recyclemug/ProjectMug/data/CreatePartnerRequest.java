@@ -13,5 +13,5 @@ public class CreatePartnerRequest {
     private String address;
     private String businessName;
     private double altitude;
-    private double latitude;
+    private double longitude;
 }
