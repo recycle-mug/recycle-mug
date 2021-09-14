@@ -5,9 +5,16 @@
         <form action="#">
           <h1>로그인하기</h1>
           <div class="social-container">
-            <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
-            <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
-            <a href="#"><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon></a>
+            <div class="social-error" v-if="socialIconClicked">아직 지원하지 않는 기능입니다.</div>
+            <a href="#" @click="onClickSocialIcon"
+              ><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon
+            ></a>
+            <a href="#" @click="onClickSocialIcon"
+              ><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon
+            ></a>
+            <a href="#" @click="onClickSocialIcon"
+              ><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon
+            ></a>
           </div>
 
           <span>👇 이메일로 로그인하기 👇</span>
@@ -65,6 +72,7 @@ export default {
         loginPw: "",
         response: "",
       },
+      socialIconClicked: false,
     };
   },
   components: { FontAwesomeIcon },
@@ -116,6 +124,9 @@ export default {
     redirect() {
       console.log("Login Success");
       this.$router.push({ name: "main" });
+    },
+    onClickSocialIcon() {
+      this.socialIconClicked = true;
     },
   },
 };
@@ -198,6 +209,16 @@ export default {
                   border: 1px solid white;
                   color: white;
                 }
+              }
+
+              .social-error {
+                color: $error-msg;
+                user-select: none;
+                width: 100%;
+                text-align: center;
+                height: 1rem;
+                font-size: 0.8rem;
+                margin-bottom: 10px;
               }
             }
 
