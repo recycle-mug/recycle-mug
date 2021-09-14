@@ -86,7 +86,7 @@ const checkAdmin = () => (from, to, next) => {
 };
 
 export default new Router({
-  mode: "hash",
+  mode: "history",
   routes: [
     {
       path: "/",
