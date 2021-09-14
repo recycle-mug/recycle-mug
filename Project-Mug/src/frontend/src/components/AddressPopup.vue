@@ -52,7 +52,8 @@ export default {
   methods: {
     async searchApi() {
       const apiKey = "210e6ee868e2837c5e6d0805cc037348";
-      const url = "https://dapi.kakao.com/v2/local/search/keyword.json";
+      // const url = "https://dapi.kakao.com/v2/local/search/keyword.json";
+      const url = "/addressApi/v2/local/search/keyword.json";
 
       let kakaoApi = axios.create();
 

@@ -87,7 +87,6 @@ const checkAdmin = () => (from, to, next) => {
 
 export default new Router({
   mode: "hash",
-  base: "/recycle-mug/",
   routes: [
     {
       path: "/",
