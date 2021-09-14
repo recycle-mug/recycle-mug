@@ -116,7 +116,6 @@
             id="location_name"
             placeholder="카페 이름"
             v-model="formData.joinAddress.addressName"
-            @keydown.enter.prevent="onSubmitForm"
           />
 
           <input
@@ -133,6 +132,23 @@
           />
         </div>
         <span class="error-msg">{{ errors.joinAddress }}</span>
+
+        <!-- Private Policy -->
+        <div class="policy-wrapper">
+          <h1 class="policy-title">개인정보 보호정책</h1>
+          <textarea name="" id="" cols="30" rows="10" class="policy" readonly>
+통신·방송의 시설기준과 신문의 기능을 보장하기 위하여 필요한 사항은 법률로 정한다. 대통령은 필요하다고 인정할 때에는 외교·국방·통일 기타 국가안위에 관한 중요정책을 국민투표에 붙일 수 있다. 누구든지 체포 또는 구속을 당한 때에는 적부의 심사를 법원에 청구할 권리를 가진다. 이 헌법시행 당시에 이 헌법에 의하여 새로 설치될 기관의 권한에 속하는 직무를 행하고 있는 기관은 이 헌법에 의하여 새로운 기관이 설치될 때까지 존속하며 그 직무를 행한다. 정당은 그 목적·조직과 활동이 민주적이어야 하며, 국민의 정치적 의사형성에 참여하는데 필요한 조직을 가져야 한다. 이 헌법은 1988년 2월 25일부터 시행한다. 다만, 이 헌법을 시행하기 위하여 필요한 법률의 제정·개정과 이 헌법에 의한 대통령 및 국회의원의 선거 기타 이 헌법시행에 관한 준비는 이 헌법시행 전에 할 수 있다.
+
+모든 국민은 법률이 정하는 바에 의하여 공무담임권을 가진다. 법률안에 이의가 있을 때에는 대통령은 제1항의 기간내에 이의서를 붙여 국회로 환부하고, 그 재의를 요구할 수 있다. 국회의 폐회중에도 또한 같다. 국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국회의원은 현행범인인 경우를 제외하고는 회기중 국회의 동의없이 체포 또는 구금되지 아니한다. 국회는 국무총리 또는 국무위원의 해임을 대통령에게 건의할 수 있다. 국회는 국가의 예산안을 심의·확정한다. 대통령으로 선거될 수 있는 자는 국회의원의 피선거권이 있고 선거일 현재 40세에 달하여야 한다. 국민의 모든 자유와 권리는 국가안전보장·질서유지 또는 공공복리를 위하여 필요한 경우에 한하여 법률로써 제한할 수 있으며, 제한하는 경우에도 자유와 권리의 본질적인 내용을 침해할 수 없다.</textarea
+          >
+          <div class="policy-check-wrapper">
+            <div class="policy-check">
+              <input type="checkbox" name="" id="policy" v-model="formData.policyChk" />
+              <label for="policy">위 개인정보 수집 · 이용에 동의합니다. (필수) </label>
+            </div>
+            <span class="error-msg">{{ errors.policyChk }}</span>
+          </div>
+        </div>
 
         <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
         <button @click.prevent="onSubmitForm">회원가입</button>
@@ -232,11 +248,28 @@
             class="num-input"
             v-model="formData.joinTel.third"
             placeholder="0000"
-            @keydown.enter.prevent="onSubmitForm"
             @keyup="limitNumber"
           />
         </div>
         <span class="error-msg">{{ errors.joinTel }}</span>
+
+        <!-- Private Policy -->
+        <div class="policy-wrapper">
+          <h1 class="policy-title">개인정보 보호정책</h1>
+          <textarea name="" id="" cols="30" rows="10" class="policy" readonly>
+통신·방송의 시설기준과 신문의 기능을 보장하기 위하여 필요한 사항은 법률로 정한다. 대통령은 필요하다고 인정할 때에는 외교·국방·통일 기타 국가안위에 관한 중요정책을 국민투표에 붙일 수 있다. 누구든지 체포 또는 구속을 당한 때에는 적부의 심사를 법원에 청구할 권리를 가진다. 이 헌법시행 당시에 이 헌법에 의하여 새로 설치될 기관의 권한에 속하는 직무를 행하고 있는 기관은 이 헌법에 의하여 새로운 기관이 설치될 때까지 존속하며 그 직무를 행한다. 정당은 그 목적·조직과 활동이 민주적이어야 하며, 국민의 정치적 의사형성에 참여하는데 필요한 조직을 가져야 한다. 이 헌법은 1988년 2월 25일부터 시행한다. 다만, 이 헌법을 시행하기 위하여 필요한 법률의 제정·개정과 이 헌법에 의한 대통령 및 국회의원의 선거 기타 이 헌법시행에 관한 준비는 이 헌법시행 전에 할 수 있다.
+
+모든 국민은 법률이 정하는 바에 의하여 공무담임권을 가진다. 법률안에 이의가 있을 때에는 대통령은 제1항의 기간내에 이의서를 붙여 국회로 환부하고, 그 재의를 요구할 수 있다. 국회의 폐회중에도 또한 같다. 국회의원의 선거구와 비례대표제 기타 선거에 관한 사항은 법률로 정한다. 국회의원은 현행범인인 경우를 제외하고는 회기중 국회의 동의없이 체포 또는 구금되지 아니한다. 국회는 국무총리 또는 국무위원의 해임을 대통령에게 건의할 수 있다. 국회는 국가의 예산안을 심의·확정한다. 대통령으로 선거될 수 있는 자는 국회의원의 피선거권이 있고 선거일 현재 40세에 달하여야 한다. 국민의 모든 자유와 권리는 국가안전보장·질서유지 또는 공공복리를 위하여 필요한 경우에 한하여 법률로써 제한할 수 있으며, 제한하는 경우에도 자유와 권리의 본질적인 내용을 침해할 수 없다.</textarea
+          >
+          <div class="policy-check-wrapper">
+            <div class="policy-check">
+              <input type="checkbox" name="" id="policy" />
+              <label for="policy">위 개인정보 수집 · 이용에 동의합니다. (필수) </label>
+            </div>
+            <span class="error-msg">{{ errors.policyChk }}</span>
+          </div>
+        </div>
+
         <span class="error-msg" style="text-align:center;">{{ errors.response }}</span>
         <button @click.prevent="onSubmitForm">회원가입</button>
         <router-link :to="{ name: 'login' }" tag="span" class="caption"
@@ -305,6 +338,7 @@ export default {
           addressLat: "0",
           addressLng: "0",
         },
+        policyChk: false,
       },
       errors: {
         joinId: "",
@@ -312,6 +346,7 @@ export default {
         joinPwChk: "",
         joinTel: "",
         joinAddress: "",
+        policyChk: "",
         response: "",
       },
       popup: null,
@@ -460,11 +495,23 @@ export default {
         this.errors.joinPwChk = error;
       }
     },
+    checkCheckboxFilled() {
+      try {
+        if (!this.formData.policyChk) {
+          throw "필수 동의 내용을 체크해주세요";
+        } else {
+          this.errors.policyChk = "";
+        }
+      } catch (error) {
+        this.errors.policyChk = error;
+      }
+    },
     validate() {
       this.checkRequired();
       this.checkId();
       this.checkPasswordForm();
       this.checkPasswordCheck();
+      this.checkCheckboxFilled();
     },
     async onSubmitForm(e) {
       e.preventDefault();
@@ -475,7 +522,8 @@ export default {
         !this.errors.joinPw &&
         !this.errors.joinPwChk &&
         !this.errors.joinTel &&
-        !this.errors.joinAddress
+        !this.errors.joinAddress &&
+        !this.errors.policyChk
       ) {
         // path
         const path = "/backend/join/" + this.formData.role;
@@ -550,9 +598,6 @@ export default {
       margin: 1rem auto;
 
       .form-container {
-        position: absolute;
-        top: 0;
-        height: 100%;
         transition: all 0.6s ease-in-out;
         box-sizing: border-box;
 
@@ -587,8 +632,7 @@ export default {
           align-items: center;
           justify-content: center;
           flex-direction: column;
-          padding: 1rem 3rem;
-          height: 100%;
+          padding: 2rem 3rem;
           text-align: center;
           box-sizing: border-box;
 
@@ -785,11 +829,77 @@ export default {
             cursor: pointer;
             font-size: 0.75rem;
           }
+
+          .policy-wrapper {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin: 1rem 0;
+
+            h1 {
+              text-align: left;
+              font-size: 1rem;
+              padding-left: 1rem;
+              color: map-get($map: $theme, $key: "text");
+            }
+
+            textarea {
+              width: 100%;
+              max-height: 100px;
+              padding: 1rem;
+              resize: none;
+              box-sizing: border-box;
+              border-radius: 6px;
+              border: 1px solid map-get($map: $theme, $key: "border");
+              color: map-get($map: $theme, $key: "text-light");
+
+              &:focus {
+                outline: none;
+                border: 2px solid $main-color;
+                color: map-get($map: $theme, $key: "text");
+              }
+            }
+
+            .policy-check-wrapper {
+              display: flex;
+              flex-direction: column;
+              justify-content: end;
+              width: 100%;
+              box-sizing: border-box;
+              margin-top: 10px;
+
+              .policy-check {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                cursor: pointer;
+
+                input {
+                  margin-right: 5px;
+                  width: fit-content;
+                }
+                label {
+                  font-size: 0.8rem;
+                  white-space: nowrap;
+                  &:hover {
+                    font-weight: bold;
+                    cursor: pointer;
+                  }
+                }
+              }
+
+              .error-msg {
+                text-align: right;
+                box-sizing: border-box;
+              }
+            }
+          }
         }
       }
 
       .partner-form-container {
-        right: 0;
+        float: right;
         width: 50%;
         opacity: 1;
         z-index: 1;
@@ -800,7 +910,7 @@ export default {
       }
 
       .customer-form-container {
-        left: 0;
+        float: left;
         width: 50%;
         z-index: 2;
 
