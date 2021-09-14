@@ -33,7 +33,6 @@ export default {
 
     .content-body {
       width: 100%;
-      height: 100%;
       margin: auto;
       box-sizing: border-box;
       background-color: map-get($map: $theme, $key: "background");

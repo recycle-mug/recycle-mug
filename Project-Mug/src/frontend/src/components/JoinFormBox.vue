@@ -12,9 +12,14 @@
       <form action="#">
         <h1>파트너 회원가입하기</h1>
         <div class="social-container">
-          <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
-          <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
-          <a href="#" @click="openKakaoLogin"
+          <div class="social-error" v-if="socialIconClicked">아직 지원하지 않는 기능입니다.</div>
+          <a href="#" @click="onClickSocialIcon"
+            ><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon
+          ></a>
+          <a href="#" @click="onClickSocialIcon"
+            ><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon
+          ></a>
+          <a href="#" @click="onClickSocialIcon"
             ><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon
           ></a>
         </div>
@@ -148,9 +153,14 @@
       <form action="#">
         <h1>사용자 회원가입하기</h1>
         <div class="social-container">
-          <a href="#"><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon></a>
-          <a href="#"><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon></a>
-          <a href="#" @click="openKakaoLogin"
+          <div class="social-error" v-if="socialIconClicked">아직 지원하지 않는 기능입니다.</div>
+          <a href="#" @click="onClickSocialIcon"
+            ><font-awesome-icon :icon="['fab', 'facebook-f']"></font-awesome-icon
+          ></a>
+          <a href="#" @click="onClickSocialIcon"
+            ><font-awesome-icon :icon="['fab', 'google-plus-g']"></font-awesome-icon
+          ></a>
+          <a href="#" @click="onClickSocialIcon"
             ><font-awesome-icon :icon="['fas', 'comment']"></font-awesome-icon
           ></a>
         </div>
@@ -255,7 +265,7 @@
       <div class="overlay">
         <div class="overlay-panel ">
           <h1>반가워요!</h1>
-          <p>혹시, 재휴 카페 사장님이신가요?</p>
+          <p>혹시, 제휴 카페 사장님이신가요?</p>
           <router-link :to="{ name: 'join', query: { role: 'partner' } }" tag="button" class="ghost"
             >파트너 회원가입하기</router-link
           >
@@ -308,6 +318,7 @@ export default {
       loading: false,
       post: null,
       error: null,
+      socialIconClicked: false,
     };
   },
   props: ["role"],
@@ -501,6 +512,9 @@ export default {
           });
       }
     },
+    onClickSocialIcon() {
+      this.socialIconClicked = true;
+    },
     async openKakaoLogin() {
       const routeData = this.$router.resolve({ name: "kakao" });
       this.popup = window.open(
@@ -533,7 +547,7 @@ export default {
       width: 1050px;
       max-width: 100%;
       min-height: 840px;
-      margin: auto;
+      margin: 1rem auto;
 
       .form-container {
         position: absolute;
@@ -604,6 +618,16 @@ export default {
                 border: 1px solid white;
                 color: white;
               }
+            }
+
+            .social-error {
+              color: $error-msg;
+              user-select: none;
+              width: 100%;
+              text-align: center;
+              height: 1rem;
+              font-size: 0.8rem;
+              margin-bottom: 10px;
             }
           }
 
