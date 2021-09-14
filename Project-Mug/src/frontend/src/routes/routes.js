@@ -137,12 +137,14 @@ export default new Router({
       name: "admin-users",
       component: AdminUsersView,
       alias: "/admin",
+      beforeEnter: checkAdmin(),
     },
     {
       path: "/admin/cups",
       name: "admin-cups",
       component: AdminCupsView,
       alias: "/admin",
+      beforeEnter: checkAdmin(),
     },
   ],
 });
