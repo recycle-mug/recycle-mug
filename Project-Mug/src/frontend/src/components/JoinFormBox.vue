@@ -846,6 +846,7 @@ export default {
             textarea {
               width: 100%;
               max-height: 100px;
+              background-color: map-get($map: $theme, $key: "background");
               padding: 1rem;
               resize: none;
               box-sizing: border-box;
