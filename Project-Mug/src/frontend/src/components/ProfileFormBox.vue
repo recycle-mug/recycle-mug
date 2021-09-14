@@ -388,6 +388,7 @@ export default {
         getInfo
           .get(path)
           .then((res) => {
+            console.log("res.data :>> ", res.data);
             this.userInfo = res.data;
             this.editForm.id = this.userInfo.id ? this.userInfo.id : "";
             this.editForm.nickname = this.userInfo.nickname ? this.userInfo.nickname : "";
@@ -398,6 +399,8 @@ export default {
               this.tel.third = this.userInfo.phoneNumber.slice(7, 11);
             }
             this.editForm.address = this.userInfo.address ? this.userInfo.address : "";
+            this.editForm.latitude = this.userInfo.latitude ? this.userInfo.latitude : "";
+            this.editForm.longitude = this.userInfo.longitude ? this.userInfo.longitude : "";
             this.editForm.businessName = this.userInfo.businessName
               ? this.userInfo.businessName
               : "";

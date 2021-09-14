@@ -37,6 +37,13 @@ module.exports = {
           "^/infoApi": "",
         },
       },
+      "/addressApi": {
+        target: "https://dapi.kakao.com",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/addressApi": "",
+        },
+      },
     },
   },
   entry: {
