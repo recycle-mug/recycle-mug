@@ -52,12 +52,21 @@
             >로그인 / 회원가입</router-link
           >
           <div v-else-if="isLogin && windowWidth < 768">
-            <router-link :to="{ name: 'profile' }" tag="div" class="icon-wrapper">
-              <font-awesome-icon
-                :icon="['fas', 'user']"
-                style="width:100%; cursor:pointer;"
-              ></font-awesome-icon
-            ></router-link>
+            <div class="profile-btn" @click="activateDropdown()">
+              <div class="icon-wrapper">
+                <font-awesome-icon
+                  :icon="['fas', 'user']"
+                  style="width:100%; cursor:pointer;"
+                ></font-awesome-icon>
+              </div>
+            </div>
+
+            <ul class="sub-menu" v-if="dropDown">
+              <router-link :to="{ name: 'profile' }" tag="li" class="menu-item">
+                마이페이지
+              </router-link>
+              <li class="menu-item" @click="logout">로그아웃</li>
+            </ul>
           </div>
 
           <div v-else-if="!isLogin && windowWidth < 768">
