@@ -263,7 +263,7 @@
           >
           <div class="policy-check-wrapper">
             <div class="policy-check">
-              <input type="checkbox" name="" id="policy" />
+              <input type="checkbox" v-model="formData.policyChk" name="" id="policy" />
               <label for="policy">위 개인정보 수집 · 이용에 동의합니다. (필수) </label>
             </div>
             <span class="error-msg">{{ errors.policyChk }}</span>
@@ -497,6 +497,7 @@ export default {
     },
     checkCheckboxFilled() {
       try {
+        console.log(this.formData.policyChk);
         if (!this.formData.policyChk) {
           throw "필수 동의 내용을 체크해주세요";
         } else {
