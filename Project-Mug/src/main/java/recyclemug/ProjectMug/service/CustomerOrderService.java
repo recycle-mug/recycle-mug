@@ -59,7 +59,7 @@ public class CustomerOrderService {
      */
     @Transactional
     public void cupReturnOfCustomer(Customer customer, Partner partner) throws NoCupsForReturnException{
-        if (customer.getCustomerState() == CustomerState.USE) {
+        if (customer.getCustomerState() == CustomerState.USE || customer.getCustomerState() == CustomerState.OVERDUE) {
             CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
             if (lastOrder.getReturnedDateTime() != null) {
                 log.error("no cups for return for customer id: " + customer.getId());
@@ -69,11 +69,7 @@ public class CustomerOrderService {
             Cup orderCup = lastOrder.getCup();
             int cupPrice = orderCup.getPrice();
 
-            if (LocalDateTime.now().isBefore(lastOrder.getReturnDateTime())) {
-                customer.completeReturnCup(cupPrice, CustomerState.NONE);
-            } else {
-                customer.completeReturnCup(cupPrice, CustomerState.OVERDUE);
-            }
+            customer.completeReturnCup(cupPrice, CustomerState.NONE);
 
             lastOrder.setReturnedDateTime(LocalDateTime.now());
             List<PartnerReturn> partnerReturnList = partnerReturnRepository.findByPartnerIdAndCupId(partner.getId(), orderCup.getId());
@@ -97,7 +93,7 @@ public class CustomerOrderService {
      */
     @Transactional
     public void cupRemoveOfCustomer(Customer customer) throws NoCupsForReturnException{
-        if (customer.getCustomerState() == CustomerState.USE) {
+        if (customer.getCustomerState() == CustomerState.USE || customer.getCustomerState() == CustomerState.OVERDUE) {
             CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
             lastOrder.setReturnedDateTime(LocalDateTime.now());
             customer.completeReturnCup(0, CustomerState.NONE);
