@@ -72,8 +72,8 @@ public class PartnerService {
             partner.setAddress(partnerDTO.getAddress());
             partner.setRegistrationNumber(partnerDTO.getRegistrationNumber());
             partner.setBusinessName(partnerDTO.getBusinessName());
-            partner.setLatitude(partnerDTO.getLatitude());
-            partner.setLongitude(partnerDTO.getLongitude());
+//            partner.setLatitude(partnerDTO.getLatitude());
+//            partner.setLongitude(partnerDTO.getLongitude());
         } else {
             throw new RuntimeException("Wrong type PW");
         }
