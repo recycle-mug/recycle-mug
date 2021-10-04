@@ -60,6 +60,9 @@ export default {
       kakaoApi.defaults.headers.common["Authorization"] = `KakaoAK ${apiKey}`;
       kakaoApi.defaults.headers.common["Content-Type"] = "application/x-www-form-urlencoded";
       kakaoApi.defaults.params = { query: this.query, category_group_code: "CE7" };
+      kakaoApi.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+      kakaoApi.defaults.headers.common["Access-Control-Allow-Methods"] =
+        "GET,POST,PUT,DELETE,OPTIONS";
 
       await kakaoApi
         .get(url)
