@@ -28,13 +28,13 @@ public class PartnerCupRepository {
      * @return
      */
     public List<PartnerCup> findCupOfPartner(Long partnerId) {
-        return em.createQuery("select pc from Partner p JOIN p.partnerCups pc WHERE p.id=:partnerId", PartnerCup.class)
+        return em.createQuery("select pc from Partner p JOIN FETCH p.partnerCups pc WHERE p.id=:partnerId", PartnerCup.class)
                 .setParameter("partnerId", partnerId)
                 .getResultList();
     }
 
     /**
-     * partner 가 가지고있는 partnerCup 를 partnerId 와 cupId 로 찾는다. (오류가능성 있음)
+     * partner 가 가지고있는 partnerCup 를 partnerId 와 cupId 로 찾는다.
      * @param partnerId
      * @param cupId
      * @return

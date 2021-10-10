@@ -34,7 +34,7 @@ public class CustomerOrderRepository {
      * @return
      */
     public CustomerOrder findLastOrderOfCustomer(Long customerId) {
-        String query = "SELECT o FROM CustomerOrder o INNER JOIN o.customer c WHERE c.id=:customerId ORDER BY o.rentDateTime DESC";
+        String query = "SELECT o FROM CustomerOrder o INNER JOIN FETCH o.customer c WHERE c.id=:customerId ORDER BY o.rentDateTime DESC";
         return em.createQuery(query, CustomerOrder.class)
                 .setParameter("customerId", customerId)
                 .setMaxResults(1).getSingleResult();
@@ -45,11 +45,18 @@ public class CustomerOrderRepository {
         return em.createQuery(query, CustomerOrder.class).getResultList();
     }
 
+    /**
+     * customerId number 를 기준으로 지금까지 빌렸던 컵 리스트를 가져오는 메서드
+     * Fetch Join 최적화 테스트
+     * @param customerId
+     * @return
+     * @throws IOException
+     */
     public List<CustomerOrderIdResponse> findByCustomerId(Long customerId) throws IOException{
-        String query = "SELECT o FROM CustomerOrder o INNER JOIN o.customer c WHERE c.id=:customerId ORDER BY o.rentDateTime DESC";
+        String query = "SELECT o FROM CustomerOrder o INNER JOIN FETCH o.customer c WHERE c.id=:customerId ORDER BY o.rentDateTime DESC";
         ArrayList<CustomerOrderIdResponse> customerOrders = new ArrayList<>();
         Cup cup;
-        for (CustomerOrder customerOrder : em.createQuery(query, CustomerOrder.class).getResultList()) {
+        for (CustomerOrder customerOrder : em.createQuery(query, CustomerOrder.class).setParameter("customerId", customerId).getResultList()) {
             cup = customerOrder.getCup();
             CustomerOrderIdResponse order = CustomerOrderIdResponse.builder()
                     .partnerName(customerOrder.getPartner().getNickname())
