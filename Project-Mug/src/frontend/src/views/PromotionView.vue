@@ -98,7 +98,6 @@ header {
         user-select: none;
         letter-spacing: 1vw;
 
-        // font-family: "Baloo Tamma 2", cursive;
         font-family: "Jua", sans-serif;
         color: $background-color;
         text-shadow: -1px -1px 0px white, 3px 3px 0px white, 6px 6px 0px $background-color-darker;
@@ -119,10 +118,20 @@ header {
   &-1 {
     .promotion-title {
       p {
-        font-size: 2.5vw;
         letter-spacing: 0.2rem;
         text-align: center;
         user-select: none;
+      }
+
+      @media screen and (max-width: 1019px) {
+        p {
+          font-size: 4vw;
+        }
+      }
+      @media screen and (min-width: 1020px) {
+        p {
+          font-size: 2.5vw;
+        }
       }
     }
   }
@@ -167,11 +176,22 @@ header {
         p {
           padding: 1rem 0;
           width: 100%;
-          font-size: 1.5vw;
           white-space: nowrap;
           letter-spacing: 0.1rem;
-          line-height: 2vw;
           font-family: "Jua", sans-serif;
+        }
+
+        @media screen and (max-width: 1019px) {
+          p {
+            font-size: 3vw;
+            line-height: 4vw;
+          }
+        }
+        @media screen and (min-width: 1020px) {
+          p {
+            font-size: 1.5vw;
+            line-height: 2vw;
+          }
         }
       }
     }
