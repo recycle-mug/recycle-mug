@@ -2,9 +2,11 @@
   <div class="menu" :class="isActive">
     <ul class="menu-categories" v-if="isActive">
       <li class="category-title">전체 카테고리</li>
-      <li class="category">카테고리</li>
-      <li class="category">카테고리</li>
-      <li class="category">카테고리</li>
+      <router-link :to="{ name: 'promotion' }" tag="li" class="category"
+        >프로모션 페이지</router-link
+      >
+      <router-link :to="{ name: 'campaign' }" tag="li" class="category">캠페인</router-link
+      ><router-link :to="{ name: 'about' }" tag="li" class="category">About</router-link>
     </ul>
   </div>
 </template>
@@ -62,6 +64,12 @@ export default {
             cursor: pointer;
             user-select: none;
             color: map-get($map: $theme, $key: "text-light");
+            transition: all 0.15s ease-in;
+
+            &:hover {
+              color: $main-color;
+              font-weight: bold;
+            }
           }
         }
       }

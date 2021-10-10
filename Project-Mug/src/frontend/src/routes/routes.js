@@ -8,6 +8,10 @@ import MainView from "../views/MainView";
 import JoinView from "../views/JoinView";
 import LoginView from "../views/LoginView";
 import ProfileView from "../views/ProfileView";
+import PromotionView from "../views/PromotionView";
+import AboutPageView from "../views/AboutPageView";
+import CampaignView from "../views/CampaignView";
+
 import AdminDashboardView from "../views/AdminDashboardView";
 import AdminCupsView from "../views/AdminCupsView";
 import AdminUsersView from "../views/AdminUsersView";
@@ -39,9 +43,8 @@ const requireAuth = () => (from, to, next) => {
           return next();
         }
       })
-      .catch((error) => {
-        console.error(error);
-        alert("로그인 해주세요");
+      .catch(() => {
+        alert("세션이 만료되었습니다. 다시 로그인 해주세요");
         next({ path: "/" });
       });
   }
@@ -85,13 +88,48 @@ const checkAdmin = () => (from, to, next) => {
   }
 };
 
+const checkFirstEnter = () => (from, to, next) => {
+  const path = "/backend/profile";
+
+  const { accessToken } = localStorage;
+  if (!accessToken) {
+    next({ path: "/promotion" });
+  } else {
+    const authUser = axios.create();
+    authUser.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
+    authUser.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+    authUser.defaults.headers.common["Access-Control-Allow-Methods"] =
+      "GET,POST,PUT,DELETE,OPTIONS";
+
+    authUser
+      .get(path)
+      .then((res) => {
+        if (res.data.error) {
+          throw res.data.error;
+        } else {
+          return next();
+        }
+      })
+      .catch(() => {
+        alert("세션이 만료되었습니다. 다시 로그인 해주세요");
+        next({ path: "/promotion" });
+      });
+  }
+};
+
 export default new Router({
   mode: "history",
   routes: [
     {
+      path: "/promotion",
+      name: "promotion",
+      component: PromotionView,
+    },
+    {
       path: "/",
       name: "main",
       component: MainView,
+      beforeEnter: checkFirstEnter(),
     },
     {
       path: "/login",
@@ -145,6 +183,16 @@ export default new Router({
       component: AdminCupsView,
       alias: "/admin",
       beforeEnter: checkAdmin(),
+    },
+    {
+      path: "/campaign",
+      name: "campaign",
+      component: CampaignView,
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: AboutPageView,
     },
   ],
 });
