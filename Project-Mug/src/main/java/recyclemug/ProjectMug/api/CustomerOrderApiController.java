@@ -132,7 +132,7 @@ public class CustomerOrderApiController {
         try {
             return customerOrderRepository.findByCustomerId(customerId);
         } catch (IOException e) {
-            log.error("IOException occur");
+            log.error("주문했던 컵이 없어요!");
         }
         return null;
     }

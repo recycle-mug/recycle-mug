@@ -63,6 +63,7 @@ public class CustomerOrderService {
             CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
             if (lastOrder.getReturnedDateTime() != null) {
                 log.error("no cups for return for customer id: " + customer.getId());
+                customer.completeReturnCup(0, CustomerState.NONE);
                 throw new NoCupsForReturnException();
             }
 
