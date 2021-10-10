@@ -95,9 +95,9 @@ public class CustomerOrderService {
     @Transactional
     public void cupRemoveOfCustomer(Customer customer) throws NoCupsForReturnException{
         if (customer.getCustomerState() == CustomerState.USE || customer.getCustomerState() == CustomerState.OVERDUE) {
+            customer.completeReturnCup(0, CustomerState.NONE);
             CustomerOrder lastOrder = customerOrderRepository.findLastOrderOfCustomer(customer.getId());
             lastOrder.setReturnedDateTime(LocalDateTime.now());
-            customer.completeReturnCup(0, CustomerState.NONE);
         } else {
             throw new NoCupsForReturnException();
         }
