@@ -9,6 +9,8 @@ import JoinView from "../views/JoinView";
 import LoginView from "../views/LoginView";
 import ProfileView from "../views/ProfileView";
 import PromotionView from "../views/PromotionView";
+import AboutPageView from "../views/AboutPageView";
+import CampaignView from "../views/CampaignView";
 
 import AdminDashboardView from "../views/AdminDashboardView";
 import AdminCupsView from "../views/AdminCupsView";
@@ -181,6 +183,16 @@ export default new Router({
       component: AdminCupsView,
       alias: "/admin",
       beforeEnter: checkAdmin(),
+    },
+    {
+      path: "/campaign",
+      name: "campaign",
+      component: CampaignView,
+    },
+    {
+      path: "/about",
+      name: "about",
+      component: AboutPageView,
     },
   ],
 });
