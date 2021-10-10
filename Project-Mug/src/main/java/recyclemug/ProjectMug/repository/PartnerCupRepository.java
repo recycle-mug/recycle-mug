@@ -28,12 +28,12 @@ public class PartnerCupRepository {
      * @return
      */
     public List<PartnerCup> findCupOfPartner(Long partnerId) {
-//        return em.createQuery("select pc from Partner p JOIN FETCH p.partnerCups pc WHERE p.id=:partnerId", PartnerCup.class)
-//                .setParameter("partnerId", partnerId)
-//                .getResultList();
-        return em.createQuery("select pc from PartnerCup pc join fetch p.partner p WHERE p.id=:partnerId", PartnerCup.class)
+        return em.createQuery("select pc from Partner p JOIN p.partnerCups pc WHERE p.id=:partnerId", PartnerCup.class)
                 .setParameter("partnerId", partnerId)
                 .getResultList();
+//        return em.createQuery("select pc from PartnerCup pc join fetch p.partner p WHERE p.id=:partnerId", PartnerCup.class)
+//                .setParameter("partnerId", partnerId)
+//                .getResultList();
     }
 
     /**
