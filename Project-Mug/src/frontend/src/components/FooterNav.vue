@@ -3,7 +3,8 @@
     <div class="footer">
       <div class="text-wrapper">
         <span class="footer-text">copyright © 2021</span>
-        <span class="footer-text">| support@wecup.com |</span>
+        <span class="footer-text">| wecup.official@gmail.com |</span>
+        <span class="footer-text">tel ☎ 010 8568 3439 </span>
       </div>
     </div>
   </footer>

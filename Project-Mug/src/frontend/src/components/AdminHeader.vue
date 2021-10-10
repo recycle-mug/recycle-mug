@@ -38,7 +38,7 @@
 
           <div class="profile-wrapper">
             <div class="profile-caption">
-              <p>John Doe</p>
+              <p>Admin</p>
               <span class="login-btn">Admin</span>
             </div>
             <div tag="div" class="profile-pic">
