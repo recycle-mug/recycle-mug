@@ -16,16 +16,8 @@
         </div>
 
         <router-link :to="{ name: 'main' }" class="content-center">
-          <h1>
-            We
-            <div class="icon-wrapper">
-              <font-awesome-icon
-                :icon="['fas', 'coffee']"
-                style="width:100%; cursor:pointer;"
-              ></font-awesome-icon>
-            </div>
-            Cup
-          </h1>
+          <img v-if="getTheme === 'theme-dark'" src="../assets/logo/logo-darkmode.png" alt="" />
+          <img v-else src="../assets/logo/logo-lightmode.png" alt="" />
         </router-link>
 
         <div class="content-right">
@@ -289,17 +281,12 @@ export default {
             display: flex;
             justify-content: center;
 
-            h1 {
-              font-weight: bolder;
-              font-size: 1.5rem;
+            img {
               cursor: pointer;
-              text-align: center;
               transition: 0.3s color linear;
-              letter-spacing: 0.5rem;
-              white-space: nowrap;
-              display: flex;
-              align-items: center;
               user-select: none;
+              max-width: 180px;
+              -webkit-user-drag: none;
             }
           }
 

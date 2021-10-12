@@ -22,7 +22,7 @@
       <div class="section-container">
         <img src="../assets/images/promotion-image-2.png" alt="" />
         <div class="promotion-content">
-          <img src="../assets/images/promotion-image-3.png" alt="" />
+          <img src="../assets/logo/logo-darkmode.png" alt="" />
           <p>
             길거리에 쌓인 일회용컵 쓰레기,<br />
             한 번 쓰이고 버려지는 플라스틱 테이크아웃 잔.<br />
@@ -54,16 +54,9 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");
-
-$background-color: #387ea0;
-$background-color-darker: #2a6786;
-$text-emphasize-color: #e5c144;
-
 * {
   box-sizing: border-box;
   color: #f8fefc;
-  font-family: "Jua", sans-serif;
 }
 header {
   height: 35vw;
@@ -99,8 +92,8 @@ header {
         letter-spacing: 1vw;
 
         font-family: "Jua", sans-serif;
-        color: $background-color;
-        text-shadow: -1px -1px 0px white, 3px 3px 0px white, 6px 6px 0px $background-color-darker;
+        color: $main-color;
+        text-shadow: -1px -1px 0px white, 3px 3px 0px white, 6px 6px 0px $dark-color;
       }
     }
   }
@@ -109,18 +102,19 @@ header {
 .section {
   padding: 8rem 2rem;
   width: 100%;
-  background-color: $background-color;
+  background-color: $main-color;
 
   .emphasize {
-    color: $text-emphasize-color;
+    color: $sub-color;
   }
 
   &-1 {
     .promotion-title {
       p {
-        letter-spacing: 0.2rem;
+        letter-spacing: 0.5rem;
         text-align: center;
         user-select: none;
+        font-weight: bold;
       }
 
       @media screen and (max-width: 1019px) {
@@ -168,7 +162,7 @@ header {
 
         img {
           margin: 2rem auto;
-          max-width: 30vw;
+          max-width: 20vw;
           -webkit-user-drag: none;
           user-select: none;
         }
@@ -179,6 +173,7 @@ header {
           white-space: nowrap;
           letter-spacing: 0.1rem;
           font-family: "Jua", sans-serif;
+          font-weight: bold;
         }
 
         @media screen and (max-width: 1019px) {
@@ -200,34 +195,35 @@ header {
 
 footer {
   height: 15vw;
-  background-color: $background-color;
+  background-color: $main-color;
   display: flex;
   justify-content: center;
   align-items: flex-start;
 
   button {
     border-radius: 20px;
-    border: 1px solid $background-color-darker;
-    background-color: $background-color-darker;
+    border: 1px solid $dark-color;
+    background-color: $dark-color;
     color: white;
     font-size: 1.5rem;
     padding: 1rem 3rem;
     cursor: pointer;
     display: block;
     transition: all 0.3s ease-in-out;
+    font-weight: bold;
 
     animation: pulsate 1.5s infinite;
-    box-shadow: 0 0 7px 0 $background-color-darker;
+    box-shadow: 0 0 7px 0 $dark-color;
 
     @keyframes pulsate {
       50% {
-        box-shadow: 0 0 24px 0 $background-color-darker;
+        box-shadow: 0 0 24px 0 $dark-color;
       }
     }
 
     &:hover {
       background-color: white;
-      color: $background-color-darker;
+      color: $dark-color;
       transform: scale(1.05);
     }
   }
