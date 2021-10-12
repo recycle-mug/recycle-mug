@@ -5,7 +5,16 @@
         <div class="icon-wrapper">
           <img src="../assets/logo/logo.png" alt="" />
         </div>
-        <span>WeCup</span>
+        <div class="sidebar-title-wrapper">
+          <img
+            v-if="getTheme === 'theme-dark'"
+            src="../assets/logo/logo-darkmode.png"
+            alt=""
+            class="sidebar-title"
+          />
+
+          <img v-else src="../assets/logo/logo-lightmode.png" alt="" class="sidebar-title" />
+        </div>
       </li>
 
       <router-link :to="{ name: 'admin' }" tag="li">
@@ -62,6 +71,11 @@ faLibrary.add(faClipboardList, faCoffee, faUsers, faChartLine, faCog);
 
 export default {
   components: { FontAwesomeIcon },
+  computed: {
+    getTheme() {
+      return this.$store.state.theme;
+    },
+  },
 };
 </script>
 
@@ -157,7 +171,8 @@ export default {
           width: 360px;
         }
 
-        &:hover ul li span {
+        &:hover ul li span,
+        &:hover ul li .sidebar-title-wrapper {
           display: block;
         }
 
@@ -216,11 +231,19 @@ export default {
               height: 80px;
               padding: 1rem;
             }
-            span {
-              font-size: 1.2rem;
-              font-weight: bolder;
-              color: map-get($map: $theme, $key: "text");
-              letter-spacing: 0.2rem;
+            .sidebar-title-wrapper {
+              display: none;
+              width: 100%;
+              position: relative;
+              left: 80px;
+              padding: 0.5rem;
+
+              img {
+                user-select: none;
+                -webkit-user-drag: none;
+                width: auto;
+                height: 100%;
+              }
             }
           }
         }
