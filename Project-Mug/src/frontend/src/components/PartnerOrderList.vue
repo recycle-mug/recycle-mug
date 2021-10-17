@@ -6,8 +6,8 @@
         <div class="col col-2">주문날짜</div>
         <div class="col col-3">주문한 컵</div>
         <div class="col col-4">주문수량</div>
-        <div class="col col-5">개당가격</div>
-        <div class="col col-6">총가격</div>
+        <!-- <div class="col col-5">개당가격</div>
+        <div class="col col-6">총가격</div> -->
         <div class="col col-7">상태</div>
         <div class="col col-8">Action</div>
       </li>
@@ -25,7 +25,7 @@
           <div class="col col-4" data-label="주문수량">
             {{ addComma(orderList[(currentPage - 1) * perPage + index - 1].stockQuantity) }}
           </div>
-          <div class="col col-5" data-label="개당가격">
+          <!-- <div class="col col-5" data-label="개당가격">
             {{ addComma(orderList[(currentPage - 1) * perPage + index - 1].price) }}
           </div>
           <div class="col col-6" data-label="총가격">
@@ -35,7 +35,7 @@
                   orderList[(currentPage - 1) * perPage + index - 1].price,
               )
             }}
-          </div>
+          </div> -->
           <div
             class="col col-7"
             v-if="orderList[(currentPage - 1) * perPage + index - 1]"

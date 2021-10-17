@@ -17,7 +17,7 @@
           <div class="description">
             <p class="cup-name">{{ cup.name }}</p>
             <p>수량 : {{ addComma(cup.stockQuantity) }}개</p>
-            <p>가격 : {{ addComma(cup.price) }}원</p>
+            <!-- <p>가격 : {{ addComma(cup.price) }}원</p> -->
           </div>
         </div>
       </slide>
@@ -29,7 +29,7 @@
           <div class="col col-1">Index</div>
           <div class="col col-2">컵</div>
           <div class="col col-3">매장 내 컵 수량</div>
-          <div class="col col-4">개당 가격</div>
+          <!-- <div class="col col-4">개당 가격</div> -->
         </li>
         <li class="table-row" v-for="(cup, index) in partnerCups" :key="index">
           <div class="col col-1" data-label="Index">{{ index + 1 }}</div>
@@ -38,7 +38,7 @@
             <span>{{ cup.name }}</span>
           </div>
           <div class="col col-3" data-label="컵수량">{{ addComma(cup.stockQuantity) }}개</div>
-          <div class="col col-4" data-label="컵가격">{{ addComma(cup.price) }}원</div>
+          <!-- <div class="col col-4" data-label="컵가격">{{ addComma(cup.price) }}원</div> -->
         </li>
       </div>
       <div class="table-footer">다음페이지</div>

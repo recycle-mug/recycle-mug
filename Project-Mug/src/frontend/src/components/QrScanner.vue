@@ -26,7 +26,12 @@
         </div>
         QR코드를 카메라 안에 비춰주세요
       </h1>
+      <h2 v-if="noRearCamera" class="scanner-error">후면 카메라가 감지되지 않습니다.</h2>
+      <h2 v-if="noFrontCamera" class="scanner-error">정면 카메라가 감지되지 않습니다.</h2>
       <div class="scanner-wrapper" v-if="scanStart">
+        <button class="scanner-switcher" @click="switchCamera">
+          <font-awesome-icon :icon="['fas', 'sync-alt']" style="width:100%;"></font-awesome-icon>
+        </button>
         <qrcode-stream
           class="scanner"
           :track="this.onScan"
@@ -67,10 +72,10 @@ import Loader from "./Loader.vue";
 import RentCup from "./RentCup.vue";
 import ReturnCup from "./ReturnCup.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faQrcode, faCamera } from "@fortawesome/free-solid-svg-icons";
+import { faQrcode, faCamera, faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 import { library as faLibrary } from "@fortawesome/fontawesome-svg-core";
 
-faLibrary.add(faQrcode, faCamera);
+faLibrary.add(faQrcode, faCamera, faSyncAlt);
 
 export default {
   components: { QrcodeStream, Loader, ReturnCup, RentCup, FontAwesomeIcon },
@@ -81,11 +86,13 @@ export default {
       loading: false,
       destroyed: false,
       isValid: undefined,
-      camera: "auto",
+      camera: "rear",
       getUrl: undefined,
       opened: false,
       scannerSelect: "",
       cupUrl: "",
+      noRearCamera: false,
+      noFrontCamera: false,
     };
   },
   props: ["role"],
@@ -131,9 +138,33 @@ export default {
       try {
         await promise;
       } catch (error) {
-        console.error(error);
+        const triedFrontCamera = this.camera === "front";
+        const triedRearCamera = this.camera === "rear";
+
+        const cameraMissingError = error.name === "OverconstrainedError";
+
+        if (triedRearCamera && cameraMissingError) {
+          this.noRearCamera = true;
+          this.camera = "front";
+        }
+
+        if (triedFrontCamera && cameraMissingError) {
+          this.noFrontCamera = true;
+          this.camera = "rear";
+        }
       } finally {
         this.loading = false;
+      }
+    },
+    switchCamera() {
+      console.log("this.camera :>> ", this.camera);
+      switch (this.camera) {
+        case "front":
+          this.camera = "rear";
+          break;
+        case "rear":
+          this.camera = "front";
+          break;
       }
     },
     turnCameraOn() {
@@ -226,6 +257,28 @@ export default {
           justify-content: center;
           align-items: center;
           border-radius: 6px;
+          position: relative;
+
+          .scanner-switcher {
+            position: absolute;
+            z-index: 99;
+            top: 20px;
+            left: calc((100% / 2) - 160px);
+            width: 35px;
+            height: 35px;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 6px;
+            background-color: rgba($color: #fff, $alpha: 0.6);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-size: 1rem;
+
+            &:hover,
+            &:active {
+              background-color: rgba($color: #fff, $alpha: 1);
+            }
+          }
 
           .scanner {
             margin: 0.5rem;
@@ -242,6 +295,15 @@ export default {
         }
 
         .scanner-description {
+          margin: 0.5rem;
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .scanner-error {
+          color: $error-msg;
           margin: 0.5rem;
           white-space: nowrap;
           display: flex;

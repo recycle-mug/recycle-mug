@@ -118,7 +118,10 @@ export default {
         this.$store
           .dispatch("LOGIN", { email, password })
           .then(this.redirect)
-          .catch((err) => (this.errors.response = err));
+          .catch((err) => {
+            console.log("err :>> ", err);
+            this.errors.response = "아이디와 비밀번호를 확인해주세요";
+          });
       }
     },
     redirect() {

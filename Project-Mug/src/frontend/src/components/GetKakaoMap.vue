@@ -50,13 +50,13 @@
                   <img :src="'data:image/jpeg;base64,' + cup.image" alt="" />
                 </div>
                 <div class="item-description">
-                  <div class="description-row">
+                  <!-- <div class="description-row">
                     <p>가격</p>
                     <div class="row-num">
                       <span>{{ addComma(cup.price) }}</span>
                       <span class="unit">(원)</span>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="description-row">
                     <p>수량</p>
                     <div class="row-num">
