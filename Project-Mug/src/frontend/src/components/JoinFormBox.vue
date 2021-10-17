@@ -557,7 +557,8 @@ export default {
             }
           })
           .catch((error) => {
-            this.errors.response = error;
+            console.log("error :>> ", error);
+            this.errors.response = "이미 사용중인 이메일입니다.";
           });
       }
     },
