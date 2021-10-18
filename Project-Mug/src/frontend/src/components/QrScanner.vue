@@ -87,6 +87,7 @@ export default {
       destroyed: false,
       isValid: undefined,
       camera: "rear",
+      cameraSetting: "rear",
       getUrl: undefined,
       opened: false,
       scannerSelect: "",
@@ -161,14 +162,23 @@ export default {
       switch (this.camera) {
         case "front":
           this.camera = "rear";
+          this.cameraSetting = "rear";
           break;
         case "rear":
           this.camera = "front";
+          this.cameraSetting = "front";
           break;
       }
     },
     turnCameraOn() {
-      this.camera = "auto";
+      switch (this.cameraSetting) {
+        case "front":
+          this.camera = "front";
+          break;
+        case "rear":
+          this.camera = "rear";
+          break;
+      }
     },
     turnCameraOff() {
       this.camera = "off";
@@ -261,7 +271,7 @@ export default {
 
           .scanner-switcher {
             position: absolute;
-            z-index: 99;
+            z-index: 50;
             top: 20px;
             left: calc((100% / 2) - 160px);
             width: 35px;
