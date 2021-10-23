@@ -11,9 +11,6 @@
       <div class="row" v-if="info.cupName">
         <div class="title">{{ info.cupName }} 대여 승인하기</div>
       </div>
-      <div class="row" v-if="info.cupImage">
-        <img :src="'data:image/jpeg;base64,' + info.cupImage" alt="" />
-      </div>
       <div class="row">
         <button @click="rentCup">컵 대여 승인하기</button>
       </div>

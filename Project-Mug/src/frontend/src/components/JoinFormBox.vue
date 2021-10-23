@@ -38,7 +38,7 @@
 
         <!-- Partner Password -->
         <span class="password-hint"
-          >8자리 이상: 영어 대문자, 영어 소문자, 숫자, ~ ! @ # $ % ^ & * 중 3종류 조합</span
+          >8자리 이상: 영어(대∙소문자), 숫자, 특수문자(~ ! @ # $ % ^ & *) 조합</span
         >
         <input
           type="password"
@@ -61,6 +61,7 @@
 
         <!-- Partner Tel -->
         <div class="num-input-wrapper">
+          <span class="num-input-title">Tel</span>
           <input
             type="number"
             name="tel_first"
@@ -195,7 +196,7 @@
 
         <!-- Password -->
         <span class="password-hint"
-          >8자리 이상: 영어 대문자, 영어 소문자, 숫자, ~ ! @ # $ % ^ & * 중 3종류 조합</span
+          >8자리 이상: 영어(대∙소문자), 숫자, 특수문자(~ ! @ # $ % ^ & *) 조합</span
         >
         <input
           type="password"
@@ -218,6 +219,7 @@
 
         <!-- Tel -->
         <div class="num-input-wrapper">
+          <span class="num-input-title">Tel</span>
           <input
             type="number"
             name="tel_first"
@@ -457,24 +459,28 @@ export default {
     },
     checkPasswordForm() {
       const num = this.formData.joinPw.search(/[0-9]/g);
-      const smallEng = this.formData.joinPw.search(/[a-z]/g);
-      const bigEng = this.formData.joinPw.search(/[A-Z]/g);
+      const eng = this.formData.joinPw.search(/[a-z]/gi);
       const spe = this.formData.joinPw.search(/[~!@@#$%^&*]/gi);
 
       let cnt = 0;
 
       if (num == -1) cnt += 1;
-      if (smallEng == -1) cnt += 1;
-      if (bigEng == -1) cnt += 1;
+      if (eng == -1) cnt += 1;
       if (spe == -1) cnt += 1;
+
+      console.log("num :>> ", num);
+      console.log("eng :>> ", eng);
+      console.log("spe :>> ", spe);
+
+      console.log("cnt :>> ", cnt);
 
       try {
         if (this.formData.joinPw.length < 8) {
           throw "8자리 이상으로 입력해주세요";
         } else if (this.formData.joinPw.search(/\s/) != -1) {
           throw "비밀번호는 공백없이 입력해주세요";
-        } else if (cnt > 1) {
-          throw "영문 소문자, 대문자, 숫자, 특수문자 중 3가지 이상을 혼합해주세요";
+        } else if (cnt > 0) {
+          throw "영어(대∙소문자), 숫자, 특수문자를 모두 혼합해주세요";
         } else if (this.formData.joinPw.search(/[()_+|<>?:{}/[\]/\\//"':;.,]/) != -1) {
           throw "정해진 특수문자 외 특수문자는 사용할 수 없습니다";
         } else {
@@ -715,6 +721,7 @@ export default {
           .num-input-wrapper {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             border: none;
             padding: 1rem 1.4rem;
             margin: 0.3rem 0;
@@ -727,6 +734,12 @@ export default {
               font-size: 0.6rem;
               margin: 3px;
               color: $main-color;
+            }
+
+            .num-input-title {
+              user-select: none;
+              padding: 0.5rem;
+              font-size: 0.8rem;
             }
 
             .num-input {
