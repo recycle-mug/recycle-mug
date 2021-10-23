@@ -42,4 +42,12 @@ public class CustomerOrder {
         this.rentDateTime = LocalDateTime.now();
         this.returnDateTime = LocalDateTime.now().plusWeeks(1);
     }
+
+    public CustomerOrder(Customer customer, PartnerCup partnerCup) {
+        this.customer = customer;
+        this.cup = partnerCup.getCup();
+        this.partner = partnerCup.getPartner();
+        this.rentDateTime = LocalDateTime.now();
+        this.returnDateTime = LocalDateTime.now().plusWeeks(1);
+    }
 }
