@@ -46,7 +46,7 @@ public class CustomerOrderService {
         } else if (!customer.getCustomerState().equals(CustomerState.NONE)) {
             throw new CustomerStateNotAllowedException();
         } else {
-            CustomerOrder customerOrder = new CustomerOrder(customer, partnerCup.getCup());
+            CustomerOrder customerOrder = new CustomerOrder(customer, partnerCup);
             partnerCup.customerOrderComplete(1);
             customer.completeOrderCup(partnerCup.getCup().getPrice());
             customerOrderRepository.saveCup(customerOrder);
