@@ -194,7 +194,6 @@ header {
 }
 
 footer {
-  height: 15vw;
   background-color: $main-color;
   display: flex;
   justify-content: center;
@@ -207,6 +206,7 @@ footer {
     color: white;
     font-size: 1.5rem;
     padding: 1rem 3rem;
+    margin-bottom: 8rem;
     cursor: pointer;
     display: block;
     transition: all 0.3s ease-in-out;
